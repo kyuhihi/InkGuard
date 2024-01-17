@@ -509,3 +509,15 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudio,unrealengine
+
+#규현추가------------------------------
+/Binaries
+/Build
+/Intermediate
+/DerivedDataCache
+/Saved
+
+Content/StarterContent/
+
+InkGuard.VC.db
+#규현추가------------------------------
