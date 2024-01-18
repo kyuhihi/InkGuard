@@ -15,13 +15,16 @@
     <Filter Include="소스 파일\Include\Common">
       <UniqueIdentifier>{19f47b29-edf6-4e2c-ad13-b1fc4b4439e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Default">
+      <UniqueIdentifier>{33caa763-2300-476c-815f-3f21b4d69a1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameServer_Select.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Common.cpp">
       <Filter>소스 파일\Include\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="GameServer_Select.cpp">
+      <Filter>소스 파일\Default</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿#include "Include.h"
 
 int nTotalSockets = 0;
-SOCKETINFO* SocketInfoArray[FD_SETSIZE];
+SOCKETINFO* SocketInfoArray[FD_SETSIZE];// 총 64개의 소켓을 받을수있다.
 
 // 소켓 정보 관리 함수
 bool AddSocketInfo(SOCKET sock);
@@ -39,30 +39,32 @@ int main(int argc, char* argv[])
 	if (retval == SOCKET_ERROR) err_display("ioctlsocket()");
 
 	// 데이터 통신에 사용할 변수
-	fd_set rset, wset;
+	fd_set ReadSet, WriteSet; // 읽기 Set, 쓰기 Set 준비. 예외셋은 필요없음.
 	int nready;
 	SOCKET client_sock;
 	struct sockaddr_in clientaddr;
 	int addrlen;
 
+	printf("클라이언트로부터의 접속을 대기중입니다\n");
+
 	while (1) {
 		// 소켓 셋 초기화
-		FD_ZERO(&rset);
-		FD_ZERO(&wset);
-		FD_SET(listen_sock, &rset);
-		for (int i = 0; i < nTotalSockets; i++) {
+		FD_ZERO(&ReadSet);
+		FD_ZERO(&WriteSet);
+		FD_SET(listen_sock, &ReadSet);	// ReadSet에 관찰 대상인 ListenSocket을 등록한다.
+		for (int i = 0; i < nTotalSockets; i++) {			
 			if (SocketInfoArray[i]->recvbytes > SocketInfoArray[i]->sendbytes)
-				FD_SET(SocketInfoArray[i]->sock, &wset);
+				FD_SET(SocketInfoArray[i]->sock, &WriteSet);	// 해당 소켓에 대해 데이터를 보내야하는 타이밍이다?-> WriteSet에 추가
 			else
-				FD_SET(SocketInfoArray[i]->sock, &rset);
+				FD_SET(SocketInfoArray[i]->sock, &ReadSet);		// 해당 소켓에 대해 데이터를 받아야하는 타이밍이다?-> ReadSet에 추가
 		}
 
 		// select()
-		nready = select(0, &rset, &wset, NULL, NULL);
+		nready = select(0, &ReadSet, &WriteSet, NULL, NULL);
 		if (nready == SOCKET_ERROR) err_quit("select()");
-
+		
 		// 소켓 셋 검사(1): 클라이언트 접속 수용
-		if (FD_ISSET(listen_sock, &rset)) {
+		if (FD_ISSET(listen_sock, &ReadSet)) {
 			addrlen = sizeof(clientaddr);
 			client_sock = accept(listen_sock,
 				(struct sockaddr*)&clientaddr, &addrlen);
@@ -87,7 +89,7 @@ int main(int argc, char* argv[])
 		// 소켓 셋 검사(2): 데이터 통신
 		for (int i = 0; i < nTotalSockets; i++) {
 			SOCKETINFO* ptr = SocketInfoArray[i];
-			if (FD_ISSET(ptr->sock, &rset)) {
+			if (FD_ISSET(ptr->sock, &ReadSet)) {// 해당 소켓이 ReadSet에 있다면? 이 if문 입장.
 				// 데이터 받기
 				retval = recv(ptr->sock, ptr->buf, BUFFER_SIZE, 0);
 				if (retval == SOCKET_ERROR) {
@@ -110,7 +112,7 @@ int main(int argc, char* argv[])
 						ntohs(clientaddr.sin_port), ptr->buf);
 				}
 			}
-			else if (FD_ISSET(ptr->sock, &wset)) {
+			else if (FD_ISSET(ptr->sock, &WriteSet)) {// 해당 소켓이 Write에 있다면? 이 if문 입장.
 				// 데이터 보내기
 				retval = send(ptr->sock, ptr->buf + ptr->sendbytes,
 					ptr->recvbytes - ptr->sendbytes, 0);
@@ -121,7 +123,7 @@ int main(int argc, char* argv[])
 				else {
 					ptr->sendbytes += retval;
 					if (ptr->recvbytes == ptr->sendbytes) {
-						ptr->recvbytes = ptr->sendbytes = 0;
+						ptr->recvbytes = ptr->sendbytes = 0;// 에코서버라서 recvbytes로 검사함. 나중에 고칠것.
 					}
 				}
 			}
@@ -179,3 +181,4 @@ void RemoveSocketInfo(int nIndex)
 		SocketInfoArray[nIndex] = SocketInfoArray[nTotalSockets - 1];
 	--nTotalSockets;
 }
+
