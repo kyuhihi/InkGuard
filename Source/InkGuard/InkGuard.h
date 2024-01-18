@@ -3,3 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyNetworking/Include.h"
+
+DECLARE_LOG_CATEGORY_EXTERN(InkGuardNetErr, Log, All)

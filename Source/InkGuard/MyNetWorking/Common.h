@@ -9,7 +9,6 @@
 
 #pragma comment(lib, "ws2_32") // ws2_32.lib 링크
 
-//Link2005 에러로인해 헤더와 cpp분리.
 void err_quit(const char* msg);
 void err_display(const char* msg);
 void err_display(int errcode);

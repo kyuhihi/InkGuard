@@ -1,8 +1,10 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "InkGuardGameMode.h"
+#include "MyNetWorking/MyNetworkMgr.h"
 #include "InkGuardCharacter.h"
 #include "UObject/ConstructorHelpers.h"
+
 
 AInkGuardGameMode::AInkGuardGameMode()
 {
@@ -12,4 +14,22 @@ AInkGuardGameMode::AInkGuardGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+}
+
+AInkGuardGameMode::~AInkGuardGameMode()
+{
+}
+
+void AInkGuardGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+	
+	MyNetworkMgr::GetInstance();
+}
+
+void AInkGuardGameMode::Logout(AController* Exiting)
+{
+	Super::Logout(Exiting);
+
+	MyNetworkMgr::GetInstance()->DestroyInstance();
 }
