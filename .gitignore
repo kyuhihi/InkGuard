@@ -510,15 +510,18 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudio,unrealengine
 
-#±ÔÇöÃß°¡------------------------------
+#ï¿½ï¿½ï¿½ï¿½ï¿½ß°ï¿½------------------------------
 /Binaries
 /Build
 /Intermediate
 /DerivedDataCache
 /Saved
 
+Content/ART/Characters/
+Content/PROGRAM/Characters/
 Content/FantasyBundle/
 Content/StarterContent/
+
 
 !SelectModelServer/
 !SelectModelServer/GameServer_Select/
@@ -527,4 +530,4 @@ Content/StarterContent/
 
 
 InkGuard.VC.db
-#±ÔÇöÃß°¡------------------------------
+#ï¿½ï¿½ï¿½ï¿½ï¿½ß°ï¿½------------------------------
