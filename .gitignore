@@ -523,8 +523,9 @@ Content/PROGRAM/Characters/
 Content/FantasyBundle/
 Content/StarterContent/
 Content/InkGuard/Animation
-Content/InkGuard/Baku
-Content/InkGuard/SpearMan
+Content/InkGuard/Baku/Animations/
+Content/InkGuard/EnemyBP/SpearMan/Animation/Origin/
+Content/InfinityBladeGrassLands/
 
 !SelectModelServer/
 !SelectModelServer/GameServer_Select/
