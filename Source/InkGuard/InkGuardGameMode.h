@@ -19,8 +19,10 @@ public:
 
 public:
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage);
-	virtual void Logout(AController* Exiting) ;
+	virtual void Logout(AController* Exiting);
 
+private:
+	MyNetworkMgr* m_pNetWorkMgr = nullptr;
 };
 
 

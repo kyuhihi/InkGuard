@@ -1,0 +1,6 @@
+#pragma once
+enum PACKET_TYPE
+{
+	PACKET_TRANSFORM,
+	PACKET_NONE,
+};

@@ -1,7 +1,7 @@
 #pragma once
 
 #define SERVER_PORT		7777
-#define BUFFER_SIZE    512
+#define SERVER_SYNC_TIME 0.003f
 
 #define _float3	XMFLOAT3
 #define _float4 XMFLOAT4
@@ -13,4 +13,3 @@
 #define _fmatrix FXMMATRIX
 
 #define _float4x4 XMFLOAT4X4
-

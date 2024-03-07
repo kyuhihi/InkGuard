@@ -30,16 +30,24 @@ private:
 	static MyNetworkMgr* m_pInstance;
 
 #pragma endregion
-
-public:
-
 private:
 	void Initialize();
 	void Tidy();
 
+public:
+	void SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform);
+	void SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const FVector& vPlayerVelocity);
+
+	bool RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket);
+
+public:
+	void SetSyncTime(bool bSyncTime) { m_bSyncTime = bSyncTime; }
+	const bool& GetSyncTime() { return m_bSyncTime; }
+
 private:
 	char* SERVERIP = (char*)"127.0.0.1";
-	SOCKET m_ClientSock;
+	bool m_bSyncTime = false;
+	SOCKETINFO m_tClientSock;
 };
 
 

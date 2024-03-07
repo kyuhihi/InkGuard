@@ -10,15 +10,17 @@
 #include <DirectXCollision.h>
 #pragma endregion
 
-#include <iostream>
-#include <vector>
-#include <list>
-#include <string>
-
-#include "Define.h"
-#include "Struct.h"
-
-
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 using namespace std;
+
+#include <iostream>
+#include <vector>
+#include <list>
+#include <map>
+#include <string>
+
+#include "Enum.h"
+#include "Define.h"
+#include "Struct.h"
+

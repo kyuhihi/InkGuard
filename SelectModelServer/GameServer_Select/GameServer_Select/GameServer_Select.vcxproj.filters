@@ -9,36 +9,84 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="소스 파일\Include">
+    <Filter Include="소스 파일\99. Include">
       <UniqueIdentifier>{dbd3d79b-3678-40a3-8531-a9bce322e0ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Include\Common">
+    <Filter Include="소스 파일\99. Include\Common">
       <UniqueIdentifier>{19f47b29-edf6-4e2c-ad13-b1fc4b4439e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Default">
+    <Filter Include="소스 파일\00. Default">
       <UniqueIdentifier>{33caa763-2300-476c-815f-3f21b4d69a1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Client">
+      <UniqueIdentifier>{935f08b3-0566-4eea-9d08-6476e3e1cadb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Client\Packet">
+      <UniqueIdentifier>{89cbb41b-4660-4432-98bc-15a931bc4176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Client\GameObject">
+      <UniqueIdentifier>{1ad7fae4-fabf-4d38-b4ba-484ed5673899}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Client\GameObject\Player">
+      <UniqueIdentifier>{6d7cede9-f12c-4b53-8306-17952acbc895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Default\00. MatchMaking">
+      <UniqueIdentifier>{6c69f5b2-ba12-4238-b879-456a9f98b6c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common.cpp">
-      <Filter>소스 파일\Include\Common</Filter>
+      <Filter>소스 파일\99. Include\Common</Filter>
     </ClCompile>
     <ClCompile Include="GameServer_Select.cpp">
-      <Filter>소스 파일\Default</Filter>
+      <Filter>소스 파일\00. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>소스 파일\01. Client</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet.cpp">
+      <Filter>소스 파일\01. Client\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>소스 파일\01. Client\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\01. Client\GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="MatchMakingMgr.cpp">
+      <Filter>소스 파일\00. Default\00. MatchMaking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include.h">
-      <Filter>소스 파일\Include</Filter>
+      <Filter>소스 파일\99. Include</Filter>
     </ClInclude>
     <ClInclude Include="Define.h">
-      <Filter>소스 파일\Include</Filter>
+      <Filter>소스 파일\99. Include</Filter>
     </ClInclude>
     <ClInclude Include="Common.h">
-      <Filter>소스 파일\Include\Common</Filter>
+      <Filter>소스 파일\99. Include\Common</Filter>
     </ClInclude>
     <ClInclude Include="Struct.h">
-      <Filter>소스 파일\Include</Filter>
+      <Filter>소스 파일\99. Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Enum.h">
+      <Filter>소스 파일\99. Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>소스 파일\01. Client</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet.h">
+      <Filter>소스 파일\01. Client\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>소스 파일\01. Client\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>소스 파일\01. Client\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="MatchMakingMgr.h">
+      <Filter>소스 파일\00. Default\00. MatchMaking</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,7 +5,6 @@
 #include "InkGuardCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
-
 AInkGuardGameMode::AInkGuardGameMode()
 {
 	// set default pawn class to our Blueprinted character
@@ -24,7 +23,8 @@ void AInkGuardGameMode::InitGame(const FString& MapName, const FString& Options,
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
 	
-	MyNetworkMgr::GetInstance();
+	m_pNetWorkMgr = MyNetworkMgr::GetInstance();
+
 }
 
 void AInkGuardGameMode::Logout(AController* Exiting)
@@ -32,4 +32,6 @@ void AInkGuardGameMode::Logout(AController* Exiting)
 	Super::Logout(Exiting);
 
 	MyNetworkMgr::GetInstance()->DestroyInstance();
+
+	m_pNetWorkMgr = nullptr;
 }
