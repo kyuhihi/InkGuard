@@ -13,8 +13,11 @@ CClient::~CClient()
 void CClient::Initialize(SOCKET sock)
 {
 	m_tSockInfo.sock = sock;
+
 	m_tSockInfo.recvbytes = 0;
 	m_tSockInfo.sendbytes = 0;
+	m_tSockInfo.totalSendLen = m_tSockInfo.sendbytes;
+	
 	m_eState = STATE_TRANSFORM;
 	
 	m_pPlayer = new CPlayer;
@@ -43,6 +46,11 @@ void CClient::Release()
 	
 }
 
+const S2C_PACKET_PLAYER_TRANSFORM& CClient::GetOtherPlayerTransform()
+{
+	return m_pPlayer->GetTransform(); 
+}
+
 #pragma region Packet
 
 bool CClient::RecvPacket()
@@ -58,10 +66,10 @@ bool CClient::RecvPacket()
 	else if (retval == 0) {
 		return false;
 	}
-	else {
-		ConductPacket(tNewPacket);
 
-	}
+	ConductPacket(tNewPacket);
+
+	
 	
 
 	return true;
@@ -69,10 +77,13 @@ bool CClient::RecvPacket()
 
 bool CClient::SendPacket()
 {// 데이터 보내기
+	if (m_tSockInfo.totalSendLen == m_tSockInfo.sendbytes)
+		return;
+
 	int retval = 0;
 	char* buf = nullptr;
 	//retval = send(m_tSockInfo.sock, ptr->buf + ptr->sendbytes,
-	//	ptr->recvbytes - ptr->sendbytes, 0);
+		//ptr->recvbytes - ptr->sendbytes, 0);
 	if (retval == SOCKET_ERROR) {
 		err_display("send()");
 		return false;
@@ -93,11 +104,14 @@ void CClient::ConductPacket(const CPacket& Packet)
 	case STATE_TRANSFORM: {
 		C2S_PACKET_PLAYER_TRANSFORM* pPacket = reinterpret_cast<C2S_PACKET_PLAYER_TRANSFORM*>(Packet.m_pBuf);
 		m_pPlayer->SetTransform(*pPacket);
-		if (pPacket->bRecvTransform)
+		if ((pPacket->bRecvTransform) && (m_tSockInfo.sendbytes == 0))// 받아야하는 타이밍이고 보내고있지 않는다면.
 		{
+			
 			S2C_PACKET_PLAYER_TRANSFORM tSendPacket = m_pOtherClient->GetOtherPlayerTransform();
-			SendPacket();
+			m_tSockInfo.totalSendLen = sizeof(tSendPacket);
 		}
+		SendPacket();
+
 		break;
 	}
 	case STATE_END:

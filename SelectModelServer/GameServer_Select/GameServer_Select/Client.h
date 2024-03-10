@@ -26,7 +26,7 @@ public://일반함수
 	
 public://Getter Setter
 	const SOCKETINFO* GetSocketInfo() { return &m_tSockInfo; }
-	const S2C_PACKET_PLAYER_TRANSFORM& GetOtherPlayerTransform() { return m_pPlayer->GetTransform(); }
+	const S2C_PACKET_PLAYER_TRANSFORM& GetOtherPlayerTransform();
 
 	void SetOtherClient(CClient* pOtherClient) { m_pOtherClient = pOtherClient; }
 
