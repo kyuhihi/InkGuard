@@ -3,6 +3,7 @@
 
 #include "PlayerNetwork.h"
 #include "MyNetWorking/MyNetworkMgr.h"
+#include "CustomFunctional.h"
 
 // Sets default values for this component's properties
 UPlayerNetwork::UPlayerNetwork()
@@ -40,6 +41,8 @@ void UPlayerNetwork::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		m_pNetworkMgr = MyNetworkMgr::GetInstance();
 	}
 
+	CheckGameStart();
+
 	SendPlayerTransform(DeltaTime);
 	RecvPlayerTransform(DeltaTime);
 
@@ -49,8 +52,19 @@ void UPlayerNetwork::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 }
 
 #pragma region Packet
+
+void UPlayerNetwork::CheckGameStart()
+{
+	if (m_bGameStart)
+		return;
+
+	m_bGameStart = m_pNetworkMgr->RecvGameStart();
+}
+
 void UPlayerNetwork::SendPlayerTransform(float DeltaTime)
 {
+	if (!m_bGameStart)
+		return;
 	FVector vPlayerPosition{ m_tPlayerStruct.pPlayer->GetActorLocation() };
 	FRotator tPlayerRotation{ m_tPlayerStruct.pPlayer->GetActorRotation() };
 	FVector vPlayerVelocity{ m_tPlayerStruct.pPlayer->GetVelocity() };
@@ -64,13 +78,19 @@ void UPlayerNetwork::SendPlayerTransform(float DeltaTime)
 
 void UPlayerNetwork::RecvPlayerTransform(float DeltaTime)
 {
-	if (!m_pNetworkMgr->GetSyncTime())
+	if (!m_pNetworkMgr->GetSyncTime() || !m_bGameStart)
 		return;
 
 	S2C_PACKET_PLAYER_TRANSFORM tRecvPacket;
 
 	if (!m_pNetworkMgr->RecvPlayerTransform(tRecvPacket))
 		return;
+
+	m_tPlayerStruct.pPlayer->SetActorLocation(UCustomFunctional::float3_To_FVector(tRecvPacket.vPosition),false,nullptr,ETeleportType::TeleportPhysics);
+	
+	FRotator PlayerRotation(m_tPlayerStruct.pPlayer->GetActorRotation());
+	PlayerRotation.Yaw = tRecvPacket.fYaw;
+	m_tPlayerStruct.pPlayer->SetActorRotation(PlayerRotation);
 
 	m_fSyncTimer = 0.f;
 }

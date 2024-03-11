@@ -35,6 +35,8 @@ private:
 	void Tidy();
 
 public:
+	const bool RecvGameStart();
+
 	void SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform);
 	void SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const FVector& vPlayerVelocity);
 

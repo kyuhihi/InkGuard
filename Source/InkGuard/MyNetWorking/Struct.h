@@ -21,6 +21,11 @@ struct C2S_PACKET_PLAYER_TRANSFORM
 
 //------------------------------------------------
 
+struct S2C_PACKET_GAMESTART
+{
+	bool bStart = false;
+};
+
 struct S2C_PACKET_PLAYER_TRANSFORM
 {
 	XMFLOAT3 vPosition = XMFLOAT3();

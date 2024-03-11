@@ -62,11 +62,7 @@ int main(int argc, char* argv[])
 		FD_SET(listen_sock, &ReadSet);	// ReadSet에 관찰 대상인 ListenSocket을 등록한다.
 		
 		for (int i = 0; i < nTotalSockets; i++) {
-			const CClient::SOCKETINFO* pSockInfo = ClientArray[i]->GetSocketInfo();
-			if (pSockInfo->recvbytes > pSockInfo->sendbytes)
-				FD_SET(pSockInfo->sock, &WriteSet);	// 해당 소켓에 대해 데이터를 보내야하는 타이밍이다?-> WriteSet에 추가
-			else
-				FD_SET(pSockInfo->sock, &ReadSet);		// 해당 소켓에 대해 데이터를 받아야하는 타이밍이다?-> ReadSet에 추가
+			ClientArray[i]->PutInReadOrWriteSet(ReadSet, WriteSet);
 		}
 
 		// select()

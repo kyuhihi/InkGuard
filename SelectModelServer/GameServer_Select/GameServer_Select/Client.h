@@ -9,11 +9,11 @@ public:
 	struct SOCKETINFO
 	{
 		SOCKET sock;
-		
-		int recvbytes;
+		bool bMatchMakingSuccess = false;
 
 		int totalSendLen;// 총 보내야하는 길이
 		int sendbytes;
+		char* cBuf = nullptr;
 	};
 
 public:
@@ -23,18 +23,21 @@ public:
 public://일반함수
 	void Initialize(SOCKET sock);
 	void Release();
-	
-public://Getter Setter
+
+	void PutInReadOrWriteSet(const fd_set& ReadSet, const fd_set& WriteSet);
+
+public:	//Getter Setter
 	const SOCKETINFO* GetSocketInfo() { return &m_tSockInfo; }
-	const S2C_PACKET_PLAYER_TRANSFORM& GetOtherPlayerTransform();
+	const S2C_PACKET_PLAYER_TRANSFORM GetOtherPlayerTransform() { return m_pPlayer->GetTransform(); }
 
-	void SetOtherClient(CClient* pOtherClient) { m_pOtherClient = pOtherClient; }
+	void SetOtherClient(CClient* pOtherClient);
+	void SetClientState(const CLIENT_STATE eNewState) { m_eState = eNewState; }
 
-public:		//Packet
+public:		//Public Packet
 	bool RecvPacket();
 	bool SendPacket();
 
-private:	//Packet
+private:	//Private Packet
 	void ConductPacket(const CPacket& Packet);
 
 private:

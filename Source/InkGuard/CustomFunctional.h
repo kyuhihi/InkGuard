@@ -17,5 +17,6 @@ class INKGUARD_API UCustomFunctional : public UObject
 
 public:
 	static const XMFLOAT3 FVector_To_float3(const FVector& vSource);
+	static const FVector float3_To_FVector(const _float3& vSource);
 	
 };

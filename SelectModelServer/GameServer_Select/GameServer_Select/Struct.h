@@ -2,6 +2,7 @@
 #include "Common.h"
 #include "Define.h"
 
+//------------------------------------------------
 struct C2S_PACKET_PLAYER_TRANSFORM
 {
 	short sPacketType = PACKET_TRANSFORM;
@@ -12,6 +13,12 @@ struct C2S_PACKET_PLAYER_TRANSFORM
 	float fYaw = 0.f;
 };
 
+//------------------------------------------------
+
+struct S2C_PACKET_GAMESTART
+{
+	bool bStart = false;
+};
 
 struct S2C_PACKET_PLAYER_TRANSFORM
 {
@@ -19,3 +26,5 @@ struct S2C_PACKET_PLAYER_TRANSFORM
 	XMFLOAT3 vVelocity = XMFLOAT3();
 	float fYaw = 0.f;
 };
+
+//------------------------------------------------

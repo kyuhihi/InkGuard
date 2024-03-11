@@ -33,6 +33,7 @@ public:
 	void SetPlayer(FPlayerStruct tPlayerData);
 
 private:
+	void CheckGameStart();
 	void SendPlayerTransform(float DeltaTime);
 	void RecvPlayerTransform(float DeltaTime);
 
@@ -40,4 +41,6 @@ private:
 	MyNetworkMgr* m_pNetworkMgr = nullptr;
 	FPlayerStruct m_tPlayerStruct; //Player->True
 	float m_fSyncTimer = 0.f;
+	
+	bool m_bGameStart = false;
 };

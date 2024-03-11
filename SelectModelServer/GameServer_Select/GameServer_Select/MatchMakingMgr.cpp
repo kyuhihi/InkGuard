@@ -25,10 +25,10 @@ bool CMatchMakingMgr::CheckMatchMakingPossible()
 
 	bool bMatchSuccess = false;
 	int i{ 0 }, j{ 0 };
-	for (int i = 0; i< m_WaitingClientVec.size(); ++i)
+	for (i = 0; i< m_WaitingClientVec.size(); ++i)
 	{
 		CClient* pSourClient = m_WaitingClientVec[i];
-		for (int j = 0; j < m_WaitingClientVec.size(); ++j)
+		for (j = 0; j < m_WaitingClientVec.size(); ++j)
 		{
 			CClient* pDestClient = m_WaitingClientVec[j];
 			if (i == j)

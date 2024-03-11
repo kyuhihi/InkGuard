@@ -23,7 +23,7 @@ void err_display(const char* msg)
 		NULL, WSAGetLastError(),
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		(char*)&lpMsgBuf, 0, NULL);
-	printf("[%s] %s\n", msg, (char*)lpMsgBuf);
+	printf("[%s] %s %d\n", msg, (char*)lpMsgBuf, WSAGetLastError());
 	LocalFree(lpMsgBuf);
 }
 
@@ -36,6 +36,6 @@ void err_display(int errcode)
 		NULL, errcode,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		(char*)&lpMsgBuf, 0, NULL);
-	printf("[오류] %s\n", (char*)lpMsgBuf);
+	printf("[오류] %s %d\n", (char*)lpMsgBuf , WSAGetLastError());
 	LocalFree(lpMsgBuf);
 }

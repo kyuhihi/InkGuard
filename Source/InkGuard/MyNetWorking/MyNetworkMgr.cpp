@@ -55,6 +55,24 @@ void MyNetworkMgr::Tidy()
 #pragma region Packet
 
 #pragma region SendPlayerTransform
+const bool MyNetworkMgr::RecvGameStart()
+{
+	if (!m_tClientSock.bConnectSuccess)
+		return false;
+
+	S2C_PACKET_GAMESTART tGameStartPacket;
+	
+	int retval{ 0 };
+	retval = recv(m_tClientSock.sock, (char*)&tGameStartPacket, sizeof(S2C_PACKET_GAMESTART), MSG_WAITALL);
+	if ((retval == SOCKET_ERROR) || (retval != sizeof(S2C_PACKET_GAMESTART))) {
+		err_quit("RecvGameStart");
+		Tidy();
+		return false;
+	}
+
+	return tGameStartPacket.bStart;
+}
+
 void MyNetworkMgr::SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform)
 {
 	if (!m_tClientSock.bConnectSuccess)
