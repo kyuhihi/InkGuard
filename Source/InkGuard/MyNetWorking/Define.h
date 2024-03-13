@@ -1,7 +1,7 @@
 #pragma once
 
 #define SERVER_PORT		7777
-#define SERVER_SYNC_TIME 0.003f
+#define SERVER_SYNC_TIME 0.002f
 
 #define _float3	XMFLOAT3
 #define _float4 XMFLOAT4

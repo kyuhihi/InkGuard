@@ -1,6 +1,7 @@
 #pragma once
 
 // 여기서 선언하면 언리얼에선 안보임.
+#pragma pack(1)
 struct SOCKETINFO
 {
 	SOCKET sock;
@@ -8,28 +9,28 @@ struct SOCKETINFO
 };
 
 //------------------------------------------------
-
+#pragma pack(1)
 struct C2S_PACKET_PLAYER_TRANSFORM
 {
 	short sPacketType = PACKET_TRANSFORM;
 	bool bRecvTransform = false;
 
 	XMFLOAT3 vPosition = XMFLOAT3();
-	XMFLOAT3 vVelocity = XMFLOAT3();
+	float fSpeed = 0.f;
+	float fVelocityZ = 0.f;
 	float fYaw = 0.f;
 };
 
 //------------------------------------------------
 
-struct S2C_PACKET_GAMESTART
+#pragma pack(1)
+struct S2C_PACKET_PLAYER_TRANSFORM //게임 플레이 정보도 같이 보내준다.
 {
-	bool bStart = false;
-};
+	char cGamePlay = GAME_PLAY::GAME_END;
 
-struct S2C_PACKET_PLAYER_TRANSFORM
-{
 	XMFLOAT3 vPosition = XMFLOAT3();
-	XMFLOAT3 vVelocity = XMFLOAT3();
+	float fSpeed = 0.f;
+	float fVelocityZ = 0.f;
 	float fYaw = 0.f;
 };
 

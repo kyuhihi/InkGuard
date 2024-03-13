@@ -35,10 +35,10 @@ private:
 	void Tidy();
 
 public:
-	const bool RecvGameStart();
+	const GAME_PLAY RecvGameStart();
 
 	void SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform);
-	void SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const FVector& vPlayerVelocity);
+	void SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed);
 
 	bool RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket);
 

@@ -25,8 +25,11 @@ public:
 	AActor* pPlayer = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bPlayer = false;
+	AActor* pEnemyBaku = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bRedTeam = false;
+	float fVelocityZ = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float fSpeed = 0.f;
 };

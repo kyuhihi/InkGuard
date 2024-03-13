@@ -37,9 +37,9 @@ void CClient::Release()
 	// 소켓 닫기
 	closesocket(m_tSockInfo.sock);
 
-	if(m_pOtherClient)
+	if (m_pOtherClient) {
 		m_pOtherClient->SetOtherClient(nullptr);
-
+	}
 	delete m_pPlayer;
 	m_pPlayer = nullptr;
 
@@ -60,8 +60,8 @@ void CClient::SetOtherClient(CClient* pOtherClient)
 { 
 	m_pOtherClient = pOtherClient;
 	if (pOtherClient) {
-		S2C_PACKET_GAMESTART tGameStartPacket;
-		tGameStartPacket.bStart = true;
+		S2C_PACKET_PLAYER_TRANSFORM tGameStartPacket;
+		tGameStartPacket.cGamePlay = m_tSockInfo.eGamePlayTeam;
 
 		m_tSockInfo.totalSendLen = sizeof(tGameStartPacket);
 		m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
@@ -71,10 +71,20 @@ void CClient::SetOtherClient(CClient* pOtherClient)
 		m_tSockInfo.bMatchMakingSuccess = true;
 
 	}
-	else
-	{
+	else{ //통신 끊긴것.
 		SetClientState(STATE_READY);
 		m_tSockInfo.bMatchMakingSuccess = false;
+		
+
+		S2C_PACKET_PLAYER_TRANSFORM tGameEndPacket;
+
+		m_tSockInfo.totalSendLen = sizeof(tGameEndPacket);
+		m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
+
+
+		memcpy(m_tSockInfo.cBuf, &tGameEndPacket, m_tSockInfo.totalSendLen);
+		m_tSockInfo.eGamePlayTeam = GAME_PLAY::GAME_END;
+		
 	}
 }
 
@@ -83,10 +93,8 @@ void CClient::SetOtherClient(CClient* pOtherClient)
 bool CClient::RecvPacket()
 {
 	CPacket tNewPacket(m_eState);
-	C2S_PACKET_PLAYER_TRANSFORM tTestPacket;
 
 	int retval = recv(m_tSockInfo.sock, tNewPacket.m_pBuf, tNewPacket.m_iBufferSize, 0);
-	//int retval = recv(m_tSockInfo.sock, (char*)&tTestPacket, sizeof(tTestPacket), 0);
 	
 	if (retval == SOCKET_ERROR) {
 		err_display("recv()");
@@ -147,6 +155,7 @@ void CClient::ConductPacket(const CPacket& Packet)
 		if ((pPacket->bRecvTransform) && (m_tSockInfo.sendbytes == 0))// 받아야하는 타이밍이고 보내고있지 않는다면.
 		{
 			S2C_PACKET_PLAYER_TRANSFORM tSendPacket = m_pOtherClient->GetOtherPlayerTransform();
+			tSendPacket.cGamePlay = m_tSockInfo.eGamePlayTeam;// 게임플레이는 본인걸로 채운다.
 			m_tSockInfo.totalSendLen = sizeof(tSendPacket);
 			m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
 			memcpy(m_tSockInfo.cBuf, &tSendPacket, m_tSockInfo.totalSendLen);

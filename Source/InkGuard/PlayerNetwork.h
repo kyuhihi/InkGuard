@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CustomStructs.h"
+#include "MyNetWorking/Include.h"
 #include "Components/ActorComponent.h"
 #include "PlayerNetwork.generated.h"
 
@@ -30,7 +31,10 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
-	void SetPlayer(FPlayerStruct tPlayerData);
+	void SetPlayerStruct(FPlayerStruct tPlayerData);
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	const FPlayerStruct& GetPlayerStruct();
 
 private:
 	void CheckGameStart();
@@ -43,4 +47,6 @@ private:
 	float m_fSyncTimer = 0.f;
 	
 	bool m_bGameStart = false;
+
+	GAME_PLAY m_eGameTeam = GAME_PLAY::GAME_END;
 };

@@ -26,6 +26,7 @@ void UPlayerNetwork::BeginPlay()
 {
 	Super::BeginPlay();
 	m_pNetworkMgr = MyNetworkMgr::GetInstance();
+
 	// ...
 	
 }
@@ -58,22 +59,25 @@ void UPlayerNetwork::CheckGameStart()
 	if (m_bGameStart)
 		return;
 
-	m_bGameStart = m_pNetworkMgr->RecvGameStart();
+	m_eGameTeam = m_pNetworkMgr->RecvGameStart();
+	if (m_eGameTeam != GAME_PLAY::GAME_END)
+		m_bGameStart = true;
 }
 
 void UPlayerNetwork::SendPlayerTransform(float DeltaTime)
 {
 	if (!m_bGameStart)
 		return;
+
 	FVector vPlayerPosition{ m_tPlayerStruct.pPlayer->GetActorLocation() };
 	FRotator tPlayerRotation{ m_tPlayerStruct.pPlayer->GetActorRotation() };
 	FVector vPlayerVelocity{ m_tPlayerStruct.pPlayer->GetVelocity() };
-
+	
 	if (m_fSyncTimer > SERVER_SYNC_TIME){
 		m_pNetworkMgr->SetSyncTime(true);
 	}
 
-	m_pNetworkMgr->SendPlayerTransform(vPlayerPosition, tPlayerRotation, vPlayerVelocity);
+	m_pNetworkMgr->SendPlayerTransform(vPlayerPosition, tPlayerRotation, vPlayerVelocity.Z, vPlayerVelocity.Length());
 }
 
 void UPlayerNetwork::RecvPlayerTransform(float DeltaTime)
@@ -86,18 +90,32 @@ void UPlayerNetwork::RecvPlayerTransform(float DeltaTime)
 	if (!m_pNetworkMgr->RecvPlayerTransform(tRecvPacket))
 		return;
 
-	m_tPlayerStruct.pPlayer->SetActorLocation(UCustomFunctional::float3_To_FVector(tRecvPacket.vPosition),false,nullptr,ETeleportType::TeleportPhysics);
-	
-	FRotator PlayerRotation(m_tPlayerStruct.pPlayer->GetActorRotation());
+
+
+	UE_LOG(InkGuardNetErr, Log, TEXT("[X]: %f [Y]: %f [Z]: %f"), tRecvPacket.vPosition.x, tRecvPacket.vPosition.y, tRecvPacket.vPosition.z);
+
+	m_tPlayerStruct.pEnemyBaku->SetActorLocation(UCustomFunctional::float3_To_FVector(tRecvPacket.vPosition),false,nullptr,ETeleportType::ResetPhysics);
+
+	FRotator PlayerRotation(m_tPlayerStruct.pEnemyBaku->GetActorRotation());
 	PlayerRotation.Yaw = tRecvPacket.fYaw;
-	m_tPlayerStruct.pPlayer->SetActorRotation(PlayerRotation);
+	m_tPlayerStruct.pEnemyBaku->SetActorRotation(PlayerRotation);
+	m_tPlayerStruct.fSpeed = tRecvPacket.fSpeed;
+	m_tPlayerStruct.fVelocityZ= tRecvPacket.fVelocityZ;
+
+
+
 
 	m_fSyncTimer = 0.f;
 }
 
 #pragma endregion
 
-void UPlayerNetwork::SetPlayer(FPlayerStruct tPlayerData)
+void UPlayerNetwork::SetPlayerStruct(FPlayerStruct tPlayerData)
 {
 	m_tPlayerStruct = tPlayerData;
+}
+
+const FPlayerStruct& UPlayerNetwork::GetPlayerStruct()
+{
+	return m_tPlayerStruct;
 }

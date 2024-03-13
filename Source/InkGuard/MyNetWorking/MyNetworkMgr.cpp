@@ -55,22 +55,22 @@ void MyNetworkMgr::Tidy()
 #pragma region Packet
 
 #pragma region SendPlayerTransform
-const bool MyNetworkMgr::RecvGameStart()
+const GAME_PLAY MyNetworkMgr::RecvGameStart()
 {
 	if (!m_tClientSock.bConnectSuccess)
-		return false;
+		return GAME_END;
 
-	S2C_PACKET_GAMESTART tGameStartPacket;
+	S2C_PACKET_PLAYER_TRANSFORM tGameStartPacket;
 	
 	int retval{ 0 };
-	retval = recv(m_tClientSock.sock, (char*)&tGameStartPacket, sizeof(S2C_PACKET_GAMESTART), MSG_WAITALL);
-	if ((retval == SOCKET_ERROR) || (retval != sizeof(S2C_PACKET_GAMESTART))) {
+	retval = recv(m_tClientSock.sock, (char*)&tGameStartPacket, sizeof(tGameStartPacket), MSG_WAITALL);
+	if ((retval == SOCKET_ERROR) || (retval != sizeof(tGameStartPacket))) {
 		err_quit("RecvGameStart");
 		Tidy();
-		return false;
+		return GAME_END;
 	}
 
-	return tGameStartPacket.bStart;
+	return (GAME_PLAY)tGameStartPacket.cGamePlay;
 }
 
 void MyNetworkMgr::SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform)
@@ -91,7 +91,7 @@ void MyNetworkMgr::SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform
 
 }
 
-void MyNetworkMgr::SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const FVector& vPlayerVelocity)
+void MyNetworkMgr::SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed)
 {
 	if (!m_tClientSock.bConnectSuccess)
 		return;
@@ -101,13 +101,14 @@ void MyNetworkMgr::SendPlayerTransform(const FVector& vPlayerPosition, const FRo
 
 	ZeroMemory(&tTransformPacket, tPacketSize);
 
-	tTransformPacket.fYaw = vPlayerRotation.Yaw;
 	tTransformPacket.vPosition = UCustomFunctional::FVector_To_float3(vPlayerPosition);
-	tTransformPacket.vVelocity = UCustomFunctional::FVector_To_float3(vPlayerVelocity);
+	tTransformPacket.fYaw = vPlayerRotation.Yaw;
+	tTransformPacket.fSpeed = fSpeed;
+	tTransformPacket.fVelocityZ = fVelocityZ;
 	tTransformPacket.bRecvTransform = m_bSyncTime;
 
 	int retval{ 0 };
-	retval = send(m_tClientSock.sock, reinterpret_cast<char*>(&tTransformPacket), tPacketSize,0);
+	retval = send(m_tClientSock.sock, reinterpret_cast<char*>(&tTransformPacket), tPacketSize, 0);
 	if ((retval == SOCKET_ERROR) || (retval != tPacketSize))
 	{
 		err_quit("SendPlayerTransform");
@@ -124,7 +125,9 @@ bool MyNetworkMgr::RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket)
 
 	int retval{ 0 };
 	retval = recv(m_tClientSock.sock, (char*)&tOutPacket, sizeof(S2C_PACKET_PLAYER_TRANSFORM), MSG_WAITALL);
-	if ((retval == SOCKET_ERROR) || (retval != sizeof(S2C_PACKET_PLAYER_TRANSFORM))) {
+	if ((retval == SOCKET_ERROR) || 
+		(retval != sizeof(S2C_PACKET_PLAYER_TRANSFORM))||
+		(tOutPacket.cGamePlay == GAME_PLAY::GAME_END)) {
 		err_quit("RecvPlayerTransform");
 		Tidy();
 		return false;

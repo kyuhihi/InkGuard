@@ -1,6 +1,11 @@
 #pragma once
-enum PACKET_TYPE
-{
+enum PACKET_TYPE {
 	PACKET_TRANSFORM,
 	PACKET_NONE,
+};
+
+enum GAME_PLAY {
+	GAME_RED_TEAM,
+	GAME_END,
+	GAME_BLUE_TEAM
 };

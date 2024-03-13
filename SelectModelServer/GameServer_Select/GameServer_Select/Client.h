@@ -10,6 +10,7 @@ public:
 	{
 		SOCKET sock;
 		bool bMatchMakingSuccess = false;
+		GAME_PLAY eGamePlayTeam = GAME_END;// 팀이 레드인지 블루인지
 
 		int totalSendLen;// 총 보내야하는 길이
 		int sendbytes;
@@ -30,8 +31,10 @@ public:	//Getter Setter
 	const SOCKETINFO* GetSocketInfo() { return &m_tSockInfo; }
 	const S2C_PACKET_PLAYER_TRANSFORM GetOtherPlayerTransform() { return m_pPlayer->GetTransform(); }
 
+	void SetTeam(const GAME_PLAY& eTeam) { m_tSockInfo.eGamePlayTeam = eTeam; }
 	void SetOtherClient(CClient* pOtherClient);
 	void SetClientState(const CLIENT_STATE eNewState) { m_eState = eNewState; }
+	
 
 public:		//Public Packet
 	bool RecvPacket();

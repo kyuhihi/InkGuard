@@ -34,8 +34,12 @@ bool CMatchMakingMgr::CheckMatchMakingPossible()
 			if (i == j)
 				continue;
 
+			pSourClient->SetTeam(GAME_RED_TEAM);
 			pSourClient->SetOtherClient(pDestClient);
+			
+			pDestClient->SetTeam(GAME_BLUE_TEAM);
 			pDestClient->SetOtherClient(pSourClient);
+
 			bMatchSuccess = true;
 			break;
 		}
