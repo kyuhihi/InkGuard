@@ -1,5 +1,6 @@
 #include "MyNetworkMgr.h"
 #include "../InkGuard.h"
+#include "../CustomFunctional.h"
 
 MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 
@@ -23,8 +24,8 @@ void MyNetworkMgr::Initialize()
 		return;
 
 	// 家南 积己
-	m_ClientSock = socket(AF_INET, SOCK_STREAM, 0);
-	if (m_ClientSock == INVALID_SOCKET) err_quit("socket()");
+	m_tClientSock.sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (m_tClientSock.sock == INVALID_SOCKET) err_quit("socket()");
 
 	// connect()
 	struct sockaddr_in serveraddr;
@@ -32,18 +33,111 @@ void MyNetworkMgr::Initialize()
 	serveraddr.sin_family = AF_INET;
 	inet_pton(AF_INET, SERVERIP, &serveraddr.sin_addr);
 	serveraddr.sin_port = htons(SERVER_PORT);
-	retval = connect(m_ClientSock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
-	if (retval == SOCKET_ERROR) err_quit("connect()");
-
+	retval = connect(m_tClientSock.sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 	
-	return;
+	if (retval == SOCKET_ERROR) {
+		err_quit("connect()");
+		Tidy();
+		return;
+	}
+	m_tClientSock.bConnectSuccess = true;
+
 }
 
 void MyNetworkMgr::Tidy()
 {// 家南 摧扁
-	closesocket(m_ClientSock);
+	closesocket(m_tClientSock.sock);
+	m_tClientSock.bConnectSuccess = false;
 
 	// 扩加 辆丰
 	WSACleanup();
 }
 
+#pragma region Packet
+
+#pragma region SendPlayerTransform
+const GAME_PLAY MyNetworkMgr::RecvGameStart()
+{
+	if (!m_tClientSock.bConnectSuccess)
+		return GAME_END;
+
+	S2C_PACKET_PLAYER_TRANSFORM tGameStartPacket;
+	
+	int retval{ 0 };
+	retval = recv(m_tClientSock.sock, (char*)&tGameStartPacket, sizeof(tGameStartPacket), MSG_WAITALL);
+	if ((retval == SOCKET_ERROR) || (retval != sizeof(tGameStartPacket))) {
+		err_quit("RecvGameStart");
+		Tidy();
+		return GAME_END;
+	}
+
+	return (GAME_PLAY)tGameStartPacket.cGamePlay;
+}
+
+void MyNetworkMgr::SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform)
+{
+	if (!m_tClientSock.bConnectSuccess)
+		return;
+
+	const unsigned long long& tPacketSize = sizeof(tNewTransform);
+
+	int retval{ 0 };
+	retval = send(m_tClientSock.sock, reinterpret_cast<char*>(&tNewTransform), sizeof(tPacketSize), 0);
+	if ((retval == SOCKET_ERROR) || (retval != tPacketSize))
+	{
+		err_quit("SendPlayerTransform");
+		Tidy();
+		return;
+	}
+
+}
+
+void MyNetworkMgr::SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed)
+{
+	if (!m_tClientSock.bConnectSuccess)
+		return;
+
+	C2S_PACKET_PLAYER_TRANSFORM tTransformPacket;
+	const unsigned long long& tPacketSize = sizeof(tTransformPacket);
+
+	ZeroMemory(&tTransformPacket, tPacketSize);
+
+	tTransformPacket.vPosition = UCustomFunctional::FVector_To_float3(vPlayerPosition);
+	tTransformPacket.fYaw = vPlayerRotation.Yaw;
+	tTransformPacket.fSpeed = fSpeed;
+	tTransformPacket.fVelocityZ = fVelocityZ;
+	tTransformPacket.bRecvTransform = m_bSyncTime;
+
+	int retval{ 0 };
+	retval = send(m_tClientSock.sock, reinterpret_cast<char*>(&tTransformPacket), tPacketSize, 0);
+	if ((retval == SOCKET_ERROR) || (retval != tPacketSize))
+	{
+		err_quit("SendPlayerTransform");
+		Tidy();
+		return;
+	}
+
+}
+
+bool MyNetworkMgr::RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket)
+{
+	if (!m_tClientSock.bConnectSuccess || !m_bSyncTime)
+		return false;
+
+	int retval{ 0 };
+	retval = recv(m_tClientSock.sock, (char*)&tOutPacket, sizeof(S2C_PACKET_PLAYER_TRANSFORM), MSG_WAITALL);
+	if ((retval == SOCKET_ERROR) || 
+		(retval != sizeof(S2C_PACKET_PLAYER_TRANSFORM))||
+		(tOutPacket.cGamePlay == GAME_PLAY::GAME_END)) {
+		err_quit("RecvPlayerTransform");
+		Tidy();
+		return false;
+	}
+
+	return true;
+}
+#pragma endregion
+
+
+
+#pragma endregion
