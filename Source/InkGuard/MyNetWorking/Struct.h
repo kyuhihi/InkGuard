@@ -5,7 +5,7 @@
 struct SOCKETINFO
 {
 	SOCKET sock;
-	bool bConnectSuccess = false;
+	bool bConnectSuccess = true;
 };
 
 //------------------------------------------------

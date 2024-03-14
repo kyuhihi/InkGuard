@@ -6,12 +6,12 @@ MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 
 MyNetworkMgr::MyNetworkMgr()
 {
-	//Initialize();
+	Initialize();
 }
 
 MyNetworkMgr::~MyNetworkMgr()
 {
-	//Tidy();
+	Tidy();
 }
 
 void MyNetworkMgr::Initialize()
@@ -40,7 +40,6 @@ void MyNetworkMgr::Initialize()
 		Tidy();
 		return;
 	}
-	m_tClientSock.bConnectSuccess = true;
 
 }
 
