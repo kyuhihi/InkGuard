@@ -42,6 +42,8 @@ void MyNetworkMgr::Initialize()
 	}
 	m_tClientSock.bConnectSuccess = true;
 
+	m_tClientSock.bConnectSuccess = true;
+
 }
 
 void MyNetworkMgr::Tidy()
