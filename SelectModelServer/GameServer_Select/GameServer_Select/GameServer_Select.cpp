@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 
 	// bind()
 	struct sockaddr_in serveraddr;
-	memset(&serveraddr, 0, sizeof(serveraddr));
+	memset(&			serveraddr, 0, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serveraddr.sin_port = htons(SERVER_PORT);
@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 		FD_SET(listen_sock, &ReadSet);	// ReadSet에 관찰 대상인 ListenSocket을 등록한다.
 		
 		for (int i = 0; i < nTotalSockets; i++) {
-			ClientArray[i]->PutInReadOrWriteSet(ReadSet, WriteSet);
+			ClientArray[i]->PutInReadOrWriteS		et(ReadSet, WriteSet);
 		}
 
 		// select()
