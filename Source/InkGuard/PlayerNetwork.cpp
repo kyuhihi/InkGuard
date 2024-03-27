@@ -3,6 +3,7 @@
 
 #include "PlayerNetwork.h"
 #include "MyNetWorking/MyNetworkMgr.h"
+#include "GameFramework/Character.h"
 #include "CustomFunctional.h"
 
 // Sets default values for this component's properties
@@ -35,20 +36,17 @@ void UPlayerNetwork::BeginPlay()
 void UPlayerNetwork::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	m_fSyncTimer += DeltaTime;
 
+	UE_LOG(InkGuardNetErr, Warning, TEXT("%f"), DeltaTime);
+
+	m_fSyncTimer += DeltaTime;
+	
 	if (!m_pNetworkMgr)
 	{
 		m_pNetworkMgr = MyNetworkMgr::GetInstance();
 	}
 
 	CheckGameStart();
-
-	SendPlayerTransform(DeltaTime);
-	RecvPlayerTransform(DeltaTime);
-
-
-	m_pNetworkMgr->SetSyncTime(false);
 
 }
 
@@ -73,10 +71,11 @@ void UPlayerNetwork::SendPlayerTransform(float DeltaTime)
 	FRotator tPlayerRotation{ m_tPlayerStruct.pPlayer->GetActorRotation() };
 	FVector vPlayerVelocity{ m_tPlayerStruct.pPlayer->GetVelocity() };
 	
+	
 	if (m_fSyncTimer > SERVER_SYNC_TIME){
 		m_pNetworkMgr->SetSyncTime(true);
 	}
-
+	
 	m_pNetworkMgr->SendPlayerTransform(vPlayerPosition, tPlayerRotation, vPlayerVelocity.Z, vPlayerVelocity.Length());
 }
 
@@ -92,20 +91,17 @@ void UPlayerNetwork::RecvPlayerTransform(float DeltaTime)
 
 
 
-	UE_LOG(InkGuardNetErr, Log, TEXT("[X]: %f [Y]: %f [Z]: %f"), tRecvPacket.vPosition.x, tRecvPacket.vPosition.y, tRecvPacket.vPosition.z);
+	//UE_LOG(InkGuardNetErr, Log, TEXT("[X]: %f [Y]: %f [Z]: %f"), tRecvPacket.vPosition.x, tRecvPacket.vPosition.y, tRecvPacket.vPosition.z);
 
-	m_tPlayerStruct.pEnemyBaku->SetActorLocation(UCustomFunctional::float3_To_FVector(tRecvPacket.vPosition),false,nullptr,ETeleportType::ResetPhysics);
+	GetOwner()->SetActorLocation(UCustomFunctional::float3_To_FVector(tRecvPacket.vPosition),false,nullptr,ETeleportType::ResetPhysics);
 
-	FRotator PlayerRotation(m_tPlayerStruct.pEnemyBaku->GetActorRotation());
+	FRotator PlayerRotation(GetOwner()->GetActorRotation());
 	PlayerRotation.Yaw = tRecvPacket.fYaw;
-	m_tPlayerStruct.pEnemyBaku->SetActorRotation(PlayerRotation);
+	GetOwner()->SetActorRotation(PlayerRotation);
 	m_tPlayerStruct.fSpeed = tRecvPacket.fSpeed;
 	m_tPlayerStruct.fVelocityZ= tRecvPacket.fVelocityZ;
 
-
-
-
-	m_fSyncTimer = 0.f;
+	m_fSyncTimer = 0.f;// recv해야하는 타이밍인지 초기화.
 }
 
 #pragma endregion
@@ -118,4 +114,9 @@ void UPlayerNetwork::SetPlayerStruct(FPlayerStruct tPlayerData)
 const FPlayerStruct& UPlayerNetwork::GetPlayerStruct()
 {
 	return m_tPlayerStruct;
+}
+
+void UPlayerNetwork::TidyNetworkTickRoutine()
+{
+	m_pNetworkMgr->SetSyncTime(false);
 }

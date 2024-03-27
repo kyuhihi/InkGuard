@@ -22,10 +22,7 @@ struct FPlayerStruct
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* pPlayer = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* pEnemyBaku = nullptr;
+	APawn* pPlayer = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float fVelocityZ = 0.f;
