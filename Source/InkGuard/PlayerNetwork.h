@@ -36,10 +36,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	const FPlayerStruct& GetPlayerStruct();
 
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void TidyNetworkTickRoutine();
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void SendPlayerTransform(float DeltaTime);
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void RecvPlayerTransform(float DeltaTime);
+
 private:
 	void CheckGameStart();
-	void SendPlayerTransform(float DeltaTime);
-	void RecvPlayerTransform(float DeltaTime);
+
 
 private:
 	MyNetworkMgr* m_pNetworkMgr = nullptr;
