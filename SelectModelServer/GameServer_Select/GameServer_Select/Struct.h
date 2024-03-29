@@ -16,6 +16,13 @@ struct C2S_PACKET_PLAYER_TRANSFORM
 	float fYaw = 0.f;
 };
 
+#pragma pack(1)
+struct C2S_PACKET_PLAYER_INPUT
+{
+	short sPacketType = PACKET_INPUT;
+	bool bInputs[PLAYER_INPUT::INPUT_END];
+};
+
 //------------------------------------------------
 #pragma pack(1)
 struct S2C_PACKET_PLAYER_TRANSFORM {
@@ -26,4 +33,11 @@ struct S2C_PACKET_PLAYER_TRANSFORM {
 	float fVelocityZ = 0.f;
 	float fYaw = 0.f;
 };
+
+#pragma pack(1)
+struct S2C_PACKET_PLAYER_INPUT
+{
+	bool bInputs[PLAYER_INPUT::INPUT_END];
+};
+
 //------------------------------------------------

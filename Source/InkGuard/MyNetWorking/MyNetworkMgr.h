@@ -41,6 +41,9 @@ public:
 	void SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed);
 
 	bool RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket);
+	
+	void SendPlayerInputData(C2S_PACKET_PLAYER_INPUT& tBakuInputData);
+	bool RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket);
 
 public:
 	void SetSyncTime(bool bSyncTime) { m_bSyncTime = bSyncTime; }
