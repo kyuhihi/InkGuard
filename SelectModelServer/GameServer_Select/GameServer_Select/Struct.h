@@ -21,6 +21,7 @@ struct C2S_PACKET_PLAYER_INPUT
 {
 	short sPacketType = PACKET_INPUT;
 	bool bInputs[PLAYER_INPUT::INPUT_END];
+	float fMontagePlayTime = 0.f;
 };
 
 //------------------------------------------------
@@ -38,6 +39,7 @@ struct S2C_PACKET_PLAYER_TRANSFORM {
 struct S2C_PACKET_PLAYER_INPUT
 {
 	bool bInputs[PLAYER_INPUT::INPUT_END];
+	float fMontagePlayTime = 0.f;
 };
 
 //------------------------------------------------

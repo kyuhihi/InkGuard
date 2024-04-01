@@ -122,6 +122,7 @@ void UPlayerNetwork::SendPlayerInputData(float DeltaTime, const FPlayerInputStru
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_VAULT] = tBakuInputData.Vault;
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_DODGE] = tBakuInputData.Dodge;
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_SPRINT] = tBakuInputData.Sprint;
+	tSendPacket.fMontagePlayTime = tBakuInputData.MontagePlayTime;
 
 	//SendPlayerInputData
 	m_pNetworkMgr->SendPlayerInputData(tSendPacket);
@@ -141,6 +142,8 @@ void UPlayerNetwork::RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tO
 		tOutInputs.Vault = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_VAULT];
 		tOutInputs.Dodge = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_DODGE];
 		tOutInputs.Sprint = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_SPRINT];
+		tOutInputs.MontagePlayTime = tRecvPacket.fMontagePlayTime;
+
 	}
 	//UE_LOG(InkGuardNetErr, Warning, TEXT("RecvPlayerInputData"));
 	

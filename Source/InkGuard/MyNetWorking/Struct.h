@@ -26,6 +26,7 @@ struct C2S_PACKET_PLAYER_INPUT
 {
 	short sPacketType = PACKET_INPUT;
 	bool bInputs[PLAYER_INPUT::INPUT_END];
+	float fMontagePlayTime = 0.f;
 };
 
 //------------------------------------------------
@@ -45,6 +46,7 @@ struct S2C_PACKET_PLAYER_TRANSFORM //게임 플레이 정보도 같이 보내준다.
 struct S2C_PACKET_PLAYER_INPUT
 {
 	bool bInputs[PLAYER_INPUT::INPUT_END];
+	float fMontagePlayTime = 0.f;
 };
 
 //------------------------------------------------

@@ -186,7 +186,6 @@ void CClient::SendComplete()
 	delete[] m_tSockInfo.cBuf;
 	m_tSockInfo.cBuf = nullptr;
 
-
 	string strState;
 	switch (m_eState)
 	{

@@ -12,6 +12,6 @@ public:
 
 private:
 	S2C_PACKET_PLAYER_TRANSFORM m_tTransform;
-	S2C_PACKET_PLAYER_INPUT	m_tInputs;
+	S2C_PACKET_PLAYER_INPUT	m_tInputs; //몽타지 실행 시간도 여기 포함.
 };
 

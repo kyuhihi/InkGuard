@@ -16,4 +16,5 @@ void CPlayer::SetInputs(const C2S_PACKET_PLAYER_INPUT& tPacket)
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_VAULT] = tPacket.bInputs[PLAYER_INPUT::INPUT_VAULT];
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_DODGE] = tPacket.bInputs[PLAYER_INPUT::INPUT_DODGE];
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_SPRINT] = tPacket.bInputs[PLAYER_INPUT::INPUT_SPRINT];
+	m_tInputs.fMontagePlayTime = tPacket.fMontagePlayTime;
 }

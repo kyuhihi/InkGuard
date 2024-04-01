@@ -50,4 +50,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Sprint = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MontagePlayTime = 0.f;
 };
