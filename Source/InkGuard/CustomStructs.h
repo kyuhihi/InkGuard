@@ -30,3 +30,27 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float fSpeed = 0.f;
 };
+
+USTRUCT(Atomic, BlueprintType)
+struct FPlayerInputStruct
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool PressingF = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Attack = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Vault = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Dodge = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Sprint = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MontagePlayTime = 0.f;
+};
