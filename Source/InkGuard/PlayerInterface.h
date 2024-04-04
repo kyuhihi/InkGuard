@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "CustomStructs.h"
 #include "PlayerInterface.generated.h"
 
 // This class does not need to be modified.
@@ -25,25 +26,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "KeyPressingEvent")
 	bool AboutKeyPressingF();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "KeyPressingEvent")
+	const FPlayerInputStruct GetPlayerInputData();
+
 };
 
-USTRUCT(Atomic, BlueprintType)
-struct FPlayerInputStruct
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool PressingF = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool Attack = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool Vault = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool Dodge = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool Sprint = false;
-};

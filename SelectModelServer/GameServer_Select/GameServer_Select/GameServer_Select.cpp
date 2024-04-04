@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 		}
 
 		// select()
-		nready = select(0, &ReadSet, &WriteSet, NULL, NULL);
+ 		nready = select(0, &ReadSet, &WriteSet, NULL, NULL);
 		if (nready == SOCKET_ERROR) err_quit("select()");
 		
 		// 소켓 셋 검사(1): 클라이언트 접속 수용

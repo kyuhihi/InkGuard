@@ -138,6 +138,42 @@ bool MyNetworkMgr::RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket)
 
 	return true;
 }
+
+void MyNetworkMgr::SendPlayerInputData(C2S_PACKET_PLAYER_INPUT& tBakuInputData)
+{
+	if (!m_tClientSock.bConnectSuccess)
+		return;
+	int retval{ 0 };
+	unsigned long long llPacketSize(sizeof(tBakuInputData));
+	retval = send(m_tClientSock.sock, reinterpret_cast<char*>(&tBakuInputData), llPacketSize, 0);
+	if ((retval == SOCKET_ERROR) || (retval != llPacketSize))
+	{
+		err_quit("SendPlayerInputData");
+		Tidy();
+		return;
+	}
+}
+
+bool MyNetworkMgr::RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket)
+{
+	if (!m_tClientSock.bConnectSuccess)
+		return false;
+
+	unsigned long long llPacketSize(sizeof(S2C_PACKET_PLAYER_INPUT));
+
+	int retval{ 0 };
+	retval = recv(m_tClientSock.sock, (char*)&tOutPacket, llPacketSize, MSG_WAITALL);
+	if ((retval == SOCKET_ERROR) || (retval != llPacketSize))
+	{
+		err_quit("RecvPlayerInputData");
+		Tidy();
+		return false;
+	}
+
+
+	return true;
+}
+
 #pragma endregion
 
 

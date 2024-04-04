@@ -30,6 +30,7 @@ public://일반함수
 public:	//Getter Setter
 	const SOCKETINFO* GetSocketInfo() { return &m_tSockInfo; }
 	const S2C_PACKET_PLAYER_TRANSFORM GetOtherPlayerTransform() { return m_pPlayer->GetTransform(); }
+	const S2C_PACKET_PLAYER_INPUT GetOtherPlayerInputs() { return m_pPlayer->GetInputs(); }
 
 	void SetTeam(const GAME_PLAY& eTeam) { m_tSockInfo.eGamePlayTeam = eTeam; }
 	void SetOtherClient(CClient* pOtherClient);
@@ -42,6 +43,7 @@ public:		//Public Packet
 
 private:	//Private Packet
 	void ConductPacket(const CPacket& Packet);
+	void SendComplete();
 
 private:
 	SOCKETINFO m_tSockInfo;

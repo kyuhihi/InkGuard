@@ -14,8 +14,7 @@ void CClient::Initialize(SOCKET sock)
 {
 	m_tSockInfo.sock = sock;
 
-	m_tSockInfo.sendbytes = 0;
-	m_tSockInfo.totalSendLen = m_tSockInfo.sendbytes;
+	m_tSockInfo.totalSendLen = m_tSockInfo.sendbytes = 0;
 	
 	SetClientState(STATE_READY);
 	
@@ -69,7 +68,6 @@ void CClient::SetOtherClient(CClient* pOtherClient)
 
 		memcpy(m_tSockInfo.cBuf, &tGameStartPacket, m_tSockInfo.totalSendLen);
 		m_tSockInfo.bMatchMakingSuccess = true;
-
 	}
 	else{ //통신 끊긴것.
 		SetClientState(STATE_READY);
@@ -131,12 +129,8 @@ bool CClient::SendPacket()
 	else {// SendPacket Success
 		m_tSockInfo.sendbytes += retval;
 		if (m_tSockInfo.totalSendLen == m_tSockInfo.sendbytes) {//SEND ALL COMPLETE
-			m_tSockInfo.totalSendLen = m_tSockInfo.sendbytes = 0;
-
-			delete[] m_tSockInfo.cBuf;
-			m_tSockInfo.cBuf = nullptr;
-			if (m_eState == STATE_READY)
-				SetClientState(STATE_TRANSFORM);
+			SendComplete();
+			
 		}
 	}
 
@@ -149,7 +143,8 @@ void CClient::ConductPacket(const CPacket& Packet)
 {
 	switch (m_eState)
 	{
-	case STATE_TRANSFORM: {
+	case STATE_TRANSFORM: 
+	{
 		C2S_PACKET_PLAYER_TRANSFORM* pPacket = reinterpret_cast<C2S_PACKET_PLAYER_TRANSFORM*>(Packet.m_pBuf);
 		m_pPlayer->SetTransform(*pPacket);
 		if ((pPacket->bRecvTransform) && (m_tSockInfo.sendbytes == 0))// 받아야하는 타이밍이고 보내고있지 않는다면.
@@ -159,15 +154,64 @@ void CClient::ConductPacket(const CPacket& Packet)
 			m_tSockInfo.totalSendLen = sizeof(tSendPacket);
 			m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
 			memcpy(m_tSockInfo.cBuf, &tSendPacket, m_tSockInfo.totalSendLen);
-
 		}
-
+		else
+		{
+			SetClientState(STATE_INPUT);
+		}
+		break;
+	}
+	case STATE_INPUT: 
+	{
+		C2S_PACKET_PLAYER_INPUT* pPacket = reinterpret_cast<C2S_PACKET_PLAYER_INPUT*>(Packet.m_pBuf);
+		m_pPlayer->SetInputs(*pPacket);
+		if ((m_tSockInfo.sendbytes == 0))// 받아야하는 타이밍이고 보내고있지 않는다면.
+		{
+			S2C_PACKET_PLAYER_INPUT tSendPacket = m_pOtherClient->GetOtherPlayerInputs();
+			m_tSockInfo.totalSendLen = sizeof(tSendPacket);
+			m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
+			memcpy(m_tSockInfo.cBuf, &tSendPacket, m_tSockInfo.totalSendLen);
+		}
 		break;
 	}
 	case STATE_END:
 	default:
 		break;
 	}
+}
+
+void CClient::SendComplete()
+{
+	m_tSockInfo.totalSendLen = m_tSockInfo.sendbytes = 0;
+	delete[] m_tSockInfo.cBuf;
+	m_tSockInfo.cBuf = nullptr;
+
+	string strState;
+	switch (m_eState)
+	{
+	case STATE_READY:
+		SetClientState(STATE_TRANSFORM);
+		break;
+	case STATE_TRANSFORM:
+		strState = " Transform";
+		SetClientState(STATE_INPUT);
+		break;
+	case STATE_INPUT:
+		strState = " Input";
+		SetClientState(STATE_TRANSFORM); //다시 트랜스폼으로 돌리는걸로 일단 설정 패킷 추가하면 바꿀것.
+		break;
+	case STATE_END:
+		break;
+	default:
+		break;
+	}
+
+	struct sockaddr_in clientaddr;
+	int addrlen = sizeof(clientaddr);
+	getpeername(m_tSockInfo.sock, (struct sockaddr*)&clientaddr, &addrlen);
+
+	cout << ntohs(clientaddr.sin_port)<< strState << " 다 보냈어." << endl;
+
 }
 
 #pragma endregion Packet

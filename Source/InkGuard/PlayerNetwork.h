@@ -40,13 +40,24 @@ public:
 	void TidyNetworkTickRoutine();
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	bool CheckGameStart();
+
+#pragma region NetworkRoutine
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void SendPlayerTransform(float DeltaTime);
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void RecvPlayerTransform(float DeltaTime);
 
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void SendPlayerInputData(float DeltaTime, const FPlayerInputStruct& tBakuInputData);
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tOutInputs);
+
+#pragma endregion
 private:
-	void CheckGameStart();
 
 
 private:
