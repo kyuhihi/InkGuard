@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 		FD_SET(listen_sock, &ReadSet);	// ReadSet에 관찰 대상인 ListenSocket을 등록한다.
 		
 		for (int i = 0; i < nTotalSockets; i++) {
-			ClientArray[i]->PutInReadOrWriteS		et(ReadSet, WriteSet);
+			ClientArray[i]->PutInReadOrWriteSet(ReadSet, WriteSet);
 		}
 
 		// select()
