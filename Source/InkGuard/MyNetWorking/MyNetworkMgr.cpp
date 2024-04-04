@@ -6,12 +6,12 @@ MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 
 MyNetworkMgr::MyNetworkMgr()
 {
-	Initialize();
+	//Initialize();
 }
 
 MyNetworkMgr::~MyNetworkMgr()
 {
-	Tidy();
+	//Tidy();
 }
 
 void MyNetworkMgr::Initialize()
