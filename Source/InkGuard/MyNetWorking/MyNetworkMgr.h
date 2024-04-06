@@ -50,7 +50,7 @@ public:
 	const bool& GetSyncTime() { return m_bSyncTime; }
 
 private:
-	char* SERVERIP = (char*)"222.117.52.76";
+	char* SERVERIP = (char*)"127.0.0.1";
 	bool m_bSyncTime = false;
 	SOCKETINFO m_tClientSock;
 };

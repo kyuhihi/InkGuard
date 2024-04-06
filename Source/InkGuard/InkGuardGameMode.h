@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "MyNetWorking/Include.h"
 #include "InkGuardGameMode.generated.h"
 
 class MyNetworkMgr; 
@@ -20,8 +21,18 @@ public:
 public:
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage);
 	virtual void Logout(AController* Exiting);
+	void Initialize();
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void OpenMainGame();
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void SetSoldierInfo(int iIndex,int iSoldierType, int iTargetTerritory);
+
 
 private:
+	SOLDIERINFO m_SoldierInfo[9];
 	MyNetworkMgr* m_pNetWorkMgr = nullptr;
 };
 

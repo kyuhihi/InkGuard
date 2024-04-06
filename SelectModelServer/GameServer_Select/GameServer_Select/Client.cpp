@@ -210,7 +210,7 @@ void CClient::SendComplete()
 	int addrlen = sizeof(clientaddr);
 	getpeername(m_tSockInfo.sock, (struct sockaddr*)&clientaddr, &addrlen);
 
-	cout << ntohs(clientaddr.sin_port)<< strState << " ´Ù º¸³Â¾î." << endl;
+	//cout << ntohs(clientaddr.sin_port)<< strState << " ´Ù º¸³Â¾î." << endl;
 
 }
 

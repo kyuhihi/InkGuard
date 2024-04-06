@@ -1,6 +1,13 @@
 #pragma once
 
 // 여기서 선언하면 언리얼에선 안보임.
+
+struct SOLDIERINFO
+{
+	SOLDIER_TYPE eSoldierType = SOLDIER_END;
+	TERRITORY_TYPE eTargetTerritory = TERRITORY_END;
+};
+
 #pragma pack(1)
 struct SOCKETINFO
 {
@@ -8,7 +15,8 @@ struct SOCKETINFO
 	bool bConnectSuccess = false;
 };
 
-//------------------------------------------------
+
+//------------------------------------------------ 패킷
 #pragma pack(1)
 struct C2S_PACKET_PLAYER_TRANSFORM
 {
