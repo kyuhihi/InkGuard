@@ -6,6 +6,7 @@ struct SOLDIERINFO
 {
 	SOLDIER_TYPE eSoldierType = SOLDIER_END;
 	TERRITORY_TYPE eTargetTerritory = TERRITORY_END;
+	int iSoldierIndex;
 };
 
 #pragma pack(1)

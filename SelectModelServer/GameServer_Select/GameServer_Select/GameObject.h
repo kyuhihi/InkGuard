@@ -3,5 +3,9 @@
 
 class CGameObject
 {
+public:
+	virtual void Initialize();
+	virtual void Release();
+
 };
 

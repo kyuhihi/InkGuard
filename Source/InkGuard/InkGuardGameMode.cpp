@@ -50,6 +50,8 @@ void AInkGuardGameMode::Initialize()
 
 void AInkGuardGameMode::OpenMainGame()
 {
+	m_pNetWorkMgr = MyNetworkMgr::GetInstance();
+
 }
 
 void AInkGuardGameMode::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)

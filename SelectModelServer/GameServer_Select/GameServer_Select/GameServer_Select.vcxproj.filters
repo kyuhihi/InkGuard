@@ -33,6 +33,15 @@
     <Filter Include="소스 파일\00. Default\00. MatchMaking">
       <UniqueIdentifier>{6c69f5b2-ba12-4238-b879-456a9f98b6c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\01. Client\GameObject\Soldier">
+      <UniqueIdentifier>{44211a74-f108-41d2-948c-cb055d0891b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Client\GameObject\Soldier\SpearMan">
+      <UniqueIdentifier>{c5dbcdbb-8031-488f-ac80-22f9e50c2a4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Client\GameObject\Soldier\Daka">
+      <UniqueIdentifier>{8581c56b-1ce2-408c-91c6-52c91a3d7c26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common.cpp">
@@ -55,6 +64,15 @@
     </ClCompile>
     <ClCompile Include="MatchMakingMgr.cpp">
       <Filter>소스 파일\00. Default\00. MatchMaking</Filter>
+    </ClCompile>
+    <ClCompile Include="SpearMan.cpp">
+      <Filter>소스 파일\01. Client\GameObject\Soldier\SpearMan</Filter>
+    </ClCompile>
+    <ClCompile Include="Daka.cpp">
+      <Filter>소스 파일\01. Client\GameObject\Soldier\Daka</Filter>
+    </ClCompile>
+    <ClCompile Include="Soldier.cpp">
+      <Filter>소스 파일\01. Client\GameObject\Soldier</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -87,6 +105,15 @@
     </ClInclude>
     <ClInclude Include="MatchMakingMgr.h">
       <Filter>소스 파일\00. Default\00. MatchMaking</Filter>
+    </ClInclude>
+    <ClInclude Include="SpearMan.h">
+      <Filter>소스 파일\01. Client\GameObject\Soldier\SpearMan</Filter>
+    </ClInclude>
+    <ClInclude Include="Daka.h">
+      <Filter>소스 파일\01. Client\GameObject\Soldier\Daka</Filter>
+    </ClInclude>
+    <ClInclude Include="Soldier.h">
+      <Filter>소스 파일\01. Client\GameObject\Soldier</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
