@@ -20,6 +20,12 @@ public:
 	virtual void Initialize() override;
 	virtual void Release() override;
 
+	virtual void SetSoldierInfo(const SOLDIER_TYPE eNewSoldierType, const TERRITORY_TYPE eNewTargetTerritoryType);
+	virtual void SetSoldierInfo(const SOLDIERINFO tNewSoldierInfo) { m_tSoldierInfo = tNewSoldierInfo; };
+	
+public:
+	void SetSoldierIndex(int iNewSoldierIndex) { m_tSoldierInfo.iSoldierIndex = iNewSoldierIndex; }
+
 protected:
 	SOLDIERINFO m_tSoldierInfo;
 };

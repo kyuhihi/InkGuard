@@ -34,8 +34,9 @@ private:
 	void Initialize();
 	void Tidy();
 
+	static DWORD WINAPI RecvGameStart(LPVOID arg);
 public:
-	const GAME_PLAY RecvGameStart();
+	void OpenMainGame();
 
 	void SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform);
 	void SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed);
@@ -46,13 +47,22 @@ public:
 	bool RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket);
 
 public:
+	const bool& GetGameStart() { return m_bGameStart; }
+
 	void SetSyncTime(bool bSyncTime) { m_bSyncTime = bSyncTime; }
 	const bool& GetSyncTime() { return m_bSyncTime; }
+
 
 private:
 	char* SERVERIP = (char*)"127.0.0.1";
 	bool m_bSyncTime = false;
-	SOCKETINFO m_tClientSock;
+
+	static SOCKETINFO m_tClientSock;
+	static GAME_PLAY m_eGameTeam;
+	static bool m_bGameStart;
+	static SOLDIERINFO m_tSoldierInfo[9]; //³»²¨.
+
+	HANDLE m_hThread;
 };
 
 

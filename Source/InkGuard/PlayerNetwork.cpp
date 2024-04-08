@@ -54,19 +54,12 @@ void UPlayerNetwork::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 bool UPlayerNetwork::CheckGameStart()
 {
-	if (m_bGameStart)
-		return true;
-
-	m_eGameTeam = m_pNetworkMgr->RecvGameStart();
-	if (m_eGameTeam != GAME_PLAY::GAME_END) {
-		m_bGameStart = true;
-	}
-	return false;
+	return m_pNetworkMgr->GetGameStart();
 }
 
 void UPlayerNetwork::SendPlayerTransform(float DeltaTime)
 {
-	if (!m_bGameStart)
+	if (!m_pNetworkMgr->GetGameStart())
 		return;
 
 	m_fSyncTimer += DeltaTime;
@@ -87,7 +80,7 @@ void UPlayerNetwork::SendPlayerTransform(float DeltaTime)
 
 void UPlayerNetwork::RecvPlayerTransform(float DeltaTime)
 {
-	if (!m_pNetworkMgr->GetSyncTime() || !m_bGameStart)
+	if (!m_pNetworkMgr->GetSyncTime() || !m_pNetworkMgr->GetGameStart())
 		return;
 
 	S2C_PACKET_PLAYER_TRANSFORM tRecvPacket;

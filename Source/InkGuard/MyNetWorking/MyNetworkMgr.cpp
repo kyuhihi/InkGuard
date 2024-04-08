@@ -3,6 +3,8 @@
 #include "../CustomFunctional.h"
 
 MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
+GAME_PLAY MyNetworkMgr::m_eGameTeam = GAME_PLAY::GAME_END;
+bool MyNetworkMgr::m_bGameStart = false;
 
 MyNetworkMgr::MyNetworkMgr()
 {
@@ -42,10 +44,13 @@ void MyNetworkMgr::Initialize()
 	}
 	m_tClientSock.bConnectSuccess = true;
 
+	//쓰레드 생성해서 게임 스타트 패킷 받자.
 }
 
 void MyNetworkMgr::Tidy()
 {// 소켓 닫기
+	CloseHandle(m_hThread);
+
 	closesocket(m_tClientSock.sock);
 	m_tClientSock.bConnectSuccess = false;
 
@@ -53,27 +58,39 @@ void MyNetworkMgr::Tidy()
 	WSACleanup();
 }
 
-#pragma region Packet
-
-#pragma region SendPlayerTransform
-const GAME_PLAY MyNetworkMgr::RecvGameStart()
+DWORD WINAPI MyNetworkMgr::RecvGameStart(LPVOID arg)
 {
-	if (!m_tClientSock.bConnectSuccess)
-		return GAME_END;
 
-	S2C_PACKET_PLAYER_TRANSFORM tGameStartPacket;
-	
+	S2C_PACKET_GAMESTART tGameStartPacket;
+
 	int retval{ 0 };
 	retval = recv(m_tClientSock.sock, (char*)&tGameStartPacket, sizeof(tGameStartPacket), MSG_WAITALL);
 	if ((retval == SOCKET_ERROR) || (retval != sizeof(tGameStartPacket))) {
 		err_quit("RecvGameStart");
-		Tidy();
-		return GAME_END;
+		MyNetworkMgr::GetInstance()->Tidy();
+		return;
 	}
 
-	return (GAME_PLAY)tGameStartPacket.cGamePlay;
+	m_eGameTeam = (GAME_PLAY)tGameStartPacket.cGamePlay;
+	m_bGameStart = true;
+	for (int i = 0; i < SOLDIER_MAX_CNT; ++i)
+	{//받은 상대편 패킷으로 이제 생성해야함.
+
+	}
+
+	return;
 }
 
+#pragma region Packet
+
+void MyNetworkMgr::OpenMainGame()
+{
+	//리시브 전에 내거 보내줘야함.
+
+	m_hThread = CreateThread(NULL, 0, RecvGameStart, NULL, 0, NULL);
+}
+
+#pragma region SendPlayerTransform
 void MyNetworkMgr::SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform)
 {
 	if (!m_tClientSock.bConnectSuccess)
@@ -126,9 +143,7 @@ bool MyNetworkMgr::RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket)
 
 	int retval{ 0 };
 	retval = recv(m_tClientSock.sock, (char*)&tOutPacket, sizeof(S2C_PACKET_PLAYER_TRANSFORM), MSG_WAITALL);
-	if ((retval == SOCKET_ERROR) || 
-		(retval != sizeof(S2C_PACKET_PLAYER_TRANSFORM))||
-		(tOutPacket.cGamePlay == GAME_PLAY::GAME_END)) {
+	if ((retval == SOCKET_ERROR) || (retval != sizeof(S2C_PACKET_PLAYER_TRANSFORM))) {
 		err_quit("RecvPlayerTransform");
 		Tidy();
 		return false;

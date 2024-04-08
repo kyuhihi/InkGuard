@@ -32,7 +32,6 @@ public:
 
 
 private:
-	SOLDIERINFO m_SoldierInfo[9];
 	MyNetworkMgr* m_pNetWorkMgr = nullptr;
 };
 

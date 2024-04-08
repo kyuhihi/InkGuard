@@ -2,6 +2,7 @@
 
 #define SERVER_PORT		7777
 #define BUFFER_SIZE    512
+#define SOLDIER_MAX_CNT 9
 
 #define _float3	XMFLOAT3
 #define _float4 XMFLOAT4

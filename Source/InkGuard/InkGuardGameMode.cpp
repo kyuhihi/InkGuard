@@ -35,7 +35,7 @@ void AInkGuardGameMode::Logout(AController* Exiting)
 {
 	Super::Logout(Exiting);
 
-	//MyNetworkMgr::GetInstance()->DestroyInstance();
+	MyNetworkMgr::GetInstance()->DestroyInstance();
 
 	m_pNetWorkMgr = nullptr;
 }
@@ -50,8 +50,9 @@ void AInkGuardGameMode::Initialize()
 
 void AInkGuardGameMode::OpenMainGame()
 {
-	m_pNetWorkMgr = MyNetworkMgr::GetInstance();
-
+	m_pNetWorkMgr = MyNetworkMgr::GetInstance(); //connect작업 할거임.
+	// 스레드 생성
+	m_pNetWorkMgr->OpenMainGame();// 여기서 쓰레드 생성해서 게임 시작했는지 체크함.
 }
 
 void AInkGuardGameMode::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)

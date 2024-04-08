@@ -42,6 +42,9 @@
     <Filter Include="소스 파일\01. Client\GameObject\Soldier\Daka">
       <UniqueIdentifier>{8581c56b-1ce2-408c-91c6-52c91a3d7c26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\01. Client\GameObject\Soldier\SoldierMgr">
+      <UniqueIdentifier>{6eb93a3b-4cea-4e5b-afa4-a338c3c5270f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common.cpp">
@@ -73,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="Soldier.cpp">
       <Filter>소스 파일\01. Client\GameObject\Soldier</Filter>
+    </ClCompile>
+    <ClCompile Include="SoldierMgr.cpp">
+      <Filter>소스 파일\01. Client\GameObject\Soldier\SoldierMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +120,9 @@
     </ClInclude>
     <ClInclude Include="Soldier.h">
       <Filter>소스 파일\01. Client\GameObject\Soldier</Filter>
+    </ClInclude>
+    <ClInclude Include="SoldierMgr.h">
+      <Filter>소스 파일\01. Client\GameObject\Soldier\SoldierMgr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

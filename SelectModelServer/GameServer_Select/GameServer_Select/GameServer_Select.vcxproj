@@ -138,6 +138,7 @@
     <ClCompile Include="Packet.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Soldier.cpp" />
+    <ClCompile Include="SoldierMgr.cpp" />
     <ClCompile Include="SpearMan.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +153,7 @@
     <ClInclude Include="Packet.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Soldier.h" />
+    <ClInclude Include="SoldierMgr.h" />
     <ClInclude Include="SpearMan.h" />
     <ClInclude Include="Struct.h" />
   </ItemGroup>

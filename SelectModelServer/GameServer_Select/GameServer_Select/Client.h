@@ -2,6 +2,8 @@
 #include "Include.h"
 #include "Packet.h"
 #include "Player.h"
+#include "SoldierMgr.h"
+
 
 class CClient
 {
@@ -51,5 +53,6 @@ private:
 	CPlayer* m_pPlayer = nullptr;
 
 	CClient* m_pOtherClient = nullptr;
+	SoldierMgr* m_pSoldierMgr = nullptr;
 };
 

@@ -41,13 +41,14 @@ void CClient::Release()
 	}
 	delete m_pPlayer;
 	m_pPlayer = nullptr;
-
 	
+	delete m_pSoldierMgr;
+	m_pSoldierMgr = nullptr;
 }
 
 void CClient::PutInReadOrWriteSet(const fd_set& ReadSet, const fd_set& WriteSet)
 {
-	if ((m_eState == STATE_READY) || (m_tSockInfo.totalSendLen != 0)) { // 다른 클라이언트가 없다면 ready해야해서 readSet에 넣어야함.
+	if ((m_tSockInfo.totalSendLen != 0)) { // 다른 클라이언트가 없다면 ready해야해서 readSet에 넣어야함.
 		FD_SET(m_tSockInfo.sock, &WriteSet);	// 해당 소켓에 대해 데이터를 보내야하는 타이밍이다?-> WriteSet에 추가
 	}
 	else {
@@ -59,17 +60,16 @@ void CClient::SetOtherClient(CClient* pOtherClient)
 { 
 	m_pOtherClient = pOtherClient;
 	if (pOtherClient) {
-		S2C_PACKET_PLAYER_TRANSFORM tGameStartPacket;
+		S2C_PACKET_GAMESTART tGameStartPacket;
 		tGameStartPacket.cGamePlay = m_tSockInfo.eGamePlayTeam;
-
 		m_tSockInfo.totalSendLen = sizeof(tGameStartPacket);
 		m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
 
-
 		memcpy(m_tSockInfo.cBuf, &tGameStartPacket, m_tSockInfo.totalSendLen);
+
 		m_tSockInfo.bMatchMakingSuccess = true;
 	}
-	else{ //통신 끊긴것.
+	else{ //통신 끊긴것. 이건 나중에 바꿔야함.. 좀더 고민쓰. m_tSockInfo 메모리 삭제해야하는데 아직안했음..
 		SetClientState(STATE_READY);
 		m_tSockInfo.bMatchMakingSuccess = false;
 		
@@ -79,10 +79,9 @@ void CClient::SetOtherClient(CClient* pOtherClient)
 		m_tSockInfo.totalSendLen = sizeof(tGameEndPacket);
 		m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
 
-
 		memcpy(m_tSockInfo.cBuf, &tGameEndPacket, m_tSockInfo.totalSendLen);
-		m_tSockInfo.eGamePlayTeam = GAME_PLAY::GAME_END;
 		
+		m_tSockInfo.eGamePlayTeam = GAME_PLAY::GAME_END;
 	}
 }
 
@@ -139,24 +138,31 @@ bool CClient::SendPacket()
 	return true;
 }
 
-void CClient::ConductPacket(const CPacket& Packet)
+void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 패킷의 구조체를 저장해둔다.
 {
 	switch (m_eState)
 	{
+	case STATE_READY:
+	{
+		C2S_PACKET_GAMESTART* pPacket = reinterpret_cast<C2S_PACKET_GAMESTART*>(Packet.m_pBuf);
+		m_pSoldierMgr->Initialize();
+		break;
+	}
 	case STATE_TRANSFORM: 
 	{
 		C2S_PACKET_PLAYER_TRANSFORM* pPacket = reinterpret_cast<C2S_PACKET_PLAYER_TRANSFORM*>(Packet.m_pBuf);
 		m_pPlayer->SetTransform(*pPacket);
+
 		if ((pPacket->bRecvTransform) && (m_tSockInfo.sendbytes == 0))// 받아야하는 타이밍이고 보내고있지 않는다면.
 		{
 			S2C_PACKET_PLAYER_TRANSFORM tSendPacket = m_pOtherClient->GetOtherPlayerTransform();
-			tSendPacket.cGamePlay = m_tSockInfo.eGamePlayTeam;// 게임플레이는 본인걸로 채운다.
+			//tSendPacket.cGamePlay = m_tSockInfo.eGamePlayTeam;// 게임플레이는 본인걸로 채운다.
 			m_tSockInfo.totalSendLen = sizeof(tSendPacket);
 			m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
 			memcpy(m_tSockInfo.cBuf, &tSendPacket, m_tSockInfo.totalSendLen);
 		}
 		else
-		{
+		{// 보낼 패킷 타이밍이 아니라면 바로 스테이트를 변경해도됨.
 			SetClientState(STATE_INPUT);
 		}
 		break;
@@ -165,7 +171,8 @@ void CClient::ConductPacket(const CPacket& Packet)
 	{
 		C2S_PACKET_PLAYER_INPUT* pPacket = reinterpret_cast<C2S_PACKET_PLAYER_INPUT*>(Packet.m_pBuf);
 		m_pPlayer->SetInputs(*pPacket);
-		if ((m_tSockInfo.sendbytes == 0))// 받아야하는 타이밍이고 보내고있지 않는다면.
+
+		if ((m_tSockInfo.sendbytes == 0))// 인풋 패킷은 매 프레임 마다 보내도록한다.
 		{
 			S2C_PACKET_PLAYER_INPUT tSendPacket = m_pOtherClient->GetOtherPlayerInputs();
 			m_tSockInfo.totalSendLen = sizeof(tSendPacket);

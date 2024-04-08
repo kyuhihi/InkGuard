@@ -51,7 +51,7 @@ bool CMatchMakingMgr::CheckMatchMakingPossible()
 	m_WaitingClientVec.erase(m_WaitingClientVec.begin() + (j - 1));
 
 
-	CheckMatchMakingPossible();
+	CheckMatchMakingPossible(); //¿Á±Õ»£√‚.
 
 	return true;
 }
