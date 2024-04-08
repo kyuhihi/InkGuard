@@ -9,6 +9,13 @@
 
 class MyNetworkMgr; 
 
+UENUM(BlueprintType)
+enum class EGameState : uint8
+{
+	GAME_WAITING UMETA(DisplayName = "GAME_WAITING"),
+	GAME_MAINGAME UMETA(DisplayName = "GAME_MAINGAME"),
+};
+
 UCLASS(minimalapi)
 class AInkGuardGameMode : public AGameModeBase
 {
@@ -30,9 +37,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void SetSoldierInfo(int iIndex,int iSoldierType, int iTargetTerritory);
 
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	EGameState GetCurGameMode();
 
 private:
 	MyNetworkMgr* m_pNetWorkMgr = nullptr;
+	EGameState m_eGameMode = EGameState::GAME_WAITING;
 };
 
 

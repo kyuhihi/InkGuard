@@ -42,24 +42,39 @@ void AInkGuardGameMode::Logout(AController* Exiting)
 
 void AInkGuardGameMode::Initialize()
 {
-	for (int i = 0; i < SOLDIER_MAX_CNT; ++i) {
-		m_SoldierInfo[i].eSoldierType = (SOLDIER_TYPE)(i / 2);
-		m_SoldierInfo[i].eTargetTerritory = (TERRITORY_TYPE)(i / 3);
-	}
+
 }
 
 void AInkGuardGameMode::OpenMainGame()
 {
-	m_pNetWorkMgr = MyNetworkMgr::GetInstance(); //connect작업 할거임.
+	if(m_pNetWorkMgr == nullptr)
+		m_pNetWorkMgr = MyNetworkMgr::GetInstance(); //connect작업 할거임.
 	// 스레드 생성
 	m_pNetWorkMgr->OpenMainGame();// 여기서 쓰레드 생성해서 게임 시작했는지 체크함.
 }
 
 void AInkGuardGameMode::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
 {
-	if (SOLDIER_MAX_CNT < iSoldierType)
-		return;
+	if (m_pNetWorkMgr == nullptr)
+		m_pNetWorkMgr = MyNetworkMgr::GetInstance(); //connect작업 할거임.
 
-	m_SoldierInfo[iIndex].eSoldierType = (SOLDIER_TYPE)iSoldierType;
-	m_SoldierInfo[iIndex].eTargetTerritory = (TERRITORY_TYPE)iTargetTerritory;
+
+	m_pNetWorkMgr->SetSoldierInfo(iIndex, iSoldierType, iTargetTerritory);
+
+}
+
+EGameState AInkGuardGameMode::GetCurGameMode()
+{
+	if (m_eGameMode == EGameState::GAME_MAINGAME)
+		return EGameState::GAME_MAINGAME;
+
+	m_pNetWorkMgr->SetGameStartMutexLock();
+	bool bGameStart = m_pNetWorkMgr->GetGameStart();
+	m_pNetWorkMgr->SetGameStartMutexUnLock();
+	if (bGameStart)
+	{
+		m_eGameMode = EGameState::GAME_MAINGAME;
+	}
+
+	return m_eGameMode;
 }

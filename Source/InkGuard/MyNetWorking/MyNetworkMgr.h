@@ -52,15 +52,20 @@ public:
 	void SetSyncTime(bool bSyncTime) { m_bSyncTime = bSyncTime; }
 	const bool& GetSyncTime() { return m_bSyncTime; }
 
+	void SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory);
+
+	void SetGameStartMutexLock() { m_GameStartMutex.lock(); };
+	void SetGameStartMutexUnLock() { m_GameStartMutex.unlock(); };
 
 private:
 	char* SERVERIP = (char*)"127.0.0.1";
 	bool m_bSyncTime = false;
+	SOCKETINFO m_tClientSock;
 
-	static SOCKETINFO m_tClientSock;
+	static mutex m_GameStartMutex;
 	static GAME_PLAY m_eGameTeam;
 	static bool m_bGameStart;
-	static SOLDIERINFO m_tSoldierInfo[9]; //≥ª≤®.
+	static SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT]; //≥ª≤® º÷¡Æ ¡§∫∏.
 
 	HANDLE m_hThread;
 };

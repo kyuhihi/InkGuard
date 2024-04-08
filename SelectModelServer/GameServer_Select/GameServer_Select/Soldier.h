@@ -16,14 +16,17 @@ public:
 		int iSoldierIndex;
 	};
 
-public:
+public:// virtual
 	virtual void Initialize() override;
 	virtual void Release() override;
 
 	virtual void SetSoldierInfo(const SOLDIER_TYPE eNewSoldierType, const TERRITORY_TYPE eNewTargetTerritoryType);
 	virtual void SetSoldierInfo(const SOLDIERINFO tNewSoldierInfo) { m_tSoldierInfo = tNewSoldierInfo; };
+	virtual void SetTargetTerritory(TERRITORY_TYPE eNewTargetTerritory) { m_tSoldierInfo.eTargetTerritory = eNewTargetTerritory; }
 	
-public:
+	virtual const SOLDIERINFO& GetSoldierInfo() { return m_tSoldierInfo; }
+
+public:// normal
 	void SetSoldierIndex(int iNewSoldierIndex) { m_tSoldierInfo.iSoldierIndex = iNewSoldierIndex; }
 
 protected:

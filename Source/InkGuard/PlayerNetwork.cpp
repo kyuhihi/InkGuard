@@ -54,7 +54,11 @@ void UPlayerNetwork::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 bool UPlayerNetwork::CheckGameStart()
 {
-	return m_pNetworkMgr->GetGameStart();
+	m_pNetworkMgr->SetGameStartMutexLock();
+	const bool& bGameStart = m_pNetworkMgr->GetGameStart();
+	m_pNetworkMgr->SetGameStartMutexUnLock();
+	
+	return bGameStart;
 }
 
 void UPlayerNetwork::SendPlayerTransform(float DeltaTime)

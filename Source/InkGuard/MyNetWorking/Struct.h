@@ -6,7 +6,6 @@ struct SOLDIERINFO
 {
 	SOLDIER_TYPE eSoldierType = SOLDIER_END;
 	TERRITORY_TYPE eTargetTerritory = TERRITORY_END;
-	int iSoldierIndex;
 };
 
 #pragma pack(1)
@@ -20,8 +19,8 @@ struct SOCKETINFO
 //------------------------------------------------ 패킷
 #pragma pack(1)
 struct C2S_PACKET_GAMESTART {
-	char cOtherSoldierInfo[SOLDIER_MAX_CNT]; // 다른 클라이언트의 팀 구성 정보임.
-	char cOtherTargetTerritory[SOLDIER_MAX_CNT]; // 다른 클라이언트의 팀이 가져야할 타겟 점령지 정보임.
+	char cSoldierInfo[SOLDIER_MAX_CNT]; 
+	char cTargetTerritory[SOLDIER_MAX_CNT]; 
 };
 
 #pragma pack(1)

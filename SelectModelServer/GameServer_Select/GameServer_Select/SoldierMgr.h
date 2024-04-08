@@ -1,19 +1,20 @@
 #pragma once
 #include "Include.h"
-#include "Packet.h"
-#include "Player.h"
 #include "SpearMan.h"
 #include "Daka.h"
 
-class SoldierMgr
+class CSoldierMgr
 {
 public:
-	SoldierMgr();
-	~SoldierMgr();
+	CSoldierMgr();
+	~CSoldierMgr();
 
 public:
-	void Initialize(const C2S_PACKET_GAMESTART* tGameStartPacket);
+	void Initialize(const C2S_PACKET_GAMESTART& tGameStartPacket);
 	void Release();
+
+	const size_t GetSoldierVecSize() { return m_pSoldiers.size(); }
+	void GetGameStartPacket(S2C_PACKET_GAMESTART& tOutGameStartPacket);
 
 private:
 	vector<class CSoldier*>m_pSoldiers;

@@ -19,6 +19,7 @@ void CClient::Initialize(SOCKET sock)
 	SetClientState(STATE_READY);
 	
 	m_pPlayer = new CPlayer;
+	m_pSoldierMgr = new CSoldierMgr;
 }
 
 void CClient::Release()
@@ -52,34 +53,36 @@ void CClient::PutInReadOrWriteSet(const fd_set& ReadSet, const fd_set& WriteSet)
 		FD_SET(m_tSockInfo.sock, &WriteSet);	// 해당 소켓에 대해 데이터를 보내야하는 타이밍이다?-> WriteSet에 추가
 	}
 	else {
+		if (m_eState == STATE_READY && IsInitializedSoldierMgr())
+		{
+			FD_SET(m_tSockInfo.sock, &WriteSet);
+			return;
+		}
 		FD_SET(m_tSockInfo.sock, &ReadSet);		// 해당 소켓에 대해 데이터를 받아야하는 타이밍이다?-> ReadSet에 추가
 	}
+}
+
+bool CClient::IsInitializedSoldierMgr()
+{
+	if (m_pSoldierMgr->GetSoldierVecSize() == 0)
+		return false;
+	else
+		return true;
 }
 
 void CClient::SetOtherClient(CClient* pOtherClient)
 { 
 	m_pOtherClient = pOtherClient;
 	if (pOtherClient) {
-		S2C_PACKET_GAMESTART tGameStartPacket;
-		tGameStartPacket.cGamePlay = m_tSockInfo.eGamePlayTeam;
-		m_tSockInfo.totalSendLen = sizeof(tGameStartPacket);
-		m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
-
-		memcpy(m_tSockInfo.cBuf, &tGameStartPacket, m_tSockInfo.totalSendLen);
-
 		m_tSockInfo.bMatchMakingSuccess = true;
 	}
-	else{ //통신 끊긴것. 이건 나중에 바꿔야함.. 좀더 고민쓰. m_tSockInfo 메모리 삭제해야하는데 아직안했음..
+	else{ //통신 끊긴것. 이건 나중에 바꿔야함.. 좀더 고민쓰.
 		SetClientState(STATE_READY);
 		m_tSockInfo.bMatchMakingSuccess = false;
 		
-
-		S2C_PACKET_PLAYER_TRANSFORM tGameEndPacket;
-
-		m_tSockInfo.totalSendLen = sizeof(tGameEndPacket);
-		m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
-
-		memcpy(m_tSockInfo.cBuf, &tGameEndPacket, m_tSockInfo.totalSendLen);
+		m_tSockInfo.totalSendLen = m_tSockInfo.sendbytes = 0;
+		delete[] m_tSockInfo.cBuf;
+		m_tSockInfo.cBuf = nullptr;
 		
 		m_tSockInfo.eGamePlayTeam = GAME_PLAY::GAME_END;
 	}
@@ -138,6 +141,18 @@ bool CClient::SendPacket()
 	return true;
 }
 
+void CClient::SendGameStartPacket()
+{	
+	S2C_PACKET_GAMESTART tGameStartPacket;
+	m_pSoldierMgr->GetGameStartPacket(tGameStartPacket);
+	tGameStartPacket.cGamePlay = m_tSockInfo.eGamePlayTeam;
+
+	m_tSockInfo.totalSendLen = sizeof(tGameStartPacket);
+	m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
+
+	memcpy(m_tSockInfo.cBuf, &tGameStartPacket, m_tSockInfo.totalSendLen);
+}
+
 void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 패킷의 구조체를 저장해둔다.
 {
 	switch (m_eState)
@@ -145,7 +160,13 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 	case STATE_READY:
 	{
 		C2S_PACKET_GAMESTART* pPacket = reinterpret_cast<C2S_PACKET_GAMESTART*>(Packet.m_pBuf);
-		m_pSoldierMgr->Initialize();
+		m_pSoldierMgr->Initialize(*pPacket);// 내 솔져들 객체만 생성. 다음에 언제 보내주냐?
+		if ((m_pOtherClient != nullptr) && (m_pOtherClient->IsInitializedSoldierMgr()))
+		{//여기서 게임스타트 패킷 보내자.
+			SendGameStartPacket();
+			m_pOtherClient->SendGameStartPacket();
+		}
+
 		break;
 	}
 	case STATE_TRANSFORM: 

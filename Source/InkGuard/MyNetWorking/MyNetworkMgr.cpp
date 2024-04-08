@@ -3,8 +3,11 @@
 #include "../CustomFunctional.h"
 
 MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
+
+mutex MyNetworkMgr::m_GameStartMutex;
 GAME_PLAY MyNetworkMgr::m_eGameTeam = GAME_PLAY::GAME_END;
 bool MyNetworkMgr::m_bGameStart = false;
+SOLDIERINFO MyNetworkMgr::m_tSoldierInfo[SOLDIER_MAX_CNT]; //내꺼 솔져 정보.
 
 MyNetworkMgr::MyNetworkMgr()
 {
@@ -44,7 +47,10 @@ void MyNetworkMgr::Initialize()
 	}
 	m_tClientSock.bConnectSuccess = true;
 
-	//쓰레드 생성해서 게임 스타트 패킷 받자.
+	for (int i = 0; i < SOLDIER_MAX_CNT; ++i) {
+		m_tSoldierInfo[i].eSoldierType = (SOLDIER_TYPE)(i / 2);
+		m_tSoldierInfo[i].eTargetTerritory = (TERRITORY_TYPE)(i / 3);
+	}
 }
 
 void MyNetworkMgr::Tidy()
@@ -54,40 +60,71 @@ void MyNetworkMgr::Tidy()
 	closesocket(m_tClientSock.sock);
 	m_tClientSock.bConnectSuccess = false;
 
+	m_GameStartMutex.unlock();
 	// 윈속 종료
 	WSACleanup();
 }
 
 DWORD WINAPI MyNetworkMgr::RecvGameStart(LPVOID arg)
-{
+{//인자로 클라이언트 소켓이 넘어옴.
+	SOCKET client_sock = (SOCKET)arg;
 
 	S2C_PACKET_GAMESTART tGameStartPacket;
 
 	int retval{ 0 };
-	retval = recv(m_tClientSock.sock, (char*)&tGameStartPacket, sizeof(tGameStartPacket), MSG_WAITALL);
+	retval = recv(client_sock, (char*)&tGameStartPacket, sizeof(tGameStartPacket), MSG_WAITALL);
 	if ((retval == SOCKET_ERROR) || (retval != sizeof(tGameStartPacket))) {
 		err_quit("RecvGameStart");
 		MyNetworkMgr::GetInstance()->Tidy();
-		return;
+		return 0;
 	}
 
-	m_eGameTeam = (GAME_PLAY)tGameStartPacket.cGamePlay;
+	m_GameStartMutex.lock();
+	
+	m_eGameTeam = (GAME_PLAY)tGameStartPacket.cGamePlay; //락을 잡아야겠쥐?
 	m_bGameStart = true;
+
 	for (int i = 0; i < SOLDIER_MAX_CNT; ++i)
 	{//받은 상대편 패킷으로 이제 생성해야함.
 
 	}
 
-	return;
+	m_GameStartMutex.unlock();
+	
+	return 0;
+}
+
+void MyNetworkMgr::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
+{
+	if (SOLDIER_MAX_CNT < iSoldierType || iSoldierType < 0)
+		return;
+
+	m_tSoldierInfo[iIndex].eSoldierType = (SOLDIER_TYPE)iSoldierType;
+	m_tSoldierInfo[iIndex].eTargetTerritory = (TERRITORY_TYPE)iTargetTerritory;
 }
 
 #pragma region Packet
 
-void MyNetworkMgr::OpenMainGame()
+void MyNetworkMgr::OpenMainGame() //내 솔져 정보들을 보내고, 상대편의 솔져정보들을 받는 쓰레드를 생성하고, 씬을 오픈시킴.
 {
-	//리시브 전에 내거 보내줘야함.
+	C2S_PACKET_GAMESTART tSendPacket;
+	for (int i = 0; i < SOLDIER_MAX_CNT; ++i)
+	{
+		tSendPacket.cSoldierInfo[i] = m_tSoldierInfo[i].eSoldierType;
+		tSendPacket.cTargetTerritory[i] = m_tSoldierInfo[i].eTargetTerritory;
+	}
 
-	m_hThread = CreateThread(NULL, 0, RecvGameStart, NULL, 0, NULL);
+
+	int retval{ 0 };
+	retval = send(m_tClientSock.sock, reinterpret_cast<char*>(&tSendPacket), sizeof(tSendPacket), 0);
+	if ((retval == SOCKET_ERROR) || (retval != sizeof(tSendPacket)))
+	{
+		err_quit("OpenMainGame Before Thread Creating");
+		Tidy();
+		return;
+	}
+
+	m_hThread = CreateThread(NULL, 0, RecvGameStart, (LPVOID)m_tClientSock.sock, 0, NULL);
 }
 
 #pragma region SendPlayerTransform

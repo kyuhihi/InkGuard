@@ -36,13 +36,13 @@
     <Filter Include="소스 파일\01. Client\GameObject\Soldier">
       <UniqueIdentifier>{44211a74-f108-41d2-948c-cb055d0891b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\01. Client\GameObject\Soldier\SpearMan">
+    <Filter Include="소스 파일\01. Client\GameObject\Soldier\00. SpearMan">
       <UniqueIdentifier>{c5dbcdbb-8031-488f-ac80-22f9e50c2a4a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\01. Client\GameObject\Soldier\Daka">
+    <Filter Include="소스 파일\01. Client\GameObject\Soldier\01. Daka">
       <UniqueIdentifier>{8581c56b-1ce2-408c-91c6-52c91a3d7c26}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\01. Client\GameObject\Soldier\SoldierMgr">
+    <Filter Include="소스 파일\01. Client\GameObject\Soldier\99. SoldierMgr">
       <UniqueIdentifier>{6eb93a3b-4cea-4e5b-afa4-a338c3c5270f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -69,16 +69,16 @@
       <Filter>소스 파일\00. Default\00. MatchMaking</Filter>
     </ClCompile>
     <ClCompile Include="SpearMan.cpp">
-      <Filter>소스 파일\01. Client\GameObject\Soldier\SpearMan</Filter>
+      <Filter>소스 파일\01. Client\GameObject\Soldier\00. SpearMan</Filter>
     </ClCompile>
     <ClCompile Include="Daka.cpp">
-      <Filter>소스 파일\01. Client\GameObject\Soldier\Daka</Filter>
+      <Filter>소스 파일\01. Client\GameObject\Soldier\01. Daka</Filter>
     </ClCompile>
     <ClCompile Include="Soldier.cpp">
       <Filter>소스 파일\01. Client\GameObject\Soldier</Filter>
     </ClCompile>
     <ClCompile Include="SoldierMgr.cpp">
-      <Filter>소스 파일\01. Client\GameObject\Soldier\SoldierMgr</Filter>
+      <Filter>소스 파일\01. Client\GameObject\Soldier\99. SoldierMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -113,16 +113,16 @@
       <Filter>소스 파일\00. Default\00. MatchMaking</Filter>
     </ClInclude>
     <ClInclude Include="SpearMan.h">
-      <Filter>소스 파일\01. Client\GameObject\Soldier\SpearMan</Filter>
+      <Filter>소스 파일\01. Client\GameObject\Soldier\00. SpearMan</Filter>
     </ClInclude>
     <ClInclude Include="Daka.h">
-      <Filter>소스 파일\01. Client\GameObject\Soldier\Daka</Filter>
+      <Filter>소스 파일\01. Client\GameObject\Soldier\01. Daka</Filter>
     </ClInclude>
     <ClInclude Include="Soldier.h">
       <Filter>소스 파일\01. Client\GameObject\Soldier</Filter>
     </ClInclude>
     <ClInclude Include="SoldierMgr.h">
-      <Filter>소스 파일\01. Client\GameObject\Soldier\SoldierMgr</Filter>
+      <Filter>소스 파일\01. Client\GameObject\Soldier\99. SoldierMgr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
