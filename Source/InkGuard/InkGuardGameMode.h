@@ -26,8 +26,8 @@ public:
 	~AInkGuardGameMode();
 
 public:
-	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage);
-	virtual void Logout(AController* Exiting);
+	
+
 	void Initialize();
 
 public:

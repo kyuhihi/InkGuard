@@ -35,8 +35,8 @@ private:
 	void Tidy();
 
 public:
-	void OpenMainGame();
-
+	//void OpenMainGame();
+	void SendGameStart();
 	void RecvGameStart();
 
 	void SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform);
@@ -60,10 +60,9 @@ private:
 	bool m_bSyncTime = false;
 	SOCKETINFO m_tClientSock;
 
-	static GAME_PLAY m_eGameTeam;
-	static bool m_bGameStart;
-	static SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT]; //내꺼 솔져 정보.
-
+	GAME_PLAY m_eGameTeam  = GAME_PLAY::GAME_END;;
+	bool m_bGameStart = false;
+	SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT]; //내꺼 솔져 정보.
 };
 
 

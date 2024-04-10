@@ -6,6 +6,7 @@
 #include "CustomStructs.h"
 #include "MyNetWorking/Include.h"
 #include "Components/ActorComponent.h"
+#include "InkGuardGameMode.h"
 #include "PlayerNetwork.generated.h"
 
 class MyNetworkMgr;
@@ -36,8 +37,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	const FPlayerStruct& GetPlayerStruct();
 
-
-
 #pragma region NetworkRoutine
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
@@ -65,6 +64,7 @@ private:
 
 private:
 	MyNetworkMgr* m_pNetworkMgr = nullptr;
+
 	FPlayerStruct m_tPlayerStruct; 
 	float m_fSyncTimer = 0.f;
 };

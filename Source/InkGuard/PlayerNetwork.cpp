@@ -55,10 +55,12 @@ void UPlayerNetwork::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 bool UPlayerNetwork::CheckGameStart()
 {
 	if (m_pNetworkMgr->GetGameStart())
-		return true;
+		return true; 
 
-	m_pNetworkMgr->OpenMainGame();
+	
+	m_pNetworkMgr->SendGameStart();
 	m_pNetworkMgr->RecvGameStart();
+
 
 	
 	return false;
@@ -162,6 +164,8 @@ const FPlayerStruct& UPlayerNetwork::GetPlayerStruct()
 {
 	return m_tPlayerStruct;
 }
+
+
 
 void UPlayerNetwork::TidyNetworkTickRoutine()
 {

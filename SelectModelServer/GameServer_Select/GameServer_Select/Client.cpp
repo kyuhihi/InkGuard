@@ -64,7 +64,7 @@ void CClient::PutInReadOrWriteSet(const fd_set& ReadSet, const fd_set& WriteSet)
 
 bool CClient::IsInitializedSoldierMgr()
 {
-	if (m_pSoldierMgr->GetSoldierVecSize() == 0)
+	if ((m_pSoldierMgr) && (m_pSoldierMgr->GetSoldierVecSize() == 0))
 		return false;
 	else
 		return true;

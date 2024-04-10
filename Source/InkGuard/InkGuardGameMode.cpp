@@ -20,29 +20,13 @@ AInkGuardGameMode::AInkGuardGameMode()
 }
 
 AInkGuardGameMode::~AInkGuardGameMode()
-{
-}
-
-void AInkGuardGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
-{
-	Super::InitGame(MapName, Options, ErrorMessage);
-	
-	//m_pNetWorkMgr = MyNetworkMgr::GetInstance();
-
-}
-
-void AInkGuardGameMode::Logout(AController* Exiting)
-{
-	Super::Logout(Exiting);
-
-	MyNetworkMgr::GetInstance()->DestroyInstance();
+{//씬 게임모드도 삭제됨.
 
 	m_pNetWorkMgr = nullptr;
 }
 
 void AInkGuardGameMode::Initialize()
 {
-
 }
 
 void AInkGuardGameMode::OpenMainGame()
@@ -50,11 +34,12 @@ void AInkGuardGameMode::OpenMainGame()
 	if(m_pNetWorkMgr == nullptr)
 		m_pNetWorkMgr = MyNetworkMgr::GetInstance(); //connect작업 할거임.
 	// 스레드 생성
-	m_pNetWorkMgr->OpenMainGame();// 여기서 쓰레드 생성해서 게임 시작했는지 체크함.
+	//m_pNetWorkMgr->OpenMainGame();// 여기서 쓰레드 생성해서 게임 시작했는지 체크함.
 }
 
 void AInkGuardGameMode::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
 {
+	return;
 	if (m_pNetWorkMgr == nullptr)
 		m_pNetWorkMgr = MyNetworkMgr::GetInstance(); //connect작업 할거임.
 
@@ -68,12 +53,12 @@ EGameState AInkGuardGameMode::GetCurGameMode()
 	if (m_eGameMode == EGameState::GAME_MAINGAME)
 		return EGameState::GAME_MAINGAME;
 
-	bool bGameStart = m_pNetWorkMgr->GetGameStart();
+	//bool bGameStart = m_pNetWorkMgr->GetGameStart();
 
-	if (bGameStart)
-	{
-		m_eGameMode = EGameState::GAME_MAINGAME;
-	}
+	//if (bGameStart)
+	//{
+	//	m_eGameMode = EGameState::GAME_MAINGAME;
+	//}
 
-	return m_eGameMode;
+	return EGameState::GAME_WAITING;
 }

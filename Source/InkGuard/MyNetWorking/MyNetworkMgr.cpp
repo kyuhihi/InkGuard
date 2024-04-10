@@ -1,12 +1,9 @@
 #include "MyNetworkMgr.h"
 #include "../InkGuard.h"
 #include "../CustomFunctional.h"
+#include "../InkGuardGameMode.h"
 
 MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
-
-GAME_PLAY MyNetworkMgr::m_eGameTeam = GAME_PLAY::GAME_END;
-bool MyNetworkMgr::m_bGameStart = false;
-SOLDIERINFO MyNetworkMgr::m_tSoldierInfo[SOLDIER_MAX_CNT]; //내꺼 솔져 정보.
 
 MyNetworkMgr::MyNetworkMgr()
 {
@@ -46,10 +43,6 @@ void MyNetworkMgr::Initialize()
 	}
 	m_tClientSock.bConnectSuccess = true;
 
-	for (int i = 0; i < SOLDIER_MAX_CNT; ++i) {
-		m_tSoldierInfo[i].eSoldierType = (SOLDIER_TYPE)(i / 2);
-		m_tSoldierInfo[i].eTargetTerritory = (TERRITORY_TYPE)(i / 3);
-	}
 }
 
 void MyNetworkMgr::Tidy()
@@ -62,13 +55,42 @@ void MyNetworkMgr::Tidy()
 	WSACleanup();
 }
 
+void MyNetworkMgr::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
+{
+	if (SOLDIER_MAX_CNT < iSoldierType || iSoldierType < 0)
+		return;
+
+	m_tSoldierInfo[iIndex].eSoldierType = (SOLDIER_TYPE)iSoldierType;
+	m_tSoldierInfo[iIndex].eTargetTerritory = (TERRITORY_TYPE)iTargetTerritory;
+}
+
+#pragma region Packet
+
+void MyNetworkMgr::SendGameStart()
+{
+	C2S_PACKET_GAMESTART tNewPacket;
+	for (int i = 0; i < SOLDIER_MAX_CNT; i++) {
+		tNewPacket.cSoldierInfo[i] = m_tSoldierInfo[i].eSoldierType;
+		tNewPacket.cTargetTerritory[i] = m_tSoldierInfo[i].eTargetTerritory;
+	}
+
+	int retval{ 0 };
+	retval = send(m_tClientSock.sock, reinterpret_cast<char*>(&tNewPacket), sizeof(tNewPacket), 0);
+	if ((retval == SOCKET_ERROR) || (retval != sizeof(tNewPacket)))
+	{
+		err_quit("SendGameStart");
+		Tidy();
+		return;
+	}
+}
+
 void MyNetworkMgr::RecvGameStart()
 {//인자로 클라이언트 소켓이 넘어옴.
 
 	S2C_PACKET_GAMESTART tGameStartPacket;
 
 	int retval{ 0 };
-	retval = recv(m_tClientSock.sock, (char*)&tGameStartPacket, sizeof(tGameStartPacket), MSG_WAITALL);
+	retval = recv(m_tClientSock.sock, (char*)&tGameStartPacket, sizeof(S2C_PACKET_GAMESTART), MSG_WAITALL);
 	if ((retval == SOCKET_ERROR) || (retval != sizeof(tGameStartPacket))) {
 		err_quit("RecvGameStart");
 		MyNetworkMgr::GetInstance()->Tidy();
@@ -93,37 +115,6 @@ void MyNetworkMgr::RecvGameStart()
 	return;
 }
 
-void MyNetworkMgr::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
-{
-	if (SOLDIER_MAX_CNT < iSoldierType || iSoldierType < 0)
-		return;
-
-	m_tSoldierInfo[iIndex].eSoldierType = (SOLDIER_TYPE)iSoldierType;
-	m_tSoldierInfo[iIndex].eTargetTerritory = (TERRITORY_TYPE)iTargetTerritory;
-}
-
-#pragma region Packet
-
-void MyNetworkMgr::OpenMainGame() //내 솔져 정보들을 보내고, 상대편의 솔져정보들을 받는 쓰레드를 생성하고, 씬을 오픈시킴.
-{
-	C2S_PACKET_GAMESTART tSendPacket;
-	for (int i = 0; i < SOLDIER_MAX_CNT; ++i)
-	{
-		tSendPacket.cSoldierInfo[i] = m_tSoldierInfo[i].eSoldierType;
-		tSendPacket.cTargetTerritory[i] = m_tSoldierInfo[i].eTargetTerritory;
-	}
-
-
-	int retval{ 0 };
-	retval = send(m_tClientSock.sock, reinterpret_cast<char*>(&tSendPacket), sizeof(tSendPacket), 0);
-	if ((retval == SOCKET_ERROR) || (retval != sizeof(tSendPacket)))
-	{
-		err_quit("OpenMainGame Before Thread Creating");
-		Tidy();
-		return;
-	}
-
-}
 
 #pragma region SendPlayerTransform
 void MyNetworkMgr::SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform)
