@@ -34,9 +34,10 @@ private:
 	void Initialize();
 	void Tidy();
 
-	static DWORD WINAPI RecvGameStart(LPVOID arg);
 public:
 	void OpenMainGame();
+
+	void RecvGameStart();
 
 	void SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform);
 	void SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed);
@@ -54,20 +55,15 @@ public:
 
 	void SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory);
 
-	void SetGameStartMutexLock() { m_GameStartMutex.lock(); };
-	void SetGameStartMutexUnLock() { m_GameStartMutex.unlock(); };
-
 private:
 	char* SERVERIP = (char*)"127.0.0.1";
 	bool m_bSyncTime = false;
 	SOCKETINFO m_tClientSock;
 
-	static mutex m_GameStartMutex;
 	static GAME_PLAY m_eGameTeam;
 	static bool m_bGameStart;
 	static SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT]; //내꺼 솔져 정보.
 
-	HANDLE m_hThread;
 };
 
 

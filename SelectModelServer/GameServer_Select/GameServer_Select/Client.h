@@ -32,6 +32,8 @@ public://일반함수
 public:	//Getter Setter
 	bool IsInitializedSoldierMgr();
 	const SOCKETINFO* GetSocketInfo() { return &m_tSockInfo; }
+
+	void GetGameStartPacket(S2C_PACKET_GAMESTART& tOutGameStartPacket);
 	const S2C_PACKET_PLAYER_TRANSFORM GetOtherPlayerTransform() { return m_pPlayer->GetTransform(); }
 	const S2C_PACKET_PLAYER_INPUT GetOtherPlayerInputs() { return m_pPlayer->GetInputs(); }
 

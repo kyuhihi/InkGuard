@@ -53,11 +53,11 @@ void CClient::PutInReadOrWriteSet(const fd_set& ReadSet, const fd_set& WriteSet)
 		FD_SET(m_tSockInfo.sock, &WriteSet);	// 해당 소켓에 대해 데이터를 보내야하는 타이밍이다?-> WriteSet에 추가
 	}
 	else {
-		if (m_eState == STATE_READY && IsInitializedSoldierMgr())
-		{
-			FD_SET(m_tSockInfo.sock, &WriteSet);
-			return;
-		}
+		//if (m_eState == STATE_READY && IsInitializedSoldierMgr())
+		//{
+		//	FD_SET(m_tSockInfo.sock, &WriteSet);
+		//	return;
+		//}
 		FD_SET(m_tSockInfo.sock, &ReadSet);		// 해당 소켓에 대해 데이터를 받아야하는 타이밍이다?-> ReadSet에 추가
 	}
 }
@@ -68,6 +68,12 @@ bool CClient::IsInitializedSoldierMgr()
 		return false;
 	else
 		return true;
+}
+
+void CClient::GetGameStartPacket(S2C_PACKET_GAMESTART& tOutGameStartPacket)
+{
+	m_pSoldierMgr->GetGameStartPacket(tOutGameStartPacket);
+	return;
 }
 
 void CClient::SetOtherClient(CClient* pOtherClient)
@@ -142,10 +148,13 @@ bool CClient::SendPacket()
 }
 
 void CClient::SendGameStartPacket()
-{	
+{	//상대편거 넘겨야함.
 	S2C_PACKET_GAMESTART tGameStartPacket;
-	m_pSoldierMgr->GetGameStartPacket(tGameStartPacket);
-	tGameStartPacket.cGamePlay = m_tSockInfo.eGamePlayTeam;
+	if ((m_pOtherClient != nullptr) && (m_pOtherClient->IsInitializedSoldierMgr()))
+	{	//상대도 연결됐고			&&	상대한테도 팀정보를 받을수 있다면?
+		m_pOtherClient->GetGameStartPacket(tGameStartPacket);
+		tGameStartPacket.cGamePlay = m_tSockInfo.eGamePlayTeam;// 이건 색깔 정보니까 내꺼 던져야함. 괜춘.
+	}
 
 	m_tSockInfo.totalSendLen = sizeof(tGameStartPacket);
 	m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
@@ -160,12 +169,11 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 	case STATE_READY:
 	{
 		C2S_PACKET_GAMESTART* pPacket = reinterpret_cast<C2S_PACKET_GAMESTART*>(Packet.m_pBuf);
-		m_pSoldierMgr->Initialize(*pPacket);// 내 솔져들 객체만 생성. 다음에 언제 보내주냐?
-		if ((m_pOtherClient != nullptr) && (m_pOtherClient->IsInitializedSoldierMgr()))
-		{//여기서 게임스타트 패킷 보내자.
-			SendGameStartPacket();
-			m_pOtherClient->SendGameStartPacket();
-		}
+		if (IsInitializedSoldierMgr() == false)
+			m_pSoldierMgr->Initialize(*pPacket);	// 내 솔져들 객체만 생성. 다음에 언제 보내주냐?
+		//여기서 게임스타트 패킷 보내자.
+
+		SendGameStartPacket();
 
 		break;
 	}

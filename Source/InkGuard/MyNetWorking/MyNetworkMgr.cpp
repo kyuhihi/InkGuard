@@ -4,7 +4,6 @@
 
 MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 
-mutex MyNetworkMgr::m_GameStartMutex;
 GAME_PLAY MyNetworkMgr::m_eGameTeam = GAME_PLAY::GAME_END;
 bool MyNetworkMgr::m_bGameStart = false;
 SOLDIERINFO MyNetworkMgr::m_tSoldierInfo[SOLDIER_MAX_CNT]; //내꺼 솔져 정보.
@@ -55,43 +54,43 @@ void MyNetworkMgr::Initialize()
 
 void MyNetworkMgr::Tidy()
 {// 소켓 닫기
-	CloseHandle(m_hThread);
 
 	closesocket(m_tClientSock.sock);
 	m_tClientSock.bConnectSuccess = false;
 
-	m_GameStartMutex.unlock();
 	// 윈속 종료
 	WSACleanup();
 }
 
-DWORD WINAPI MyNetworkMgr::RecvGameStart(LPVOID arg)
+void MyNetworkMgr::RecvGameStart()
 {//인자로 클라이언트 소켓이 넘어옴.
-	SOCKET client_sock = (SOCKET)arg;
 
 	S2C_PACKET_GAMESTART tGameStartPacket;
 
 	int retval{ 0 };
-	retval = recv(client_sock, (char*)&tGameStartPacket, sizeof(tGameStartPacket), MSG_WAITALL);
+	retval = recv(m_tClientSock.sock, (char*)&tGameStartPacket, sizeof(tGameStartPacket), MSG_WAITALL);
 	if ((retval == SOCKET_ERROR) || (retval != sizeof(tGameStartPacket))) {
 		err_quit("RecvGameStart");
 		MyNetworkMgr::GetInstance()->Tidy();
-		return 0;
+		return;
 	}
 
-	m_GameStartMutex.lock();
-	
-	m_eGameTeam = (GAME_PLAY)tGameStartPacket.cGamePlay; //락을 잡아야겠쥐?
+	GAME_PLAY eGamePacketType = (GAME_PLAY)tGameStartPacket.cGamePlay; //락을 잡아야겠쥐?
+	if (eGamePacketType == GAME_END)  //게임 시작을 안한 것.
+		return;
+
 	m_bGameStart = true;
+
+	m_eGameTeam = eGamePacketType;
+
 
 	for (int i = 0; i < SOLDIER_MAX_CNT; ++i)
 	{//받은 상대편 패킷으로 이제 생성해야함.
 
 	}
 
-	m_GameStartMutex.unlock();
-	
-	return 0;
+
+	return;
 }
 
 void MyNetworkMgr::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
@@ -124,7 +123,6 @@ void MyNetworkMgr::OpenMainGame() //내 솔져 정보들을 보내고, 상대편의 솔져정보들
 		return;
 	}
 
-	m_hThread = CreateThread(NULL, 0, RecvGameStart, (LPVOID)m_tClientSock.sock, 0, NULL);
 }
 
 #pragma region SendPlayerTransform

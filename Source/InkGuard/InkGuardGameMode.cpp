@@ -68,9 +68,8 @@ EGameState AInkGuardGameMode::GetCurGameMode()
 	if (m_eGameMode == EGameState::GAME_MAINGAME)
 		return EGameState::GAME_MAINGAME;
 
-	m_pNetWorkMgr->SetGameStartMutexLock();
 	bool bGameStart = m_pNetWorkMgr->GetGameStart();
-	m_pNetWorkMgr->SetGameStartMutexUnLock();
+
 	if (bGameStart)
 	{
 		m_eGameMode = EGameState::GAME_MAINGAME;
