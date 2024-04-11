@@ -53,11 +53,6 @@ void CClient::PutInReadOrWriteSet(const fd_set& ReadSet, const fd_set& WriteSet)
 		FD_SET(m_tSockInfo.sock, &WriteSet);	// 해당 소켓에 대해 데이터를 보내야하는 타이밍이다?-> WriteSet에 추가
 	}
 	else {
-		//if (m_eState == STATE_READY && IsInitializedSoldierMgr())
-		//{
-		//	FD_SET(m_tSockInfo.sock, &WriteSet);
-		//	return;
-		//}
 		FD_SET(m_tSockInfo.sock, &ReadSet);		// 해당 소켓에 대해 데이터를 받아야하는 타이밍이다?-> ReadSet에 추가
 	}
 }
@@ -117,8 +112,6 @@ bool CClient::RecvPacket()
 
 bool CClient::SendPacket()
 {// 데이터 보내기
-	if (!m_tSockInfo.bMatchMakingSuccess)
-		return true;
 
 	if (m_tSockInfo.totalSendLen == m_tSockInfo.sendbytes) {// 이건 
 		err_display("total != sendbytes");//이건 나중에 조금 손봐.
@@ -136,12 +129,12 @@ bool CClient::SendPacket()
 	}
 	else {// SendPacket Success
 		m_tSockInfo.sendbytes += retval;
+		cout << retval << "만큼 보냄" << endl;
 		if (m_tSockInfo.totalSendLen == m_tSockInfo.sendbytes) {//SEND ALL COMPLETE
 			SendComplete();
 			
 		}
 	}
-
 
 	
 	return true;
@@ -149,11 +142,16 @@ bool CClient::SendPacket()
 
 void CClient::SendGameStartPacket()
 {	//상대편거 넘겨야함.
+
+	if (m_tSockInfo.totalSendLen != 0)
+		return;
+
 	S2C_PACKET_GAMESTART tGameStartPacket;
 	if ((m_pOtherClient != nullptr) && (m_pOtherClient->IsInitializedSoldierMgr()))
 	{	//상대도 연결됐고			&&	상대한테도 팀정보를 받을수 있다면?
 		m_pOtherClient->GetGameStartPacket(tGameStartPacket);
 		tGameStartPacket.cGamePlay = m_tSockInfo.eGamePlayTeam;// 이건 색깔 정보니까 내꺼 던져야함. 괜춘.
+		m_eReservedState = STATE_TRANSFORM;
 	}
 
 	m_tSockInfo.totalSendLen = sizeof(tGameStartPacket);
@@ -172,9 +170,10 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 		if (IsInitializedSoldierMgr() == false)
 			m_pSoldierMgr->Initialize(*pPacket);	// 내 솔져들 객체만 생성. 다음에 언제 보내주냐?
 		//여기서 게임스타트 패킷 보내자.
-
+		
+		
 		SendGameStartPacket();
-
+		
 		break;
 	}
 	case STATE_TRANSFORM: 
@@ -226,7 +225,7 @@ void CClient::SendComplete()
 	switch (m_eState)
 	{
 	case STATE_READY:
-		SetClientState(STATE_TRANSFORM);
+		strState = " Ready";
 		break;
 	case STATE_TRANSFORM:
 		strState = " Transform";
@@ -242,11 +241,17 @@ void CClient::SendComplete()
 		break;
 	}
 
+	if (m_eReservedState != STATE_END) {
+		SetClientState(m_eReservedState);
+		m_eReservedState = STATE_END;
+	}
+
+
 	struct sockaddr_in clientaddr;
 	int addrlen = sizeof(clientaddr);
 	getpeername(m_tSockInfo.sock, (struct sockaddr*)&clientaddr, &addrlen);
 
-	//cout << ntohs(clientaddr.sin_port)<< strState << " 다 보냈어." << endl;
+	cout << ntohs(clientaddr.sin_port)<< strState << " 다 보냈어." << endl;
 
 }
 

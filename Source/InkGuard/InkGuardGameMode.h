@@ -26,14 +26,9 @@ public:
 	~AInkGuardGameMode();
 
 public:
-	
-
 	void Initialize();
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
-	void OpenMainGame();
-
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void SetSoldierInfo(int iIndex,int iSoldierType, int iTargetTerritory);
 

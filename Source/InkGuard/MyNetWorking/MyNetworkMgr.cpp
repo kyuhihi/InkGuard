@@ -8,6 +8,7 @@ MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 MyNetworkMgr::MyNetworkMgr()
 {
 	Initialize();
+	InitializeSoldierInfo();
 }
 
 MyNetworkMgr::~MyNetworkMgr()
@@ -55,6 +56,15 @@ void MyNetworkMgr::Tidy()
 	WSACleanup();
 }
 
+void MyNetworkMgr::InitializeSoldierInfo()
+{
+	for (int i = 0; i < SOLDIER_MAX_CNT; i++)
+	{
+		m_tSoldierInfo[i].eSoldierType = (SOLDIER_TYPE)(i % SOLDIER_TYPE::SOLDIER_END);
+		m_tSoldierInfo[i].eTargetTerritory = (TERRITORY_TYPE)(i % TERRITORY_TYPE::TERRITORY_END);
+	}
+}
+
 void MyNetworkMgr::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
 {
 	if (SOLDIER_MAX_CNT < iSoldierType || iSoldierType < 0)
@@ -68,6 +78,8 @@ void MyNetworkMgr::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerri
 
 void MyNetworkMgr::SendGameStart()
 {
+	if (!m_tClientSock.bConnectSuccess)
+		return;
 	C2S_PACKET_GAMESTART tNewPacket;
 	for (int i = 0; i < SOLDIER_MAX_CNT; i++) {
 		tNewPacket.cSoldierInfo[i] = m_tSoldierInfo[i].eSoldierType;
@@ -86,7 +98,8 @@ void MyNetworkMgr::SendGameStart()
 
 void MyNetworkMgr::RecvGameStart()
 {//인자로 클라이언트 소켓이 넘어옴.
-
+	if (!m_tClientSock.bConnectSuccess)
+		return;
 	S2C_PACKET_GAMESTART tGameStartPacket;
 
 	int retval{ 0 };

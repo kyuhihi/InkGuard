@@ -55,6 +55,8 @@ private:	//Private Packet
 private:
 	SOCKETINFO m_tSockInfo;
 	CLIENT_STATE m_eState = STATE_END;
+
+	CLIENT_STATE m_eReservedState = STATE_END;
 	CPlayer* m_pPlayer = nullptr;
 
 	CClient* m_pOtherClient = nullptr;

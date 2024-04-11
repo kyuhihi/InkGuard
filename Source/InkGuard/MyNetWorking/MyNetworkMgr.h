@@ -33,6 +33,8 @@ private:
 private:
 	void Initialize();
 	void Tidy();
+	
+	void InitializeSoldierInfo();
 
 public:
 	//void OpenMainGame();
