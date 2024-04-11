@@ -37,7 +37,6 @@ public:
 
 private:
 	MyNetworkMgr* m_pNetWorkMgr = nullptr;
-	EGameState m_eGameMode = EGameState::GAME_WAITING;
 };
 
 

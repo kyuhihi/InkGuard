@@ -57,14 +57,20 @@ public:
 
 	void SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory);
 
+	void SetReservedOpenLevel(bool bNewValue);
+	const bool& GetReservedOpenLevel() { return m_bReservedOpenLevel; };
+
 private:
 	char* SERVERIP = (char*)"127.0.0.1";
 	bool m_bSyncTime = false;
 	SOCKETINFO m_tClientSock;
 
-	GAME_PLAY m_eGameTeam  = GAME_PLAY::GAME_END;;
+	GAME_PLAY m_eGameTeam  = GAME_PLAY::GAME_END;		//내 색깔
 	bool m_bGameStart = false;
-	SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT]; //내꺼 솔져 정보.
+	bool m_bReservedOpenLevel = false;					// 게임스타트 패킷을 받고 오픈레벨 하기 직전까지 true할거임.
+
+	SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT];		//내꺼 솔져 정보.
+	SOLDIERINFO m_tOtherSoldierInfo[SOLDIER_MAX_CNT];	//상대거 솔져 정보.
 };
 
 

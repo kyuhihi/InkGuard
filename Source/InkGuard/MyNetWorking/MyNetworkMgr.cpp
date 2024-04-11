@@ -74,12 +74,19 @@ void MyNetworkMgr::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerri
 	m_tSoldierInfo[iIndex].eTargetTerritory = (TERRITORY_TYPE)iTargetTerritory;
 }
 
+void MyNetworkMgr::SetReservedOpenLevel(bool bNewValue)
+{
+	m_bReservedOpenLevel = bNewValue;
+}
+
 #pragma region Packet
 
+#pragma region SendGameStart
 void MyNetworkMgr::SendGameStart()
 {
 	if (!m_tClientSock.bConnectSuccess)
 		return;
+
 	C2S_PACKET_GAMESTART tNewPacket;
 	for (int i = 0; i < SOLDIER_MAX_CNT; i++) {
 		tNewPacket.cSoldierInfo[i] = m_tSoldierInfo[i].eSoldierType;
@@ -100,6 +107,7 @@ void MyNetworkMgr::RecvGameStart()
 {//인자로 클라이언트 소켓이 넘어옴.
 	if (!m_tClientSock.bConnectSuccess)
 		return;
+
 	S2C_PACKET_GAMESTART tGameStartPacket;
 
 	int retval{ 0 };
@@ -114,19 +122,21 @@ void MyNetworkMgr::RecvGameStart()
 	if (eGamePacketType == GAME_END)  //게임 시작을 안한 것.
 		return;
 
-	m_bGameStart = true;
+	m_bGameStart = true;					//이거 켜지면 게임 시작인거.
 
 	m_eGameTeam = eGamePacketType;
-
+	SetReservedOpenLevel(true);		//오픈 레벨 예약이 되었습니까? 예.
 
 	for (int i = 0; i < SOLDIER_MAX_CNT; ++i)
-	{//받은 상대편 패킷으로 이제 생성해야함.
-
+	{//받은 상대편 패킷으로 저장.
+		m_tOtherSoldierInfo[i].eSoldierType = (SOLDIER_TYPE)tGameStartPacket.cOtherSoldierInfo[i];
+		m_tOtherSoldierInfo[i].eTargetTerritory = (TERRITORY_TYPE)tGameStartPacket.cOtherTargetTerritory[i];
 	}
 
 
 	return;
 }
+#pragma region
 
 
 #pragma region SendPlayerTransform

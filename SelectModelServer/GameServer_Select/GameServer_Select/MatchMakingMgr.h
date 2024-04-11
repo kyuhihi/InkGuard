@@ -10,6 +10,7 @@ public:
 
 public:
 	void AddClient(CClient* pClient);
+	void RemoveClient(CClient* pClient);
 
 private:
 	bool CheckMatchMakingPossible();

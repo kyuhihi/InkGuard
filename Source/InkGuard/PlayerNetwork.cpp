@@ -28,6 +28,7 @@ void UPlayerNetwork::BeginPlay()
 	Super::BeginPlay();
 	m_pNetworkMgr = MyNetworkMgr::GetInstance();
 
+	m_pNetworkMgr->SetReservedOpenLevel(false);
 	// ...
 	
 }
@@ -54,7 +55,7 @@ void UPlayerNetwork::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 bool UPlayerNetwork::CheckGameStart()
 {
-	if (m_pNetworkMgr->GetGameStart())
+	if (m_pNetworkMgr->GetGameStart() && m_pNetworkMgr->GetReservedOpenLevel())
 		return true; 
 
 	

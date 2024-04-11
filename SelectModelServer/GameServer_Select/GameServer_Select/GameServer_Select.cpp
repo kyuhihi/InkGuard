@@ -139,7 +139,9 @@ void RemoveSocketInfo(int nIndex)
 {
 	const CClient::SOCKETINFO* ptr = ClientArray[nIndex]->GetSocketInfo();
 
-	delete ClientArray[nIndex];
+	MatchMakingMgr.RemoveClient(ClientArray[nIndex]);
+
+	delete ClientArray[nIndex];       
 	ClientArray[nIndex] = nullptr;
 
 	if (nIndex != (nTotalSockets - 1))

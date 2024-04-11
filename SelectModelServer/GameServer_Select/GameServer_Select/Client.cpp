@@ -129,7 +129,7 @@ bool CClient::SendPacket()
 	}
 	else {// SendPacket Success
 		m_tSockInfo.sendbytes += retval;
-		cout << retval << "¸¸Å­ º¸³¿" << endl;
+		//cout << retval << "¸¸Å­ º¸³¿" << endl;
 		if (m_tSockInfo.totalSendLen == m_tSockInfo.sendbytes) {//SEND ALL COMPLETE
 			SendComplete();
 			
@@ -251,7 +251,7 @@ void CClient::SendComplete()
 	int addrlen = sizeof(clientaddr);
 	getpeername(m_tSockInfo.sock, (struct sockaddr*)&clientaddr, &addrlen);
 
-	cout << ntohs(clientaddr.sin_port)<< strState << " ´Ù º¸³Â¾î." << endl;
+	//cout << ntohs(clientaddr.sin_port)<< strState << " ´Ù º¸³Â¾î." << endl;
 
 }
 

@@ -39,15 +39,18 @@ void AInkGuardGameMode::SetSoldierInfo(int iIndex, int iSoldierType, int iTarget
 
 EGameState AInkGuardGameMode::GetCurGameMode()
 {
-	if (m_eGameMode == EGameState::GAME_MAINGAME)
+	if (m_pNetWorkMgr == nullptr)
+		m_pNetWorkMgr = MyNetworkMgr::GetInstance(); //connect작업 할거임.
+	
+	if ((m_pNetWorkMgr->GetGameStart() == true))
+	{
+		if (m_pNetWorkMgr->GetReservedOpenLevel() == true)
+		{
+			return EGameState::GAME_WAITING;
+		}
+		//false라면 제대로 시작된 것.
 		return EGameState::GAME_MAINGAME;
-
-	//bool bGameStart = m_pNetWorkMgr->GetGameStart();
-
-	//if (bGameStart)
-	//{
-	//	m_eGameMode = EGameState::GAME_MAINGAME;
-	//}
+	}
 
 	return EGameState::GAME_WAITING;
 }
