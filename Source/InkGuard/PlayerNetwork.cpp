@@ -27,9 +27,6 @@ void UPlayerNetwork::BeginPlay()
 {
 	Super::BeginPlay();
 	m_pNetworkMgr = MyNetworkMgr::GetInstance();
-
-	m_pNetworkMgr->SetReservedOpenLevel(false);
-	// ...
 	
 }
 

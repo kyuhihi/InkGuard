@@ -33,6 +33,9 @@ public:
 	void SetSoldierInfo(int iIndex,int iSoldierType, int iTargetTerritory);
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void SetReservedOpenLevel(bool bNewValue);
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	EGameState GetCurGameMode();
 
 private:

@@ -30,17 +30,25 @@ void AInkGuardGameMode::Initialize()
 void AInkGuardGameMode::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
 {
 	if (m_pNetWorkMgr == nullptr)
-		m_pNetWorkMgr = MyNetworkMgr::GetInstance(); //connect작업 할거임.
+		m_pNetWorkMgr = MyNetworkMgr::GetInstance(); 
 
 
 	m_pNetWorkMgr->SetSoldierInfo(iIndex, iSoldierType, iTargetTerritory);
 
 }
 
+void AInkGuardGameMode::SetReservedOpenLevel(bool bNewValue)
+{
+	if (m_pNetWorkMgr == nullptr)
+		m_pNetWorkMgr = MyNetworkMgr::GetInstance(); 
+
+	m_pNetWorkMgr->SetReservedOpenLevel(bNewValue); //메인레벨의 경우에만 set false를 걸어준다.
+}
+
 EGameState AInkGuardGameMode::GetCurGameMode()
 {
 	if (m_pNetWorkMgr == nullptr)
-		m_pNetWorkMgr = MyNetworkMgr::GetInstance(); //connect작업 할거임.
+		m_pNetWorkMgr = MyNetworkMgr::GetInstance();
 	
 	if ((m_pNetWorkMgr->GetGameStart() == true))
 	{
