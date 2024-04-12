@@ -55,7 +55,7 @@ void UPlayerNetwork::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 bool UPlayerNetwork::CheckGameStart()
 {
-	if (m_pNetworkMgr->GetGameStart() && m_pNetworkMgr->GetReservedOpenLevel())
+	if (m_pNetworkMgr->GetGameStart() && m_pNetworkMgr->GetReservedOpenLevel())// 게임 시작이 되었는지. 오픈레벨이 걸린상황은 아닌지.
 		return true; 
 
 	

@@ -37,6 +37,7 @@ public:
 
 private:
 	MyNetworkMgr* m_pNetWorkMgr = nullptr;
+
 };
 
 
