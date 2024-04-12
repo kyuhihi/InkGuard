@@ -51,6 +51,7 @@ public:
 
 public:
 	const bool& GetGameStart() { return m_bGameStart; }
+	const GAME_PLAY& GetTeamColor() { return m_eGameTeam; }
 
 	void SetSyncTime(bool bSyncTime) { m_bSyncTime = bSyncTime; }
 	const bool& GetSyncTime() { return m_bSyncTime; }
@@ -60,6 +61,12 @@ public:
 	void SetReservedOpenLevel(bool bNewValue);
 	const bool& GetReservedOpenLevel() { return m_bReservedOpenLevel; };
 
+	void SetSpawnMgr(class ASpawnMgr* pSpawnMgr);
+
+public:
+	static SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT];
+	static SOLDIERINFO m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
+
 private:
 	char* SERVERIP = (char*)"127.0.0.1";
 	bool m_bSyncTime = false;
@@ -68,9 +75,9 @@ private:
 	GAME_PLAY m_eGameTeam  = GAME_PLAY::GAME_END;		//내 색깔
 	bool m_bGameStart = false;
 	bool m_bReservedOpenLevel = false;					// 게임스타트 패킷을 받고 오픈레벨 하기 직전까지 true할거임.
-
-	SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT];		//내꺼 솔져 정보.
-	SOLDIERINFO m_tOtherSoldierInfo[SOLDIER_MAX_CNT];	//상대거 솔져 정보.
+	
+	
+	class ASpawnMgr* m_pSpawnMgr = nullptr;
 };
 
 

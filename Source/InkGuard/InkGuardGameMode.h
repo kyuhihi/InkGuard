@@ -38,6 +38,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	EGameState GetCurGameMode();
 
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void GetTeamColor(bool& bRedColor);
+
 private:
 	MyNetworkMgr* m_pNetWorkMgr = nullptr;
 

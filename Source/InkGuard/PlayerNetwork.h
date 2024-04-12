@@ -42,7 +42,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	bool CheckGameStart();
 
-
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void SendPlayerTransform(float DeltaTime);
 

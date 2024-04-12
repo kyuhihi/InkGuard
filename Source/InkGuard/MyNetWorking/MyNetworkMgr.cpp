@@ -2,13 +2,17 @@
 #include "../InkGuard.h"
 #include "../CustomFunctional.h"
 #include "../InkGuardGameMode.h"
+#include "../SpawnMgr.h"
 
 MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 
+SOLDIERINFO MyNetworkMgr::m_tSoldierInfo[SOLDIER_MAX_CNT];
+SOLDIERINFO MyNetworkMgr::m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
+
 MyNetworkMgr::MyNetworkMgr()
 {
-	Initialize();
-	InitializeSoldierInfo();
+	Initialize(); //네트워킹 커넥트 작업.
+	ASpawnMgr::Initialize();
 }
 
 MyNetworkMgr::~MyNetworkMgr()
@@ -54,24 +58,18 @@ void MyNetworkMgr::Tidy()
 
 	// 윈속 종료
 	WSACleanup();
+	m_pSpawnMgr = nullptr;
 }
 
-void MyNetworkMgr::InitializeSoldierInfo()
-{
-	for (int i = 0; i < SOLDIER_MAX_CNT; i++)
-	{
-		m_tSoldierInfo[i].eSoldierType = (SOLDIER_TYPE)(i % SOLDIER_TYPE::SOLDIER_END);
-		m_tSoldierInfo[i].eTargetTerritory = (TERRITORY_TYPE)(i % TERRITORY_TYPE::TERRITORY_END);
-	}
-}
+
 
 void MyNetworkMgr::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
 {
-	if (SOLDIER_MAX_CNT < iSoldierType || iSoldierType < 0)
+	if (SOLDIER_MAX_CNT <= iSoldierType || iSoldierType < 0)
 		return;
 
-	m_tSoldierInfo[iIndex].eSoldierType = (SOLDIER_TYPE)iSoldierType;
-	m_tSoldierInfo[iIndex].eTargetTerritory = (TERRITORY_TYPE)iTargetTerritory;
+	ASpawnMgr::SetSoldierInfo(iIndex, iSoldierType, iTargetTerritory); //우리팀 셋팅
+
 }
 
 void MyNetworkMgr::SetReservedOpenLevel(bool bNewValue)
@@ -127,12 +125,7 @@ void MyNetworkMgr::RecvGameStart()
 	m_eGameTeam = eGamePacketType;
 	SetReservedOpenLevel(true);		//오픈 레벨 예약이 되었습니까? 예.
 
-	for (int i = 0; i < SOLDIER_MAX_CNT; ++i)
-	{//받은 상대편 패킷으로 저장.
-		m_tOtherSoldierInfo[i].eSoldierType = (SOLDIER_TYPE)tGameStartPacket.cOtherSoldierInfo[i];
-		m_tOtherSoldierInfo[i].eTargetTerritory = (TERRITORY_TYPE)tGameStartPacket.cOtherTargetTerritory[i];
-	}
-
+	ASpawnMgr::SetOtherSoldierInfo(tGameStartPacket); //적팀것 셋팅
 
 	return;
 }

@@ -62,3 +62,15 @@ EGameState AInkGuardGameMode::GetCurGameMode()
 
 	return EGameState::GAME_WAITING;
 }
+
+void AInkGuardGameMode::GetTeamColor(bool& bRedColor)
+{
+	if (m_pNetWorkMgr == nullptr)
+		m_pNetWorkMgr = MyNetworkMgr::GetInstance();
+
+	GAME_PLAY eTeamColor = m_pNetWorkMgr->GetTeamColor();
+	if (eTeamColor == GAME_RED_TEAM)
+		bRedColor = true;
+	else
+		bRedColor = false;
+}
