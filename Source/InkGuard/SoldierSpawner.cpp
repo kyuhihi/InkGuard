@@ -2,6 +2,8 @@
 
 
 #include "SoldierSpawner.h"
+#include "SpawnMgr.h"
+
 
 // Sets default values
 ASoldierSpawner::ASoldierSpawner()
@@ -23,5 +25,13 @@ void ASoldierSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASoldierSpawner::AppendNewDuty(const int& iSoldierType)
+{
+	FSpawnDutyStruct NewDuty;
+	NewDuty.iSpawnType = iSoldierType;
+
+	m_tSpawnInfos.Add(NewDuty);
 }
 

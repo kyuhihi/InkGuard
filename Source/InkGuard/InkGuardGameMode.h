@@ -10,7 +10,7 @@
 class MyNetworkMgr; 
 
 UENUM(BlueprintType)
-enum class EGameState : uint8
+enum class EMainGameState : uint8
 {
 	GAME_WAITING UMETA(DisplayName = "GAME_WAITING"),
 	GAME_MAINGAME UMETA(DisplayName = "GAME_MAINGAME"),
@@ -36,7 +36,7 @@ public:
 	void SetReservedOpenLevel(bool bNewValue);
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
-	EGameState GetCurGameMode();
+	EMainGameState GetCurGameMode();
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void GetTeamColor(bool& bRedColor);

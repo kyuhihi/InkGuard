@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SpawnMgr.h"
+#include "SoldierSpawner.h"
+#include "InkGuardGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ASpawnMgr::ASpawnMgr()
@@ -13,6 +16,11 @@ ASpawnMgr::ASpawnMgr()
 ASpawnMgr::~ASpawnMgr()
 {
 	m_pNetworkMgr = nullptr;
+	m_pInkGuardGameMode = nullptr;
+
+	for (auto& pSpawner : m_pSpawners)
+		pSpawner = nullptr;
+	m_pSpawners.Empty(0);
 }
 
 // Called when the game starts or when spawned
@@ -20,13 +28,48 @@ void ASpawnMgr::BeginPlay()
 {
 	Super::BeginPlay();
 	m_pNetworkMgr = MyNetworkMgr::GetInstance();
-
+	m_pInkGuardGameMode = Cast<AInkGuardGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
 // Called every frame
 void ASpawnMgr::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+}
+
+void ASpawnMgr::RegisterSpawner(ASoldierSpawner* pCallSoldierSpawner, const int iSpawnerColor, const int iTargetTerritory)
+{
+	m_pSpawners.Add(pCallSoldierSpawner);
+	GAME_PLAY eSpawnerColor = (GAME_PLAY)iSpawnerColor;
+
+	bool bTeamRedColor{ true };
+	m_pInkGuardGameMode->GetTeamColor(bTeamRedColor);
+	
+	GAME_PLAY eTeamColor = GAME_PLAY::GAME_BLUE_TEAM;
+	if (bTeamRedColor)
+		eTeamColor = GAME_RED_TEAM;
+
+	if (eTeamColor == eSpawnerColor)
+	{// 내팀 컬러와 같으면 내거 뒤지고 내 팀컬러와 다르면 적팀 솔져정보 뒤짐.
+		for (int i = 0; i < SOLDIER_MAX_CNT; i++)
+		{
+			if (iTargetTerritory == MyNetworkMgr::m_tSoldierInfo[i].eTargetTerritory)
+			{
+				pCallSoldierSpawner->AppendNewDuty(MyNetworkMgr::m_tSoldierInfo[i].eSoldierType);
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < SOLDIER_MAX_CNT; i++)
+		{
+			if (iTargetTerritory == MyNetworkMgr::m_tOtherSoldierInfo[i].eTargetTerritory)
+			{
+				pCallSoldierSpawner->AppendNewDuty(MyNetworkMgr::m_tOtherSoldierInfo[i].eSoldierType);
+			}
+		}
+	}
 
 }
 

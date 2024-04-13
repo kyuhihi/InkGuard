@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "MyNetWorking/Include.h"
+#include "CustomStructs.h"
 #include "SoldierSpawner.generated.h"
 
 UCLASS()
@@ -24,10 +25,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	void AppendNewDuty(const int& iSoldierType);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int iTargetTerritoryType = TERRITORY_END;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int iTeamColor = GAME_END;
+	int iSpawnerColor = GAME_END;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FSpawnDutyStruct> m_tSpawnInfos;
 };

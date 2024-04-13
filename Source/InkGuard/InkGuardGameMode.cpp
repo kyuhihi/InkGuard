@@ -20,7 +20,7 @@ AInkGuardGameMode::AInkGuardGameMode()
 
 AInkGuardGameMode::~AInkGuardGameMode()
 {//씬 게임모드도 삭제됨.
-
+	m_pNetWorkMgr = nullptr;
 }
 
 void AInkGuardGameMode::Initialize()
@@ -45,7 +45,7 @@ void AInkGuardGameMode::SetReservedOpenLevel(bool bNewValue)
 	m_pNetWorkMgr->SetReservedOpenLevel(bNewValue); //메인레벨의 경우에만 set false를 걸어준다.
 }
 
-EGameState AInkGuardGameMode::GetCurGameMode()
+EMainGameState AInkGuardGameMode::GetCurGameMode()
 {
 	if (m_pNetWorkMgr == nullptr)
 		m_pNetWorkMgr = MyNetworkMgr::GetInstance();
@@ -54,13 +54,13 @@ EGameState AInkGuardGameMode::GetCurGameMode()
 	{
 		if (m_pNetWorkMgr->GetReservedOpenLevel() == true)
 		{
-			return EGameState::GAME_WAITING;
+			return EMainGameState::GAME_WAITING;
 		}
 		//false라면 제대로 시작된 것.
-		return EGameState::GAME_MAINGAME;
+		return EMainGameState::GAME_MAINGAME;
 	}
 
-	return EGameState::GAME_WAITING;
+	return EMainGameState::GAME_WAITING;
 }
 
 void AInkGuardGameMode::GetTeamColor(bool& bRedColor)

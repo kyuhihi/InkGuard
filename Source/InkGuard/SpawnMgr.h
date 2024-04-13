@@ -8,6 +8,9 @@
 #include "MyNetWorking/MyNetworkMgr.h"
 #include "SpawnMgr.generated.h"
 
+//아래 클래스는 매니저 이긴한데 main map에 배치되는 액터임. 
+//무언가 호출하려 결심한다면 해당 객체가 메인맵에서 먼저 생성되었을지 고민해봐야함.
+
 UCLASS()
 class INKGUARD_API ASpawnMgr : public AActor
 {
@@ -26,14 +29,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+public://Spawner Call
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void RegisterSpawner(ASoldierSpawner* pCallSoldierSpawner, const int iSpawnerColor, const int iTargetTerritory); //지금 caller 스포너가 스폰해야할 객체를 물어보고 가져오는 코드.
+
 public:
 	static void Initialize();
 	static void SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory);
 	static void SetOtherSoldierInfo(const S2C_PACKET_GAMESTART& tGameStartPacket);
 
 private:
+	TArray<ASoldierSpawner*> m_pSpawners;
+	
+private:
 	MyNetworkMgr* m_pNetworkMgr = nullptr;
-	//SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT];			//내꺼 솔져 정보. .. 매번 객체가 레벨 열릴때마다 소멸됨..
-	//SOLDIERINFO m_tOtherSoldierInfo[SOLDIER_MAX_CNT];	//상대거 솔져 정보.
-
+	class AInkGuardGameMode* m_pInkGuardGameMode = nullptr;
 };
