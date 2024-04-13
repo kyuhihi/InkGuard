@@ -17,6 +17,9 @@ AInkGuardGameMode::AInkGuardGameMode()
 
 AInkGuardGameMode::~AInkGuardGameMode()
 {
+	MyNetworkMgr::GetInstance()->DestroyInstance();
+
+	m_pNetWorkMgr = nullptr;
 }
 
 void AInkGuardGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
@@ -31,7 +34,7 @@ void AInkGuardGameMode::Logout(AController* Exiting)
 {
 	Super::Logout(Exiting);
 
-	MyNetworkMgr::GetInstance()->DestroyInstance();
+	//MyNetworkMgr::GetInstance()->DestroyInstance();
 
-	m_pNetWorkMgr = nullptr;
+	//m_pNetWorkMgr = nullptr;
 }
