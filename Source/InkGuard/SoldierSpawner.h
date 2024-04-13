@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "MyNetWorking/Include.h"
 #include "CustomStructs.h"
+#include "SoldierInterface.h"
 #include "SoldierSpawner.generated.h"
 
 UCLASS()
@@ -27,6 +28,9 @@ public:
 
 public:
 	void AppendNewDuty(const int& iSoldierType);
+
+	UFUNCTION(BlueprintCallable, Category = "Setting to Object")
+	void InitializeAboutSpawnerBySoldierInterface(AActor* pActor);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

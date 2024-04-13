@@ -35,3 +35,14 @@ void ASoldierSpawner::AppendNewDuty(const int& iSoldierType)
 	m_tSpawnInfos.Add(NewDuty);
 }
 
+void ASoldierSpawner::InitializeAboutSpawnerBySoldierInterface(AActor* pActor)
+{
+	ISoldierInterface* pTargetInterface = nullptr; 
+	pTargetInterface  = Cast<ISoldierInterface>(pActor);
+	if (pTargetInterface)
+	{
+		pTargetInterface->SetAboutColor(iSpawnerColor);
+		pTargetInterface->SetAboutSpawner(this);
+	}
+}
+
