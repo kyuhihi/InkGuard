@@ -7,7 +7,7 @@
 #include "SoldierInterface.generated.h"
 
 // This class does not need to be modified.
-UINTERFACE(MinimalAPI)
+UINTERFACE(MinimalAPI, Blueprintable)
 class USoldierInterface : public UInterface
 {
 	GENERATED_BODY()
