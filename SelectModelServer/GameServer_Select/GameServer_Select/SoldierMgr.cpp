@@ -63,3 +63,12 @@ void CSoldierMgr::GetGameStartPacket(S2C_PACKET_GAMESTART& tOutGameStartPacket)
 	}
 	return;
 }
+
+void CSoldierMgr::SetGameStartPacket(const C2S_PACKET_GAMESTART& tGameStartPacket)
+{
+	for (int i = 0; i < SOLDIER_MAX_CNT; i++) 
+	{
+		m_pSoldiers[i]->SetTargetTerritory((CSoldier::TERRITORY_TYPE)tGameStartPacket.cTargetTerritory[i]);
+		m_pSoldiers[i]->SetSoldierIndex(i);
+	}
+}

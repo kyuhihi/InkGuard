@@ -168,8 +168,9 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 	{
 		C2S_PACKET_GAMESTART* pPacket = reinterpret_cast<C2S_PACKET_GAMESTART*>(Packet.m_pBuf);
 		if (IsInitializedSoldierMgr() == false)
-			m_pSoldierMgr->Initialize(*pPacket);	// 내 솔져들 객체만 생성. 다음에 언제 보내주냐?
-		//여기서 게임스타트 패킷 보내자.
+			m_pSoldierMgr->Initialize(*pPacket);
+		else
+			m_pSoldierMgr->SetGameStartPacket(*pPacket);
 		
 		
 		SendGameStartPacket();

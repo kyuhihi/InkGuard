@@ -61,8 +61,6 @@ public:
 	void SetReservedOpenLevel(bool bNewValue);
 	const bool& GetReservedOpenLevel() { return m_bReservedOpenLevel; };
 
-	void SetSpawnMgr(class ASpawnMgr* pSpawnMgr);
-
 public:
 	static SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT];
 	static SOLDIERINFO m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
