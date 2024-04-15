@@ -15,6 +15,18 @@ class INKGUARD_API UCustomStructs : public UObject
 	GENERATED_BODY()
 };
 
+USTRUCT(Atomic, BlueprintType)
+struct FSpawnDutyStruct
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<ACharacter> pTargetActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int iSpawnType = 0;
+
+};
 
 USTRUCT(Atomic, BlueprintType)
 struct FPlayerStruct

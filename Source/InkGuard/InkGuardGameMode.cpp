@@ -4,6 +4,9 @@
 #include "MyNetWorking/MyNetworkMgr.h"
 #include "InkGuardCharacter.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Engine/Level.h"
+#include "Engine/World.h"
+
 
 AInkGuardGameMode::AInkGuardGameMode()
 {
@@ -16,25 +19,58 @@ AInkGuardGameMode::AInkGuardGameMode()
 }
 
 AInkGuardGameMode::~AInkGuardGameMode()
-{
-	MyNetworkMgr::GetInstance()->DestroyInstance();
-
+{//씬 게임모드도 삭제됨.
 	m_pNetWorkMgr = nullptr;
 }
 
-void AInkGuardGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+void AInkGuardGameMode::Initialize()
 {
-	Super::InitGame(MapName, Options, ErrorMessage);
-	
-	m_pNetWorkMgr = MyNetworkMgr::GetInstance();
+}
+
+void AInkGuardGameMode::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
+{
+	if (m_pNetWorkMgr == nullptr)
+		m_pNetWorkMgr = MyNetworkMgr::GetInstance(); 
+
+
+	m_pNetWorkMgr->SetSoldierInfo(iIndex, iSoldierType, iTargetTerritory);
 
 }
 
-void AInkGuardGameMode::Logout(AController* Exiting)
+void AInkGuardGameMode::SetReservedOpenLevel(bool bNewValue)
 {
-	Super::Logout(Exiting);
+	if (m_pNetWorkMgr == nullptr)
+		m_pNetWorkMgr = MyNetworkMgr::GetInstance(); 
 
-	//MyNetworkMgr::GetInstance()->DestroyInstance();
+	m_pNetWorkMgr->SetReservedOpenLevel(bNewValue); //메인레벨의 경우에만 set false를 걸어준다.
+}
 
-	//m_pNetWorkMgr = nullptr;
+EMainGameState AInkGuardGameMode::GetCurGameMode()
+{
+	if (m_pNetWorkMgr == nullptr)
+		m_pNetWorkMgr = MyNetworkMgr::GetInstance();
+	
+	if ((m_pNetWorkMgr->GetGameStart() == true))
+	{
+		if (m_pNetWorkMgr->GetReservedOpenLevel() == true)
+		{
+			return EMainGameState::GAME_WAITING;
+		}
+		//false라면 제대로 시작된 것.
+		return EMainGameState::GAME_MAINGAME;
+	}
+
+	return EMainGameState::GAME_WAITING;
+}
+
+void AInkGuardGameMode::GetTeamColor(bool& bRedColor)
+{
+	if (m_pNetWorkMgr == nullptr)
+		m_pNetWorkMgr = MyNetworkMgr::GetInstance();
+
+	GAME_PLAY eTeamColor = m_pNetWorkMgr->GetTeamColor();
+	if (eTeamColor == GAME_RED_TEAM)
+		bRedColor = true;
+	else
+		bRedColor = false;
 }

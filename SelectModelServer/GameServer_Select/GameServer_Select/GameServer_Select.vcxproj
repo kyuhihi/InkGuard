@@ -131,15 +131,20 @@
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Common.cpp" />
+    <ClCompile Include="Daka.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameServer_Select.cpp" />
     <ClCompile Include="MatchMakingMgr.cpp" />
     <ClCompile Include="Packet.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Soldier.cpp" />
+    <ClCompile Include="SoldierMgr.cpp" />
+    <ClCompile Include="SpearMan.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="Daka.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="Enum.h" />
     <ClInclude Include="GameObject.h" />
@@ -147,6 +152,9 @@
     <ClInclude Include="MatchMakingMgr.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Soldier.h" />
+    <ClInclude Include="SoldierMgr.h" />
+    <ClInclude Include="SpearMan.h" />
     <ClInclude Include="Struct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

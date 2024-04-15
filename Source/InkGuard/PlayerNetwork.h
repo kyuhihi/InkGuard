@@ -6,6 +6,7 @@
 #include "CustomStructs.h"
 #include "MyNetWorking/Include.h"
 #include "Components/ActorComponent.h"
+#include "InkGuardGameMode.h"
 #include "PlayerNetwork.generated.h"
 
 class MyNetworkMgr;
@@ -36,13 +37,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	const FPlayerStruct& GetPlayerStruct();
 
-	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
-	void TidyNetworkTickRoutine();
+#pragma region NetworkRoutine
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	bool CheckGameStart();
-
-#pragma region NetworkRoutine
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void SendPlayerTransform(float DeltaTime);
@@ -56,16 +54,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tOutInputs);
 
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void TidyNetworkTickRoutine();
+
 #pragma endregion
 private:
 
 
 private:
 	MyNetworkMgr* m_pNetworkMgr = nullptr;
-	FPlayerStruct m_tPlayerStruct; //Player->True
-	float m_fSyncTimer = 0.f;
-	
-	bool m_bGameStart = false;
 
-	GAME_PLAY m_eGameTeam = GAME_PLAY::GAME_END;
+	FPlayerStruct m_tPlayerStruct; 
+	float m_fSyncTimer = 0.f;
 };

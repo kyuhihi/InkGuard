@@ -4,9 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "MyNetWorking/Include.h"
 #include "InkGuardGameMode.generated.h"
 
 class MyNetworkMgr; 
+
+UENUM(BlueprintType)
+enum class EMainGameState : uint8
+{
+	GAME_WAITING UMETA(DisplayName = "GAME_WAITING"),
+	GAME_MAINGAME UMETA(DisplayName = "GAME_MAINGAME"),
+};
 
 UCLASS(minimalapi)
 class AInkGuardGameMode : public AGameModeBase
@@ -18,11 +26,24 @@ public:
 	~AInkGuardGameMode();
 
 public:
-	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage);
-	virtual void Logout(AController* Exiting);
+	void Initialize();
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void SetSoldierInfo(int iIndex,int iSoldierType, int iTargetTerritory);
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void SetReservedOpenLevel(bool bNewValue);
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	EMainGameState GetCurGameMode();
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void GetTeamColor(bool& bRedColor);
 
 private:
 	MyNetworkMgr* m_pNetWorkMgr = nullptr;
+
 };
 
 

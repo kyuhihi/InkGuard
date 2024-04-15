@@ -1,12 +1,18 @@
 #include "MyNetworkMgr.h"
 #include "../InkGuard.h"
 #include "../CustomFunctional.h"
+#include "../InkGuardGameMode.h"
+#include "../SpawnMgr.h"
 
 MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 
+SOLDIERINFO MyNetworkMgr::m_tSoldierInfo[SOLDIER_MAX_CNT];
+SOLDIERINFO MyNetworkMgr::m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
+
 MyNetworkMgr::MyNetworkMgr()
 {
-	//Initialize();
+	//Initialize(); //네트워킹 커넥트 작업.
+	//ASpawnMgr::Initialize();
 }
 
 MyNetworkMgr::~MyNetworkMgr()
@@ -42,40 +48,91 @@ void MyNetworkMgr::Initialize()
 	}
 	m_tClientSock.bConnectSuccess = true;
 
-	m_tClientSock.bConnectSuccess = true;
-
 }
 
 void MyNetworkMgr::Tidy()
 {// 소켓 닫기
+
 	closesocket(m_tClientSock.sock);
 	m_tClientSock.bConnectSuccess = false;
 
 	// 윈속 종료
 	WSACleanup();
+	m_pSpawnMgr = nullptr;
+}
+
+
+
+void MyNetworkMgr::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
+{
+	if (SOLDIER_MAX_CNT <= iSoldierType || iSoldierType < 0)
+		return;
+
+	ASpawnMgr::SetSoldierInfo(iIndex, iSoldierType, iTargetTerritory); //우리팀 셋팅
+
+}
+
+void MyNetworkMgr::SetReservedOpenLevel(bool bNewValue)
+{
+	m_bReservedOpenLevel = bNewValue;
 }
 
 #pragma region Packet
 
-#pragma region SendPlayerTransform
-const GAME_PLAY MyNetworkMgr::RecvGameStart()
+#pragma region SendGameStart
+void MyNetworkMgr::SendGameStart()
 {
 	if (!m_tClientSock.bConnectSuccess)
-		return GAME_END;
+		return;
 
-	S2C_PACKET_PLAYER_TRANSFORM tGameStartPacket;
-	
-	int retval{ 0 };
-	retval = recv(m_tClientSock.sock, (char*)&tGameStartPacket, sizeof(tGameStartPacket), MSG_WAITALL);
-	if ((retval == SOCKET_ERROR) || (retval != sizeof(tGameStartPacket))) {
-		err_quit("RecvGameStart");
-		Tidy();
-		return GAME_END;
+	C2S_PACKET_GAMESTART tNewPacket;
+	for (int i = 0; i < SOLDIER_MAX_CNT; i++) {
+		tNewPacket.cSoldierInfo[i] = m_tSoldierInfo[i].eSoldierType;
+		tNewPacket.cTargetTerritory[i] = m_tSoldierInfo[i].eTargetTerritory;
 	}
 
-	return (GAME_PLAY)tGameStartPacket.cGamePlay;
+	int retval{ 0 };
+	retval = send(m_tClientSock.sock, reinterpret_cast<char*>(&tNewPacket), sizeof(tNewPacket), 0);
+	if ((retval == SOCKET_ERROR) || (retval != sizeof(tNewPacket)))
+	{
+		err_quit("SendGameStart");
+		Tidy();
+		return;
+	}
 }
 
+void MyNetworkMgr::RecvGameStart()
+{//인자로 클라이언트 소켓이 넘어옴.
+	if (!m_tClientSock.bConnectSuccess)
+		return;
+
+	S2C_PACKET_GAMESTART tGameStartPacket;
+
+	int retval{ 0 };
+	retval = recv(m_tClientSock.sock, (char*)&tGameStartPacket, sizeof(S2C_PACKET_GAMESTART), MSG_WAITALL);
+	if ((retval == SOCKET_ERROR) || (retval != sizeof(tGameStartPacket))) {
+		err_quit("RecvGameStart");
+		MyNetworkMgr::GetInstance()->Tidy();
+		return;
+	}
+
+	GAME_PLAY eGamePacketType = (GAME_PLAY)tGameStartPacket.cGamePlay; //락을 잡아야겠쥐?
+	if (eGamePacketType == GAME_END)  //게임 시작을 안한 것.
+		return;
+
+	m_bGameStart = true;					//이거 켜지면 게임 시작인거.
+
+	m_eGameTeam = eGamePacketType;
+	SetReservedOpenLevel(true);		//오픈 레벨 예약이 되었습니까? 예.
+
+	ASpawnMgr::SetOtherSoldierInfo(tGameStartPacket); //적팀것 셋팅
+
+	return;
+}
+#pragma region
+
+
+#pragma region SendPlayerTransform
 void MyNetworkMgr::SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform)
 {
 	if (!m_tClientSock.bConnectSuccess)
@@ -128,9 +185,7 @@ bool MyNetworkMgr::RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket)
 
 	int retval{ 0 };
 	retval = recv(m_tClientSock.sock, (char*)&tOutPacket, sizeof(S2C_PACKET_PLAYER_TRANSFORM), MSG_WAITALL);
-	if ((retval == SOCKET_ERROR) || 
-		(retval != sizeof(S2C_PACKET_PLAYER_TRANSFORM))||
-		(tOutPacket.cGamePlay == GAME_PLAY::GAME_END)) {
+	if ((retval == SOCKET_ERROR) || (retval != sizeof(S2C_PACKET_PLAYER_TRANSFORM))) {
 		err_quit("RecvPlayerTransform");
 		Tidy();
 		return false;

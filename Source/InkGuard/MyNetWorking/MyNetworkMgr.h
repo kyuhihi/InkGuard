@@ -33,9 +33,13 @@ private:
 private:
 	void Initialize();
 	void Tidy();
+	
+	void InitializeSoldierInfo();
 
 public:
-	const GAME_PLAY RecvGameStart();
+	//void OpenMainGame();
+	void SendGameStart();
+	void RecvGameStart();
 
 	void SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform);
 	void SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed);
@@ -46,13 +50,32 @@ public:
 	bool RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket);
 
 public:
+	const bool& GetGameStart() { return m_bGameStart; }
+	const GAME_PLAY& GetTeamColor() { return m_eGameTeam; }
+
 	void SetSyncTime(bool bSyncTime) { m_bSyncTime = bSyncTime; }
 	const bool& GetSyncTime() { return m_bSyncTime; }
 
+	void SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory);
+
+	void SetReservedOpenLevel(bool bNewValue);
+	const bool& GetReservedOpenLevel() { return m_bReservedOpenLevel; };
+
+public:
+	static SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT];
+	static SOLDIERINFO m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
+
 private:
-	char* SERVERIP = (char*)"222.117.52.76";
+	char* SERVERIP = (char*)"127.0.0.1";
 	bool m_bSyncTime = false;
 	SOCKETINFO m_tClientSock;
+
+	GAME_PLAY m_eGameTeam  = GAME_PLAY::GAME_END;		//내 색깔
+	bool m_bGameStart = false;
+	bool m_bReservedOpenLevel = false;					// 게임스타트 패킷을 받고 오픈레벨 하기 직전까지 true할거임.
+	
+	
+	class ASpawnMgr* m_pSpawnMgr = nullptr;
 };
 
 

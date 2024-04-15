@@ -27,8 +27,6 @@ void UPlayerNetwork::BeginPlay()
 {
 	Super::BeginPlay();
 	m_pNetworkMgr = MyNetworkMgr::GetInstance();
-
-	// ...
 	
 }
 
@@ -54,19 +52,21 @@ void UPlayerNetwork::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 bool UPlayerNetwork::CheckGameStart()
 {
-	if (m_bGameStart)
-		return true;
+	if (m_pNetworkMgr->GetGameStart() && m_pNetworkMgr->GetReservedOpenLevel())// 게임 시작이 되었는지. 오픈레벨이 걸린상황은 아닌지.
+		return true; 
 
-	m_eGameTeam = m_pNetworkMgr->RecvGameStart();
-	if (m_eGameTeam != GAME_PLAY::GAME_END) {
-		m_bGameStart = true;
-	}
+	
+	m_pNetworkMgr->SendGameStart();
+	m_pNetworkMgr->RecvGameStart();
+
+
+	
 	return false;
 }
 
 void UPlayerNetwork::SendPlayerTransform(float DeltaTime)
 {
-	if (!m_bGameStart)
+	if (!m_pNetworkMgr->GetGameStart())
 		return;
 
 	m_fSyncTimer += DeltaTime;
@@ -87,7 +87,7 @@ void UPlayerNetwork::SendPlayerTransform(float DeltaTime)
 
 void UPlayerNetwork::RecvPlayerTransform(float DeltaTime)
 {
-	if (!m_pNetworkMgr->GetSyncTime() || !m_bGameStart)
+	if (!m_pNetworkMgr->GetSyncTime() || !m_pNetworkMgr->GetGameStart())
 		return;
 
 	S2C_PACKET_PLAYER_TRANSFORM tRecvPacket;
@@ -162,6 +162,8 @@ const FPlayerStruct& UPlayerNetwork::GetPlayerStruct()
 {
 	return m_tPlayerStruct;
 }
+
+
 
 void UPlayerNetwork::TidyNetworkTickRoutine()
 {

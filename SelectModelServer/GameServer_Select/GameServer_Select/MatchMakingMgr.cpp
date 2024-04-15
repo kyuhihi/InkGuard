@@ -18,6 +18,36 @@ void CMatchMakingMgr::AddClient(CClient* pClient)
 	CheckMatchMakingPossible();
 }
 
+void CMatchMakingMgr::RemoveClient(CClient* pClient)
+{
+	const CClient::SOCKETINFO* pDestSocketInfo = pClient->GetSocketInfo();
+
+	struct sockaddr_in pDestclientaddr;
+	int Destaddrlen = sizeof(pDestclientaddr);
+	getpeername(pDestSocketInfo->sock, (struct sockaddr*)&pDestclientaddr, &Destaddrlen);
+	char Destaddr[INET_ADDRSTRLEN];
+	inet_ntop(AF_INET, &pDestclientaddr.sin_addr, Destaddr, sizeof(Destaddr));
+
+	int iRemoveIndex = -1;
+	for (int i =0; i < m_WaitingClientVec.size(); ++i)
+	{
+		const CClient::SOCKETINFO* tSrcSocketInfo = m_WaitingClientVec[i]->GetSocketInfo();
+		struct sockaddr_in pSrcclientaddr;
+		int Srcaddrlen = sizeof(pSrcclientaddr);
+		getpeername(tSrcSocketInfo->sock, (struct sockaddr*)&pSrcclientaddr, &Srcaddrlen);
+		char Srcaddr[INET_ADDRSTRLEN];
+		inet_ntop(AF_INET, &pSrcclientaddr.sin_addr, Srcaddr, sizeof(Srcaddr));
+
+		if (ntohs(pDestclientaddr.sin_port) == ntohs(pSrcclientaddr.sin_port))
+		{//삭제.
+			iRemoveIndex = i;
+			break;
+		}
+	}
+	if(iRemoveIndex >= 0)
+		m_WaitingClientVec.erase(m_WaitingClientVec.begin() + iRemoveIndex);
+}
+
 bool CMatchMakingMgr::CheckMatchMakingPossible()
 {
 	if (m_WaitingClientVec.size() < 2)					//적어도 한명보다는 많아야함.
@@ -51,7 +81,7 @@ bool CMatchMakingMgr::CheckMatchMakingPossible()
 	m_WaitingClientVec.erase(m_WaitingClientVec.begin() + (j - 1));
 
 
-	CheckMatchMakingPossible();
+	CheckMatchMakingPossible(); //재귀호출.
 
 	return true;
 }

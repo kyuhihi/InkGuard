@@ -2,6 +2,8 @@
 #include "Include.h"
 #include "Packet.h"
 #include "Player.h"
+#include "SoldierMgr.h"
+
 
 class CClient
 {
@@ -28,7 +30,10 @@ public://일반함수
 	void PutInReadOrWriteSet(const fd_set& ReadSet, const fd_set& WriteSet);
 
 public:	//Getter Setter
+	bool IsInitializedSoldierMgr();
 	const SOCKETINFO* GetSocketInfo() { return &m_tSockInfo; }
+
+	void GetGameStartPacket(S2C_PACKET_GAMESTART& tOutGameStartPacket);
 	const S2C_PACKET_PLAYER_TRANSFORM GetOtherPlayerTransform() { return m_pPlayer->GetTransform(); }
 	const S2C_PACKET_PLAYER_INPUT GetOtherPlayerInputs() { return m_pPlayer->GetInputs(); }
 
@@ -41,6 +46,8 @@ public:		//Public Packet
 	bool RecvPacket();
 	bool SendPacket();
 
+	void SendGameStartPacket();
+
 private:	//Private Packet
 	void ConductPacket(const CPacket& Packet);
 	void SendComplete();
@@ -48,8 +55,11 @@ private:	//Private Packet
 private:
 	SOCKETINFO m_tSockInfo;
 	CLIENT_STATE m_eState = STATE_END;
+
+	CLIENT_STATE m_eReservedState = STATE_END;
 	CPlayer* m_pPlayer = nullptr;
 
 	CClient* m_pOtherClient = nullptr;
+	CSoldierMgr* m_pSoldierMgr = nullptr; // 솔져로 포함된 다카와 스피어맨을 관리하는 집약체임. 내팀 9마리만 관리할거임.
 };
 
