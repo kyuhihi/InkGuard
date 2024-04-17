@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../InkGuard.h"
+#include "../Customs/CustomStructs.h"
 
 class MyNetworkMgr
 {
@@ -61,6 +62,9 @@ public:
 	void SetReservedOpenLevel(bool bNewValue);
 	const bool& GetReservedOpenLevel() { return m_bReservedOpenLevel; };
 
+private:
+	void ClearAdditionalPacket();
+
 public:
 	static SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT];
 	static SOLDIERINFO m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
@@ -74,8 +78,13 @@ private:
 	bool m_bGameStart = false;
 	bool m_bReservedOpenLevel = false;					// 게임스타트 패킷을 받고 오픈레벨 하기 직전까지 true할거임.
 	
-	
+	char* m_pRecvAdditionalPacket = nullptr; // 받은것.
+	short m_iRecvAdditionalPacketSize = 0;
+
 	class ASpawnMgr* m_pSpawnMgr = nullptr;
+
+	list<FAdditionalBase*> m_SendAdditionalPacketList;
+
 };
 
 

@@ -6,9 +6,17 @@
 #include "UObject/NoExportTypes.h"
 #include "CustomStructs.generated.h"
 
+
+UENUM(BlueprintType)
+enum class EAdditionalPacketType : uint8
+{
+	ADD_VAULT UMETA(DisplayName = "Vaulting Data"),
+};
+
 /**
- * 
+ *
  */
+
 UCLASS()
 class INKGUARD_API UCustomStructs : public UObject
 {
@@ -65,4 +73,30 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MontagePlayTime = 0.f;
+};
+
+USTRUCT(Atomic, BlueprintType)
+struct FAdditionalBase 
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	EAdditionalPacketType ePacketType;
+};
+
+
+USTRUCT(Atomic, BlueprintType)
+struct FVaultingPacket : public FAdditionalBase
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector VaultingStart;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector VaultingMiddle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector VaultingEnd;
+	
 };

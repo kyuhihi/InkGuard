@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "MyNetWorking/Include.h"
+#include "../MyNetWorking/Headers/Include.h"
 #include "CustomFunctional.generated.h"
 
 /**

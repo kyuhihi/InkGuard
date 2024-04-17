@@ -2,9 +2,10 @@
 
 
 #include "PlayerNetwork.h"
-#include "MyNetWorking/MyNetworkMgr.h"
+#include "../MyNetWorking/MyNetworkMgr.h"
 #include "GameFramework/Character.h"
-#include "CustomFunctional.h"
+#include "../Customs/CustomFunctional.h"
+#include "../MyBlueprintFunctionLibrary.h"
 
 // Sets default values for this component's properties
 UPlayerNetwork::UPlayerNetwork()
@@ -150,6 +151,12 @@ void UPlayerNetwork::RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tO
 	return;
 }
 
+void UPlayerNetwork::SendAdditionalData(float DeltaTime)
+{
+	//if (m_AdditionalPacketList.empty())
+	//	return;
+
+}
 
 #pragma endregion
 
@@ -163,9 +170,17 @@ const FPlayerStruct& UPlayerNetwork::GetPlayerStruct()
 	return m_tPlayerStruct;
 }
 
-
-
 void UPlayerNetwork::TidyNetworkTickRoutine()
 {
 	m_pNetworkMgr->SetSyncTime(false);
+
 }
+
+
+void UPlayerNetwork::ReadyAdditionalData(const FVaultingPacket tNewPacket)
+{
+	/*FVaultingPacket* pNewPacket = new FVaultingPacket(tNewPacket);
+	m_AdditionalPacketList.push_back(pNewPacket);*/
+}
+
+

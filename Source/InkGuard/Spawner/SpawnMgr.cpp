@@ -2,7 +2,7 @@
 
 #include "SpawnMgr.h"
 #include "SoldierSpawner.h"
-#include "InkGuardGameMode.h"
+#include "../InkGuardGameMode.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values

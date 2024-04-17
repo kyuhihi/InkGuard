@@ -3,14 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CustomStructs.h"
-#include "MyNetWorking/Include.h"
+#include "../Customs/CustomStructs.h"
+#include "../MyNetWorking/Headers/Include.h"
 #include "Components/ActorComponent.h"
-#include "InkGuardGameMode.h"
+#include "../InkGuardGameMode.h"
 #include "PlayerNetwork.generated.h"
 
 class MyNetworkMgr;
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class INKGUARD_API UPlayerNetwork : public UActorComponent
 {
@@ -37,11 +36,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	const FPlayerStruct& GetPlayerStruct();
 
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void ReadyAdditionalData(const FVaultingPacket tNewPacket); //반드시 빌더 패턴 사용해서 입력할것.
+
 #pragma region NetworkRoutine
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	bool CheckGameStart();
-
+//============================================================= 게임 시작 전 후
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void SendPlayerTransform(float DeltaTime);
 
@@ -55,15 +58,20 @@ public:
 	void RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tOutInputs);
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
-	void TidyNetworkTickRoutine();
+	void SendAdditionalData(float DeltaTime);
+
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void TidyNetworkTickRoutine(); // 틱마다 끝내야할 루틴 넣기.
 
 #pragma endregion
-private:
 
+private:
 
 private:
 	MyNetworkMgr* m_pNetworkMgr = nullptr;
 
 	FPlayerStruct m_tPlayerStruct; 
 	float m_fSyncTimer = 0.f;
+
 };

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "MyNetWorking/Include.h"
+#include "MyNetWorking/Headers/Include.h"
 #include "MyGameInstance.generated.h"
 
 class MyNetworkMgr;

@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MyNetWorking/Include.h"
-#include "MyNetWorking/MyNetworkMgr.h"
+#include "../MyNetWorking/Headers/Include.h"
+#include "../MyNetWorking/MyNetworkMgr.h"
 #include "SpawnMgr.generated.h"
 
 //아래 클래스는 매니저 이긴한데 main map에 배치되는 액터임. 

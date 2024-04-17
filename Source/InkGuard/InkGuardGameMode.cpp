@@ -2,7 +2,7 @@
 
 #include "InkGuardGameMode.h"
 #include "MyNetWorking/MyNetworkMgr.h"
-#include "InkGuardCharacter.h"
+#include "Default/InkGuardCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/Level.h"
 #include "Engine/World.h"

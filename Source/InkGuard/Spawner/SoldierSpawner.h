@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MyNetWorking/Include.h"
-#include "CustomStructs.h"
+#include "../MyNetWorking/Headers/Include.h"
+#include "../Customs/CustomStructs.h"
 #include "SoldierInterface.h"
 #include "SoldierSpawner.generated.h"
 

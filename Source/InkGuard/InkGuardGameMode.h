@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "MyNetWorking/Include.h"
+#include "MyNetWorking/Headers/Include.h"
 #include "InkGuardGameMode.generated.h"
 
 class MyNetworkMgr; 

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "CustomStructs.h"
+#include "../Customs/CustomStructs.h"
 #include "PlayerInterface.generated.h"
 
 // This class does not need to be modified.

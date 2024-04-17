@@ -1,8 +1,9 @@
 #include "MyNetworkMgr.h"
 #include "../InkGuard.h"
-#include "../CustomFunctional.h"
+#include "../Customs/CustomFunctional.h"
 #include "../InkGuardGameMode.h"
-#include "../SpawnMgr.h"
+#include "../Spawner/SpawnMgr.h"
+#include "../MyBlueprintFunctionLibrary.h"
 
 MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 
@@ -52,6 +53,7 @@ void MyNetworkMgr::Initialize()
 
 void MyNetworkMgr::Tidy()
 {// 소켓 닫기
+	ClearAdditionalPacket();
 
 	closesocket(m_tClientSock.sock);
 	m_tClientSock.bConnectSuccess = false;
@@ -59,6 +61,7 @@ void MyNetworkMgr::Tidy()
 	// 윈속 종료
 	WSACleanup();
 	m_pSpawnMgr = nullptr;
+
 }
 
 
@@ -75,6 +78,25 @@ void MyNetworkMgr::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerri
 void MyNetworkMgr::SetReservedOpenLevel(bool bNewValue)
 {
 	m_bReservedOpenLevel = bNewValue;
+}
+
+void MyNetworkMgr::ClearAdditionalPacket()
+{
+	if (m_pRecvAdditionalPacket != nullptr)
+	{
+		delete[] m_pRecvAdditionalPacket;
+		m_pRecvAdditionalPacket = nullptr;
+	}
+
+	if (m_SendAdditionalPacketList.empty())
+		return;
+
+
+	for (auto& iter : m_SendAdditionalPacketList)
+	{
+		delete iter;
+	}
+	m_SendAdditionalPacketList.clear();
 }
 
 #pragma region Packet
@@ -213,6 +235,8 @@ bool MyNetworkMgr::RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket)
 {
 	if (!m_tClientSock.bConnectSuccess)
 		return false;
+	
+	ClearAdditionalPacket();
 
 	unsigned long long llPacketSize(sizeof(S2C_PACKET_PLAYER_INPUT));
 
@@ -225,7 +249,19 @@ bool MyNetworkMgr::RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket)
 		return false;
 	}
 
+	if (tOutPacket.sAdditionalPacketSize != 0) // 추가로 받아야하는 패킷이있다면 버퍼 할당함..
+	{
+		m_pRecvAdditionalPacket = new char[tOutPacket.sAdditionalPacketSize];
+		ZeroMemory(m_pRecvAdditionalPacket, tOutPacket.sAdditionalPacketSize);
 
+		m_iRecvAdditionalPacketSize = tOutPacket.sAdditionalPacketSize;
+	}
+	else
+	{
+		m_iRecvAdditionalPacketSize = 0;
+	}
+
+	
 	return true;
 }
 

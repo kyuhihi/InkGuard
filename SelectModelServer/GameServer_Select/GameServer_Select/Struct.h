@@ -53,6 +53,7 @@ struct S2C_PACKET_PLAYER_INPUT
 {
 	bool bInputs[PLAYER_INPUT::INPUT_END];
 	float fMontagePlayTime = 0.f;
+	short sAdditionalPacketCnt = 0;
 };
 
 //------------------------------------------------
