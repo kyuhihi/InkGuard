@@ -38,13 +38,15 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
-	void AddAdditionalData(const FVaultingPacket tNewPacket); //반드시 빌더 패턴 사용해서 입력할것.
+	void AddAdditionalData(const FVaultingPacket tNewPacket); //반드시 빌더 패턴 사용해서 입력할것. <= my blueprint function library static 함수참고.
 
 #pragma region NetworkRoutine
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	bool CheckGameStart();
-//============================================================= 게임 시작 전 후
+
+//============================================================= 게임 시작 전: 위 //  후: 아래
+
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void SendPlayerTransform(float DeltaTime);
 

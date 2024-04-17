@@ -45,6 +45,9 @@
     <Filter Include="소스 파일\01. Client\GameObject\Soldier\99. SoldierMgr">
       <UniqueIdentifier>{6eb93a3b-4cea-4e5b-afa4-a338c3c5270f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\01. Client\Packet\MemoryMgr">
+      <UniqueIdentifier>{f674ae0a-b782-424b-9cf0-c4ccfa1a4ffc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common.cpp">
@@ -79,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="SoldierMgr.cpp">
       <Filter>소스 파일\01. Client\GameObject\Soldier\99. SoldierMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryPooler.cpp">
+      <Filter>소스 파일\01. Client\Packet\MemoryMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +129,9 @@
     </ClInclude>
     <ClInclude Include="SoldierMgr.h">
       <Filter>소스 파일\01. Client\GameObject\Soldier\99. SoldierMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryPooler.h">
+      <Filter>소스 파일\01. Client\Packet\MemoryMgr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

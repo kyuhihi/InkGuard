@@ -23,6 +23,9 @@ CPacket::CPacket(const CLIENT_STATE& eState)
 		m_pBuf = new char[m_iBufferSize];
 		break;
 	}
+	case STATE_ADDITIONAL: {
+
+	}
 	case STATE_END:
 	default:
 		break;

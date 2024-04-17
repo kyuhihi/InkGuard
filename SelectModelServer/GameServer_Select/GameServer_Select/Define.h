@@ -1,8 +1,10 @@
 #pragma once
 
 #define SERVER_PORT		7777
-#define BUFFER_SIZE    512
+
 #define SOLDIER_MAX_CNT 9
+#define MAX_ADDITIONAL_SIZE 100 //추가로 오는 패킷은 최대 백개ㄲㅏ지받을수있다.
+
 
 #define _float3	XMFLOAT3
 #define _float4 XMFLOAT4

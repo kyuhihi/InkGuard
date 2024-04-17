@@ -62,7 +62,8 @@ public:
 
 	void AppendDataToAdditionalList(bool bSendVec, EAdditionalPacketType eNewType, const C2S_PACKET_ADDITIONAL_FLOAT3x3 tNewPacket);
 	void SendAdditionalData();
-
+	void RecvAdditionalData();
+	void ConductAdditionalData(const char* pNewPacket);
 
 public:
 	const bool& GetGameStart() { return m_bGameStart; }
@@ -77,7 +78,7 @@ public:
 	const bool& GetReservedOpenLevel() { return m_bReservedOpenLevel; };
 
 private:
-	void ClearAdditionalPacket(); //성능 문제 생기면 여기부터 봐라. 풀링 고민해봐라.
+	void ClearAdditionalPacket(); //이 함수는 Recv Input Packet에서 클리어 한번처리함.
 	bool RequestRemainVectorIndex(bool bSendVec, int& iOutVectorIndex);
 
 public:
@@ -93,15 +94,13 @@ private:
 	bool m_bGameStart = false;
 	bool m_bReservedOpenLevel = false;					// 게임스타트 패킷을 받고 오픈레벨 하기 직전까지 true할거임.
 	
-	//char* m_pRecvAdditionalPacket = nullptr; // 받은것.
-
 	class ASpawnMgr* m_pSpawnMgr = nullptr;
 
 	vector<AdditionalPacket> m_SendAdditionalPacketVec;
-	short m_iSendAdditionalPacketSize = 0;
+	short m_sSendAdditionalPacketSize = 0;
 
 	vector<AdditionalPacket> m_RecvAdditionalPacketVec;
-	short m_iRecvAdditionalPacketSize = 0;
+	short m_sRecvAdditionalPacketSize = 0;
 
 };
 

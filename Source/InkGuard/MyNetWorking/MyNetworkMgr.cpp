@@ -107,6 +107,7 @@ void MyNetworkMgr::SetReservedOpenLevel(bool bNewValue)
 
 void MyNetworkMgr::ClearAdditionalPacket()// 패킷다 받고 변수들 상태만 바꿔놓는 함수.
 {
+	m_sRecvAdditionalPacketSize = m_sSendAdditionalPacketSize = 0;
 	for (auto& iter: m_RecvAdditionalPacketVec)
 	{
 		if (iter.bUse) {
@@ -262,6 +263,9 @@ void MyNetworkMgr::SendPlayerInputData(C2S_PACKET_PLAYER_INPUT& tBakuInputData)
 {
 	if (!m_tClientSock.bConnectSuccess)
 		return;
+
+	tBakuInputData.sAdditionalPacketSize = m_sSendAdditionalPacketSize; // 다음에 추가로 보낼 패킷 사이즈를 넣어준다.
+
 	int retval{ 0 };
 	unsigned long long llPacketSize(sizeof(tBakuInputData));
 	retval = send(m_tClientSock.sock, reinterpret_cast<char*>(&tBakuInputData), llPacketSize, 0);
@@ -291,17 +295,12 @@ bool MyNetworkMgr::RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket)
 		return false;
 	}
 
-	//if (tOutPacket.sAdditionalPacketSize != 0) // 추가로 받아야하는 패킷이있다면 버퍼 할당함..
-	//{
-	//	m_pRecvAdditionalPacket = new char[tOutPacket.sAdditionalPacketSize];
-	//	ZeroMemory(m_pRecvAdditionalPacket, tOutPacket.sAdditionalPacketSize);
+	m_sRecvAdditionalPacketSize = tOutPacket.sAdditionalPacketSize;
 
-	//	m_iRecvAdditionalPacketSize = tOutPacket.sAdditionalPacketSize;
-	//}
-	//else
-	//{
-	//	m_iRecvAdditionalPacketSize = 0;
-	//}
+	if (m_sRecvAdditionalPacketSize != 0) // 추가로 받아야하는 패킷이있다면 recv한번ㄴ더 해야함.
+	{
+		RecvAdditionalData();
+	}
 
 
 	return true;
@@ -332,19 +331,102 @@ void MyNetworkMgr::AppendDataToAdditionalList(bool bSendVec, EAdditionalPacketTy
 			m_RecvAdditionalPacketVec[iRemainVectorIndex].iDataSize = iNewPacketSize;
 			memcpy(m_RecvAdditionalPacketVec[iRemainVectorIndex].pData, &tNewPacket, iNewPacketSize);
 		}
+
+		m_sSendAdditionalPacketSize += iNewPacketSize;
 	}
 }
 
 void MyNetworkMgr::SendAdditionalData()
 {
-	for (auto& iter : m_SendAdditionalPacketVec)
+	if (m_sSendAdditionalPacketSize <= 0)
+		return;
+
+	char* SendBuffer = new char[m_sSendAdditionalPacketSize];
+	int iOffset(0);
+	int sizeOfChar(sizeof(char));
+
+	for (auto& Packet : m_SendAdditionalPacketVec)
 	{
-		if (iter.bUse == false)
+		if (Packet.bUse == false)
 			break;
 
-		//여기서 패킷 복사할것. TODO Recv도 만들고, 서버도 받고 보낼준비하고.........저
+		char cPacketType = (char)Packet.ePacketType;		//패킷타입 넣어주고
+		memcpy(SendBuffer + iOffset, &cPacketType, sizeOfChar);//short만큼 복사하고
+		iOffset += sizeOfChar;//오프셋 더해주고
+
+		memcpy(SendBuffer + iOffset, &Packet.pData, sizeof(Packet.iDataSize));//데이터 그 뒤에 넣어주고
+		iOffset += Packet.iDataSize;// 오프셋 또 더해주고
+	}
+
+
+	int retval{ 0 };
+	retval = send(m_tClientSock.sock, SendBuffer, m_sSendAdditionalPacketSize, 0);
+	if ((retval == SOCKET_ERROR) || (retval != m_sSendAdditionalPacketSize))
+	{
+		err_quit("SendAdditionalData");
+		Tidy();
+		return;
+	}
+
+
+	delete[] SendBuffer;
+	SendBuffer = nullptr;
+}
+
+void MyNetworkMgr::RecvAdditionalData()
+{
+	char* RecvPacket = new char[m_sRecvAdditionalPacketSize];
+
+	int retval{ 0 };
+
+	retval = recv(m_tClientSock.sock, RecvPacket, m_sRecvAdditionalPacketSize, MSG_WAITALL);
+	if ((retval == SOCKET_ERROR) || (retval != m_sRecvAdditionalPacketSize))
+	{
+		err_quit("RecvAdditionalData");
+		Tidy();
+		return;
+	}
+	ConductAdditionalData(RecvPacket);
+
+}
+
+void MyNetworkMgr::ConductAdditionalData(const char* pNewPacket)
+{
+	int iOffset(0);
+	
+	int iSizeofchar(sizeof(char));
+	while (iOffset < m_sRecvAdditionalPacketSize)
+	{//버퍼에서 char 로 패킷타입 복사하고, 실 데이터 꺼내옴.
+		
+		char cpyPacketType(0);
+		memcpy(&cpyPacketType, pNewPacket + iOffset, iSizeofchar);
+		iOffset += iSizeofchar;
+
+		EAdditionalPacketType eNewPacketType((EAdditionalPacketType)cpyPacketType);
+
+		C2S_PACKET_ADDITIONAL_FLOAT3x3 tFloat3x3;
+
+		switch (eNewPacketType)
+		{
+			case EAdditionalPacketType::ADD_VAULT: 
+			{
+				memcpy(&tFloat3x3, pNewPacket + iOffset, sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3));
+				iOffset += sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3);
+				AppendDataToAdditionalList(false, eNewPacketType, tFloat3x3);
+
+				break; 
+			}
+			default: 
+			{
+				break;
+			}
+		}
+
 	}
 }
+
+
+
 
 #pragma endregion
 

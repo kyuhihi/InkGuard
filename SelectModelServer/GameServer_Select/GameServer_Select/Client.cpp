@@ -210,6 +210,17 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 		}
 		break;
 	}
+	case STATE_ADDITIONAL:// 이거봐라.
+	{
+		if ((m_tSockInfo.sendbytes == 0))// 인풋 패킷은 매 프레임 마다 보내도록한다.
+		{
+			S2C_PACKET_PLAYER_INPUT tSendPacket = m_pOtherClient->GetOtherPlayerInputs();
+			m_tSockInfo.totalSendLen = sizeof(tSendPacket);
+			m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
+			memcpy(m_tSockInfo.cBuf, &tSendPacket, m_tSockInfo.totalSendLen);
+		}
+		break;
+	}
 	case STATE_END:
 	default:
 		break;
@@ -234,7 +245,11 @@ void CClient::SendComplete()
 		break;
 	case STATE_INPUT:
 		strState = " Input";
-		SetClientState(STATE_TRANSFORM); //다시 트랜스폼으로 돌리는걸로 일단 설정 패킷 추가하면 바꿀것.
+		SetClientState(STATE_ADDITIONAL); //다시 트랜스폼으로 돌리는걸로 일단 설정 패킷 추가하면 바꿀것.
+		break;
+	case STATE_ADDITIONAL:
+		strState = " Additional";
+		SetClientState(STATE_TRANSFORM);
 		break;
 	case STATE_END:
 		break;

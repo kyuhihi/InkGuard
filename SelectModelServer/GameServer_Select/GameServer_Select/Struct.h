@@ -3,6 +3,14 @@
 #include "Define.h"
 #include "Enum.h"
 
+
+//	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!유의점!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+//	클라쪽에서 struct 추가 했다고  ctrl a해서 붙여넣기는 금할것. 
+//	아래 서버에 struct 구조는 client구조와 상이할수 있음..
+
+//	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!유의점!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 //------------------------------------------------
 #pragma pack(1)
 struct C2S_PACKET_GAMESTART {
@@ -28,6 +36,21 @@ struct C2S_PACKET_PLAYER_INPUT
 	short sPacketType = PACKET_INPUT;
 	bool bInputs[PLAYER_INPUT::INPUT_END];
 	float fMontagePlayTime = 0.f;
+	short sAdditionalPacketSize = 0;
+};
+
+#pragma pack(1)
+struct C2S_PACKET_ADDITIONAL_FLOAT3
+{
+	XMFLOAT3 vValue = XMFLOAT3();
+};
+
+#pragma pack(1)
+struct C2S_PACKET_ADDITIONAL_FLOAT3x3
+{
+	XMFLOAT3 vValue1 = XMFLOAT3();
+	XMFLOAT3 vValue2 = XMFLOAT3();
+	XMFLOAT3 vValue3 = XMFLOAT3();
 };
 
 //------------------------------------------------
@@ -53,7 +76,7 @@ struct S2C_PACKET_PLAYER_INPUT
 {
 	bool bInputs[PLAYER_INPUT::INPUT_END];
 	float fMontagePlayTime = 0.f;
-	short sAdditionalPacketCnt = 0;
+	short sAdditionalPacketSize = 0;
 };
 
 //------------------------------------------------

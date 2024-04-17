@@ -111,6 +111,8 @@ int main(int argc, char* argv[])
 
 	// 윈속 종료
 	WSACleanup();
+
+	CMemoryPooler::GetInstance()->DestroyInstance();
 	return 0;
 }
 
