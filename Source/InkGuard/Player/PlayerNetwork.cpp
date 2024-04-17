@@ -153,8 +153,7 @@ void UPlayerNetwork::RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tO
 
 void UPlayerNetwork::SendAdditionalData(float DeltaTime)
 {
-	//if (m_AdditionalPacketList.empty())
-	//	return;
+
 
 }
 
@@ -170,6 +169,8 @@ const FPlayerStruct& UPlayerNetwork::GetPlayerStruct()
 	return m_tPlayerStruct;
 }
 
+
+
 void UPlayerNetwork::TidyNetworkTickRoutine()
 {
 	m_pNetworkMgr->SetSyncTime(false);
@@ -177,10 +178,13 @@ void UPlayerNetwork::TidyNetworkTickRoutine()
 }
 
 
-void UPlayerNetwork::ReadyAdditionalData(const FVaultingPacket tNewPacket)
-{
-	/*FVaultingPacket* pNewPacket = new FVaultingPacket(tNewPacket);
-	m_AdditionalPacketList.push_back(pNewPacket);*/
+void UPlayerNetwork::AddAdditionalData(const FVaultingPacket tNewPacket)
+{	
+	C2S_PACKET_ADDITIONAL_FLOAT3x3 tCast2Packet;
+	
+	tCast2Packet.vValue1 = UCustomFunctional::FVector_To_float3(tNewPacket.VaultingStart);
+	tCast2Packet.vValue2 = UCustomFunctional::FVector_To_float3(tNewPacket.VaultingMiddle);
+	tCast2Packet.vValue3 = UCustomFunctional::FVector_To_float3(tNewPacket.VaultingEnd);
+
+	m_pNetworkMgr->AppendDataToAdditionalList(true, tNewPacket.ePacketType, tCast2Packet);
 }
-
-

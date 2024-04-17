@@ -38,7 +38,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
-	void ReadyAdditionalData(const FVaultingPacket tNewPacket); //반드시 빌더 패턴 사용해서 입력할것.
+	void AddAdditionalData(const FVaultingPacket tNewPacket); //반드시 빌더 패턴 사용해서 입력할것.
 
 #pragma region NetworkRoutine
 

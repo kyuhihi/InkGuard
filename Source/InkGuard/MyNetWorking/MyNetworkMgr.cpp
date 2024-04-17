@@ -10,6 +10,8 @@ MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 SOLDIERINFO MyNetworkMgr::m_tSoldierInfo[SOLDIER_MAX_CNT];
 SOLDIERINFO MyNetworkMgr::m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
 
+#define MAX_ADDITIONAL_SIZE 100
+
 MyNetworkMgr::MyNetworkMgr()
 {
 	Initialize(); //네트워킹 커넥트 작업.
@@ -22,6 +24,12 @@ MyNetworkMgr::~MyNetworkMgr()
 }
 
 void MyNetworkMgr::Initialize()
+{
+	InitializeSocket();
+	InitializeAdditionalList();
+}
+
+void MyNetworkMgr::InitializeSocket()
 {
 	int retval;
 
@@ -41,14 +49,30 @@ void MyNetworkMgr::Initialize()
 	inet_pton(AF_INET, SERVERIP, &serveraddr.sin_addr);
 	serveraddr.sin_port = htons(SERVER_PORT);
 	retval = connect(m_tClientSock.sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
-	
+
 	if (retval == SOCKET_ERROR) {
 		err_quit("connect()");
 		Tidy();
 		return;
 	}
 	m_tClientSock.bConnectSuccess = true;
+}
 
+void MyNetworkMgr::InitializeAdditionalList()
+{
+	m_SendAdditionalPacketVec.reserve(MAX_ADDITIONAL_SIZE); // 최적화..
+	m_RecvAdditionalPacketVec.reserve(MAX_ADDITIONAL_SIZE);
+
+	for (int i = 0; i < MAX_ADDITIONAL_SIZE; ++i)
+	{
+		AdditionalPacket newPacket;
+		m_RecvAdditionalPacketVec.push_back(newPacket);
+	}
+	for (int i = 0; i < MAX_ADDITIONAL_SIZE; ++i)
+	{
+		AdditionalPacket newPacket;
+		m_SendAdditionalPacketVec.push_back(newPacket);
+	}
 }
 
 void MyNetworkMgr::Tidy()
@@ -60,11 +84,12 @@ void MyNetworkMgr::Tidy()
 
 	// 윈속 종료
 	WSACleanup();
+
+	m_RecvAdditionalPacketVec.clear();
+	m_SendAdditionalPacketVec.clear();
 	m_pSpawnMgr = nullptr;
 
 }
-
-
 
 void MyNetworkMgr::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
 {
@@ -80,23 +105,55 @@ void MyNetworkMgr::SetReservedOpenLevel(bool bNewValue)
 	m_bReservedOpenLevel = bNewValue;
 }
 
-void MyNetworkMgr::ClearAdditionalPacket()
+void MyNetworkMgr::ClearAdditionalPacket()// 패킷다 받고 변수들 상태만 바꿔놓는 함수.
 {
-	if (m_pRecvAdditionalPacket != nullptr)
+	for (auto& iter: m_RecvAdditionalPacketVec)
 	{
-		delete[] m_pRecvAdditionalPacket;
-		m_pRecvAdditionalPacket = nullptr;
+		if (iter.bUse) {
+			iter.bUse = false;
+			iter.iDataSize = 0;
+			continue;
+		}
+		break;
 	}
 
-	if (m_SendAdditionalPacketList.empty())
-		return;
 
-
-	for (auto& iter : m_SendAdditionalPacketList)
-	{
-		delete iter;
+	for (auto& iter : m_SendAdditionalPacketVec) {
+		if (iter.bUse) {
+			iter.bUse = false;
+			iter.iDataSize = 0;
+			continue;
+		}
+		break;
 	}
-	m_SendAdditionalPacketList.clear();
+	
+}
+
+bool MyNetworkMgr::RequestRemainVectorIndex(bool bSendVec, int& iOutVectorIndex)
+{
+	bool bCanReturn(false);
+
+	if (bSendVec) {
+		for (int i = 0; i < m_SendAdditionalPacketVec.size(); ++i) {
+			if (m_SendAdditionalPacketVec[i].bUse)// 이미사용하고있는 벡터라면 컨티뉴
+				continue;
+
+			bCanReturn = true;
+			iOutVectorIndex = i;
+		}
+	}
+	else {
+		for (int i = 0; i < m_RecvAdditionalPacketVec.size(); ++i) {
+			if (m_RecvAdditionalPacketVec[i].bUse)// 이미사용하고있는 벡터라면 컨티뉴
+				continue;
+
+			bCanReturn = true;
+			iOutVectorIndex = i;
+		}
+	}
+
+
+	return bCanReturn;
 }
 
 #pragma region Packet
@@ -151,27 +208,9 @@ void MyNetworkMgr::RecvGameStart()
 
 	return;
 }
-#pragma region
-
+#pragma endregion
 
 #pragma region SendPlayerTransform
-void MyNetworkMgr::SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform)
-{
-	if (!m_tClientSock.bConnectSuccess)
-		return;
-
-	const unsigned long long& tPacketSize = sizeof(tNewTransform);
-
-	int retval{ 0 };
-	retval = send(m_tClientSock.sock, reinterpret_cast<char*>(&tNewTransform), sizeof(tPacketSize), 0);
-	if ((retval == SOCKET_ERROR) || (retval != tPacketSize))
-	{
-		err_quit("SendPlayerTransform");
-		Tidy();
-		return;
-	}
-
-}
 
 void MyNetworkMgr::SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed)
 {
@@ -216,6 +255,9 @@ bool MyNetworkMgr::RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket)
 	return true;
 }
 
+#pragma endregion
+
+#pragma region SendInput
 void MyNetworkMgr::SendPlayerInputData(C2S_PACKET_PLAYER_INPUT& tBakuInputData)
 {
 	if (!m_tClientSock.bConnectSuccess)
@@ -235,7 +277,7 @@ bool MyNetworkMgr::RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket)
 {
 	if (!m_tClientSock.bConnectSuccess)
 		return false;
-	
+
 	ClearAdditionalPacket();
 
 	unsigned long long llPacketSize(sizeof(S2C_PACKET_PLAYER_INPUT));
@@ -249,24 +291,62 @@ bool MyNetworkMgr::RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket)
 		return false;
 	}
 
-	if (tOutPacket.sAdditionalPacketSize != 0) // 추가로 받아야하는 패킷이있다면 버퍼 할당함..
-	{
-		m_pRecvAdditionalPacket = new char[tOutPacket.sAdditionalPacketSize];
-		ZeroMemory(m_pRecvAdditionalPacket, tOutPacket.sAdditionalPacketSize);
+	//if (tOutPacket.sAdditionalPacketSize != 0) // 추가로 받아야하는 패킷이있다면 버퍼 할당함..
+	//{
+	//	m_pRecvAdditionalPacket = new char[tOutPacket.sAdditionalPacketSize];
+	//	ZeroMemory(m_pRecvAdditionalPacket, tOutPacket.sAdditionalPacketSize);
 
-		m_iRecvAdditionalPacketSize = tOutPacket.sAdditionalPacketSize;
-	}
-	else
-	{
-		m_iRecvAdditionalPacketSize = 0;
-	}
+	//	m_iRecvAdditionalPacketSize = tOutPacket.sAdditionalPacketSize;
+	//}
+	//else
+	//{
+	//	m_iRecvAdditionalPacketSize = 0;
+	//}
 
-	
+
 	return true;
 }
 
+
 #pragma endregion
 
+#pragma region Send Additional
+
+void MyNetworkMgr::AppendDataToAdditionalList(bool bSendVec, EAdditionalPacketType eNewType, const C2S_PACKET_ADDITIONAL_FLOAT3x3 tNewPacket)
+{
+	int iRemainVectorIndex = -1;
+	if (RequestRemainVectorIndex(bSendVec, iRemainVectorIndex))
+	{
+		int iNewPacketSize = sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3);
+		if (bSendVec)
+		{
+			m_SendAdditionalPacketVec[iRemainVectorIndex].bUse = true;
+			m_SendAdditionalPacketVec[iRemainVectorIndex].ePacketType = eNewType;
+			m_SendAdditionalPacketVec[iRemainVectorIndex].iDataSize = iNewPacketSize;
+			memcpy(m_SendAdditionalPacketVec[iRemainVectorIndex].pData,&tNewPacket, iNewPacketSize);
+		}
+		else
+		{
+			m_RecvAdditionalPacketVec[iRemainVectorIndex].bUse = true;
+			m_RecvAdditionalPacketVec[iRemainVectorIndex].ePacketType = eNewType;
+			m_RecvAdditionalPacketVec[iRemainVectorIndex].iDataSize = iNewPacketSize;
+			memcpy(m_RecvAdditionalPacketVec[iRemainVectorIndex].pData, &tNewPacket, iNewPacketSize);
+		}
+	}
+}
+
+void MyNetworkMgr::SendAdditionalData()
+{
+	for (auto& iter : m_SendAdditionalPacketVec)
+	{
+		if (iter.bUse == false)
+			break;
+
+		//여기서 패킷 복사할것. TODO Recv도 만들고, 서버도 받고 보낼준비하고.........저
+	}
+}
+
+#pragma endregion
 
 
 #pragma endregion

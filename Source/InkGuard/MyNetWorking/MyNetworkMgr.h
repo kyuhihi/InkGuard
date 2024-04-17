@@ -5,7 +5,8 @@
 
 class MyNetworkMgr
 {
-#pragma region Declare Singleton
+#pragma region Declare
+#pragma region Singleton
 public:
 	static MyNetworkMgr* GetInstance()
 	{
@@ -31,24 +32,37 @@ private:
 	static MyNetworkMgr* m_pInstance;
 
 #pragma endregion
+#pragma region Struct
+	struct AdditionalPacket {
+		bool bUse = false;
+		int iDataSize = 0;
+		EAdditionalPacketType ePacketType;
+		char pData[sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3)]; //나중에 더커지면 바꿀것.
+	};
+
+#pragma endregion
+#pragma endregion
+
 private:
 	void Initialize();
+	void InitializeSocket();
+	void InitializeAdditionalList();
+
 	void Tidy();
 	
-	void InitializeSoldierInfo();
-
 public:
-	//void OpenMainGame();
 	void SendGameStart();
 	void RecvGameStart();
 
-	void SendPlayerTransform(C2S_PACKET_PLAYER_TRANSFORM tNewTransform);
 	void SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed);
-
-	bool RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket);
+	bool RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket);// 앞으로 오버로딩 하지말자..
 	
 	void SendPlayerInputData(C2S_PACKET_PLAYER_INPUT& tBakuInputData);
 	bool RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket);
+
+	void AppendDataToAdditionalList(bool bSendVec, EAdditionalPacketType eNewType, const C2S_PACKET_ADDITIONAL_FLOAT3x3 tNewPacket);
+	void SendAdditionalData();
+
 
 public:
 	const bool& GetGameStart() { return m_bGameStart; }
@@ -63,7 +77,8 @@ public:
 	const bool& GetReservedOpenLevel() { return m_bReservedOpenLevel; };
 
 private:
-	void ClearAdditionalPacket();
+	void ClearAdditionalPacket(); //성능 문제 생기면 여기부터 봐라. 풀링 고민해봐라.
+	bool RequestRemainVectorIndex(bool bSendVec, int& iOutVectorIndex);
 
 public:
 	static SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT];
@@ -78,12 +93,15 @@ private:
 	bool m_bGameStart = false;
 	bool m_bReservedOpenLevel = false;					// 게임스타트 패킷을 받고 오픈레벨 하기 직전까지 true할거임.
 	
-	char* m_pRecvAdditionalPacket = nullptr; // 받은것.
-	short m_iRecvAdditionalPacketSize = 0;
+	//char* m_pRecvAdditionalPacket = nullptr; // 받은것.
 
 	class ASpawnMgr* m_pSpawnMgr = nullptr;
 
-	list<FAdditionalBase*> m_SendAdditionalPacketList;
+	vector<AdditionalPacket> m_SendAdditionalPacketVec;
+	short m_iSendAdditionalPacketSize = 0;
+
+	vector<AdditionalPacket> m_RecvAdditionalPacketVec;
+	short m_iRecvAdditionalPacketSize = 0;
 
 };
 

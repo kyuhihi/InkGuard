@@ -44,6 +44,20 @@ struct C2S_PACKET_PLAYER_INPUT
 	short sAdditionalPacketSize = 0;
 };
 
+#pragma pack(1)
+struct C2S_PACKET_ADDITIONAL_FLOAT3
+{
+	XMFLOAT3 vValue = XMFLOAT3();
+};
+
+#pragma pack(1)
+struct C2S_PACKET_ADDITIONAL_FLOAT3x3
+{
+	XMFLOAT3 vValue1 = XMFLOAT3();
+	XMFLOAT3 vValue2 = XMFLOAT3();
+	XMFLOAT3 vValue3 = XMFLOAT3();
+};
+
 //------------------------------------------------
 #pragma pack(1)
 struct S2C_PACKET_GAMESTART {
@@ -69,4 +83,4 @@ struct S2C_PACKET_PLAYER_INPUT
 	short sAdditionalPacketSize = 0;
 };
 
-//------------------------------------------------
+//------------------------------------------------ 
