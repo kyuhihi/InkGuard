@@ -228,7 +228,7 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 	}
 	case STATE_ADDITIONAL:
 	{
-		if ((m_tSockInfo.sendbytes == 0))// 인풋 패킷은 매 프레임 마다 보내도록한다.
+		if ((m_tSockInfo.sendbytes == 0))
 		{
 			m_pOtherClient->CalculateSendAdditionalPacekt(m_tSockInfo.cBuf, m_tSockInfo.totalSendLen);
 			//m_tSockInfo.totalSendLen = sizeof(tSendPacket);
@@ -257,7 +257,6 @@ void CClient::SendComplete()
 		break;
 	case STATE_INPUT: {
 		strState = " Input";
-
 		if (m_pPlayer->IsAnyAdditionalData()) 
 			SetClientState(STATE_ADDITIONAL); //인풋 다보냈는데 추가 데이터 보내야할게 잇다면 additional로 이동.
 		else
@@ -267,6 +266,7 @@ void CClient::SendComplete()
 	case STATE_ADDITIONAL:
 		strState = " Additional";
 		SetClientState(STATE_TRANSFORM);
+		m_pOtherClient->ClearPlayerUsedData();
 		break;
 	case STATE_END:
 	default:

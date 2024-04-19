@@ -153,8 +153,12 @@ void UPlayerNetwork::RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tO
 
 void UPlayerNetwork::SendAdditionalData(float DeltaTime)
 {
+	m_pNetworkMgr->SendAdditionalData();
+}
 
-
+void UPlayerNetwork::RecvAdditionalData(float DeltaTime)
+{
+	//m_pNetworkMgr->ConductAdditionalData
 }
 
 #pragma endregion

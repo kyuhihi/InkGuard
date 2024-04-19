@@ -85,9 +85,20 @@ void CPlayer::CalculateSendAdditionalPacekt(char* pOtherClientSendBuf, int& iOth
 		CMemoryPooler::MemoryBlock* blockToDelete =iter->second;
 		iter = m_AdditionalDataList.erase(iter);
 
-		m_pMemoryPooler->DeAllocate(blockToDelete);
+		m_UsedData.push_back(blockToDelete);
 	}
 
 
 }
+
+void CPlayer::ClearUsedData()
+{
+	m_iRemAdditionalSize = 0;
+	for (auto& iter : m_UsedData)
+	{
+		m_pMemoryPooler->DeAllocate(iter);
+	}
+	m_UsedData.clear();
+}
+
 

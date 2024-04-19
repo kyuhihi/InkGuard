@@ -62,6 +62,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void SendAdditionalData(float DeltaTime);
 
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void RecvAdditionalData(float DeltaTime);
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void TidyNetworkTickRoutine(); // 틱마다 끝내야할 루틴 넣기.

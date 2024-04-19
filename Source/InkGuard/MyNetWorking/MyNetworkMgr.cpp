@@ -423,6 +423,7 @@ void MyNetworkMgr::ConductAdditionalData(const char* pNewPacket)
 		}
 
 	}
+	m_sRecvAdditionalPacketSize = 0;
 }
 
 

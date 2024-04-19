@@ -36,6 +36,7 @@ public:	//Getter Setter
 	const S2C_PACKET_PLAYER_TRANSFORM GetOtherPlayerTransform() { return m_pPlayer->GetTransform(); }
 	const S2C_PACKET_PLAYER_INPUT GetOtherPlayerInputs() { return m_pPlayer->GetInputs(); }
 	void CalculateSendAdditionalPacekt(char* pOtherClientSendBuf, int& iOtherSendBufferSize) { m_pPlayer->CalculateSendAdditionalPacekt(pOtherClientSendBuf, iOtherSendBufferSize); };
+	void ClearPlayerUsedData() { m_pPlayer->ClearUsedData(); };
 
 	void SetTeam(const GAME_PLAY& eTeam) { m_tSockInfo.eGamePlayTeam = eTeam; }
 	void SetOtherClient(CClient* pOtherClient);
