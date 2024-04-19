@@ -64,6 +64,7 @@ public:
 	void SendAdditionalData();
 	void RecvAdditionalData();
 	void ConductAdditionalData(const char* pNewPacket);
+	void FindAdditionalData(EAdditionalPacketType eFindType, C2S_PACKET_ADDITIONAL_FLOAT3x3& tOutData);
 
 public:
 	const bool& GetGameStart() { return m_bGameStart; }

@@ -158,7 +158,18 @@ void UPlayerNetwork::SendAdditionalData(float DeltaTime)
 
 void UPlayerNetwork::RecvAdditionalData(float DeltaTime)
 {
-	//m_pNetworkMgr->ConductAdditionalData
+	m_pNetworkMgr->RecvAdditionalData();
+}
+
+const FVaultingPacket UPlayerNetwork::GetVaultingData()
+{
+	C2S_PACKET_ADDITIONAL_FLOAT3x3 tFindData;
+	m_pNetworkMgr->FindAdditionalData(EAdditionalPacketType::ADD_VAULT, tFindData);
+	FVaultingPacket RetData;
+	RetData.VaultingStart = UCustomFunctional::float3_To_FVector(tFindData.vValue1);
+	RetData.VaultingMiddle = UCustomFunctional::float3_To_FVector(tFindData.vValue2);
+	RetData.VaultingEnd= UCustomFunctional::float3_To_FVector(tFindData.vValue3);
+	return RetData;
 }
 
 #pragma endregion
@@ -178,7 +189,7 @@ const FPlayerStruct& UPlayerNetwork::GetPlayerStruct()
 void UPlayerNetwork::TidyNetworkTickRoutine()
 {
 	m_pNetworkMgr->SetSyncTime(false);
-
+	
 }
 
 

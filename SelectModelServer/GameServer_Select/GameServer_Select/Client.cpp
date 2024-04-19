@@ -112,15 +112,19 @@ bool CClient::RecvPacket()
 	}
 	else if (m_eState == STATE_ADDITIONAL)
 	{
-		pair<int, CMemoryPooler::MemoryBlock*>& Buf = m_pPlayer->GetLastDataBlock();
-		retval = recv(m_tSockInfo.sock, Buf.second->pData, Buf.first, 0);//first는 사이즈 second는 구조체.
-		if (retval == SOCKET_ERROR) {
-			err_display("recv()");
-			return false;
+		if (m_pPlayer->IsAnyAdditionalData()) {
+			pair<int, CMemoryPooler::MemoryBlock*>& Buf = m_pPlayer->GetLastDataBlock();
+			retval = recv(m_tSockInfo.sock, Buf.second->pData, Buf.first, 0);//first는 사이즈 second는 구조체.
+			if (retval == SOCKET_ERROR) {
+				err_display("recv()");
+				return false;
+			}
+			else if (retval == 0) {
+				return false;
+			}
 		}
-		else if (retval == 0) {
-			return false;
-		}
+
+		ConductPacket(tNewPacket);
 	}
 	
 
@@ -257,10 +261,11 @@ void CClient::SendComplete()
 		break;
 	case STATE_INPUT: {
 		strState = " Input";
-		if (m_pPlayer->IsAnyAdditionalData()) 
-			SetClientState(STATE_ADDITIONAL); //인풋 다보냈는데 추가 데이터 보내야할게 잇다면 additional로 이동.
-		else
-			SetClientState(STATE_TRANSFORM); // 다시 처음 루틴으로 복귀.
+		SetClientState(STATE_ADDITIONAL);
+		//if (m_pPlayer->IsAnyAdditionalData()) 
+		//	SetClientState(STATE_ADDITIONAL); //인풋 다보냈는데 추가 데이터 보내야할게 잇다면 additional로 이동.
+		//else
+		//	SetClientState(STATE_TRANSFORM); // 다시 처음 루틴으로 복귀.
 		break;
 	}
 	case STATE_ADDITIONAL:

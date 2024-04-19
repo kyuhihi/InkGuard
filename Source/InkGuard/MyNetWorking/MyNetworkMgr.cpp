@@ -297,10 +297,10 @@ bool MyNetworkMgr::RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket)
 
 	m_sRecvAdditionalPacketSize = tOutPacket.sAdditionalPacketSize;
 
-	if (m_sRecvAdditionalPacketSize != 0) // 추가로 받아야하는 패킷이있다면 recv한번ㄴ더 해야함.
-	{
-		RecvAdditionalData();
-	}
+	//if (m_sRecvAdditionalPacketSize != 0) // 추가로 받아야하는 패킷이있다면 recv한번ㄴ더 해야함.
+	//{
+	//	RecvAdditionalData();
+	//}
 
 
 	return true;
@@ -375,6 +375,8 @@ void MyNetworkMgr::SendAdditionalData()
 
 void MyNetworkMgr::RecvAdditionalData()
 {
+	if (m_sRecvAdditionalPacketSize == 0) 
+		return;
 	char* RecvPacket = new char[m_sRecvAdditionalPacketSize];
 
 	int retval{ 0 };
@@ -388,6 +390,19 @@ void MyNetworkMgr::RecvAdditionalData()
 	}
 	ConductAdditionalData(RecvPacket);
 
+}
+
+void  MyNetworkMgr::FindAdditionalData(EAdditionalPacketType eFindType, C2S_PACKET_ADDITIONAL_FLOAT3x3& tOutData)
+{
+	for (auto& iter : m_RecvAdditionalPacketVec)
+	{
+		if (iter.bUse == false)
+			return;
+		if (iter.ePacketType == eFindType)
+		{
+			memcpy(&tOutData, iter.pData, sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3));
+		}
+	}
 }
 
 void MyNetworkMgr::ConductAdditionalData(const char* pNewPacket)

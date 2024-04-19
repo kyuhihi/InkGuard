@@ -66,6 +66,9 @@ public:
 	void RecvAdditionalData(float DeltaTime);
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	const FVaultingPacket GetVaultingData();
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void TidyNetworkTickRoutine(); // 틱마다 끝내야할 루틴 넣기.
 
 #pragma endregion
