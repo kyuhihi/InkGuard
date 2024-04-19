@@ -32,5 +32,62 @@ void CPlayer::SetInputs(const C2S_PACKET_PLAYER_INPUT& tPacket)
 
 	m_tInputs.fMontagePlayTime = tPacket.fMontagePlayTime;
 
-	m_AdditionalDataList.push_back(make_pair(tPacket.sAdditionalPacketSize, m_pMemoryPooler->Allocate(tPacket.sAdditionalPacketSize)));
+	if (tPacket.sAdditionalPacketSize == 0)
+		return;
+
+	m_AdditionalDataList.push_back(make_pair(tPacket.sAdditionalPacketSize, m_pMemoryPooler->Allocate(tPacket.sAdditionalPacketSize))); 
+
+	m_tInputs.sAdditionalPacketSize = 0;
+	for (auto iter : m_AdditionalDataList)
+	{
+		m_tInputs.sAdditionalPacketSize +=	iter.first;// 패킷 총 사이즈 계산해둬!
+	}
+
 }
+
+const S2C_PACKET_PLAYER_INPUT CPlayer::GetInputs()
+{
+	m_iRemAdditionalSize = m_tInputs.sAdditionalPacketSize;
+
+	return m_tInputs;
+}
+
+pair<int, CMemoryPooler::MemoryBlock*>& CPlayer::GetLastDataBlock()
+{
+	if (!m_AdditionalDataList.empty()) {
+		return m_AdditionalDataList.back();
+	}
+	else {
+		// 만약 리스트가 비어있다면, 적절한 예외 처리를 수행하거나 null을 반환할 수 있습니다.
+		throw std::out_of_range("List is empty");
+	}
+}
+
+void CPlayer::CalculateSendAdditionalPacekt(char* pOtherClientSendBuf, int& iOtherSendBufferSize)
+{
+	if (m_AdditionalDataList.empty())
+		return;
+	iOtherSendBufferSize = m_iRemAdditionalSize;
+	pOtherClientSendBuf = new char[m_iRemAdditionalSize];
+
+	int iCheckBufferSize = 0;
+	int iOffset = 0;
+	auto iter = m_AdditionalDataList.begin();
+	while ( iter != m_AdditionalDataList.end() && iCheckBufferSize != m_iRemAdditionalSize)
+	{
+		int dataSizeToSendThisWhile = iter->first;
+		memcpy(pOtherClientSendBuf + iOffset, iter->second->pData, dataSizeToSendThisWhile);
+
+		iOffset += dataSizeToSendThisWhile;
+
+		iCheckBufferSize += dataSizeToSendThisWhile;
+
+		CMemoryPooler::MemoryBlock* blockToDelete =iter->second;
+		iter = m_AdditionalDataList.erase(iter);
+
+		m_pMemoryPooler->DeAllocate(blockToDelete);
+	}
+
+
+}
+

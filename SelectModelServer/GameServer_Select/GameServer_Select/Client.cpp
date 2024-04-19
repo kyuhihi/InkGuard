@@ -94,18 +94,35 @@ void CClient::SetOtherClient(CClient* pOtherClient)
 bool CClient::RecvPacket()
 {
 	CPacket tNewPacket(m_eState);
-
-	int retval = recv(m_tSockInfo.sock, tNewPacket.m_pBuf, tNewPacket.m_iBufferSize, 0);
 	
-	if (retval == SOCKET_ERROR) {
-		err_display("recv()");
-		return false;
-	}
-	else if (retval == 0) {
-		return false;
-	}
+	int retval(0);
 
-	ConductPacket(tNewPacket);
+	if (tNewPacket.m_pBuf != nullptr) { //CPacket의 생성자로 할당 될수있었다면 해당 버퍼에 정보를 담아내야만 한다.
+		retval = recv(m_tSockInfo.sock, tNewPacket.m_pBuf, tNewPacket.m_iBufferSize, 0);
+
+		if (retval == SOCKET_ERROR) {
+			err_display("recv()");
+			return false;
+		}
+		else if (retval == 0) { 
+			return false;
+		}
+
+		ConductPacket(tNewPacket);
+	}
+	else if (m_eState == STATE_ADDITIONAL)
+	{
+		pair<int, CMemoryPooler::MemoryBlock*>& Buf = m_pPlayer->GetLastDataBlock();
+		retval = recv(m_tSockInfo.sock, Buf.second->pData, Buf.first, 0);//first는 사이즈 second는 구조체.
+		if (retval == SOCKET_ERROR) {
+			err_display("recv()");
+			return false;
+		}
+		else if (retval == 0) {
+			return false;
+		}
+	}
+	
 
 	return true;
 }
@@ -119,7 +136,7 @@ bool CClient::SendPacket()
 	}
 
 	int retval = 0;
-	retval = send(m_tSockInfo.sock, m_tSockInfo.cBuf + m_tSockInfo.sendbytes, 
+	retval = send(m_tSockInfo.sock, m_tSockInfo.cBuf + m_tSockInfo.sendbytes,
 		m_tSockInfo.totalSendLen - m_tSockInfo.sendbytes, 0);
 
 
@@ -132,11 +149,10 @@ bool CClient::SendPacket()
 		//cout << retval << "만큼 보냄" << endl;
 		if (m_tSockInfo.totalSendLen == m_tSockInfo.sendbytes) {//SEND ALL COMPLETE
 			SendComplete();
-			
+
 		}
 	}
 
-	
 	return true;
 }
 
@@ -210,14 +226,14 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 		}
 		break;
 	}
-	case STATE_ADDITIONAL:// 이거봐라.
+	case STATE_ADDITIONAL:
 	{
 		if ((m_tSockInfo.sendbytes == 0))// 인풋 패킷은 매 프레임 마다 보내도록한다.
 		{
-			S2C_PACKET_PLAYER_INPUT tSendPacket = m_pOtherClient->GetOtherPlayerInputs();
-			m_tSockInfo.totalSendLen = sizeof(tSendPacket);
-			m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
-			memcpy(m_tSockInfo.cBuf, &tSendPacket, m_tSockInfo.totalSendLen);
+			m_pOtherClient->CalculateSendAdditionalPacekt(m_tSockInfo.cBuf, m_tSockInfo.totalSendLen);
+			//m_tSockInfo.totalSendLen = sizeof(tSendPacket);
+			//m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
+			//memcpy(m_tSockInfo.cBuf, &tSendPacket, m_tSockInfo.totalSendLen);
 		}
 		break;
 	}
@@ -229,10 +245,6 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 
 void CClient::SendComplete()
 {
-	m_tSockInfo.totalSendLen = m_tSockInfo.sendbytes = 0;
-	delete[] m_tSockInfo.cBuf;
-	m_tSockInfo.cBuf = nullptr;
-
 	string strState;
 	switch (m_eState)
 	{
@@ -243,16 +255,20 @@ void CClient::SendComplete()
 		strState = " Transform";
 		SetClientState(STATE_INPUT);
 		break;
-	case STATE_INPUT:
+	case STATE_INPUT: {
 		strState = " Input";
-		SetClientState(STATE_ADDITIONAL); //다시 트랜스폼으로 돌리는걸로 일단 설정 패킷 추가하면 바꿀것.
+
+		if (m_pPlayer->IsAnyAdditionalData()) 
+			SetClientState(STATE_ADDITIONAL); //인풋 다보냈는데 추가 데이터 보내야할게 잇다면 additional로 이동.
+		else
+			SetClientState(STATE_TRANSFORM); // 다시 처음 루틴으로 복귀.
 		break;
+	}
 	case STATE_ADDITIONAL:
 		strState = " Additional";
 		SetClientState(STATE_TRANSFORM);
 		break;
 	case STATE_END:
-		break;
 	default:
 		break;
 	}
@@ -267,6 +283,12 @@ void CClient::SendComplete()
 	int addrlen = sizeof(clientaddr);
 	getpeername(m_tSockInfo.sock, (struct sockaddr*)&clientaddr, &addrlen);
 
+	m_tSockInfo.totalSendLen = m_tSockInfo.sendbytes = 0;
+	if (m_tSockInfo.cBuf != nullptr) 
+	{
+		delete[] m_tSockInfo.cBuf;
+		m_tSockInfo.cBuf = nullptr;
+	}
 	//cout << ntohs(clientaddr.sin_port)<< strState << " 다 보냈어." << endl;
 
 }

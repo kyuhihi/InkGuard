@@ -1,9 +1,8 @@
 #pragma once
 #include "Include.h"
 #include "Packet.h"
-#include "Player.h"
 #include "SoldierMgr.h"
-
+#include "Player.h"
 
 class CClient
 {
@@ -36,6 +35,7 @@ public:	//Getter Setter
 	void GetGameStartPacket(S2C_PACKET_GAMESTART& tOutGameStartPacket);
 	const S2C_PACKET_PLAYER_TRANSFORM GetOtherPlayerTransform() { return m_pPlayer->GetTransform(); }
 	const S2C_PACKET_PLAYER_INPUT GetOtherPlayerInputs() { return m_pPlayer->GetInputs(); }
+	void CalculateSendAdditionalPacekt(char* pOtherClientSendBuf, int& iOtherSendBufferSize) { m_pPlayer->CalculateSendAdditionalPacekt(pOtherClientSendBuf, iOtherSendBufferSize); };
 
 	void SetTeam(const GAME_PLAY& eTeam) { m_tSockInfo.eGamePlayTeam = eTeam; }
 	void SetOtherClient(CClient* pOtherClient);

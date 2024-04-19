@@ -33,7 +33,7 @@ private:
 public:
 	struct MemoryBlock {
 		char* pData = nullptr;
-		int iDataSize = 0;
+		size_t iDataSize = 0;
 	};
 
 #pragma endregion

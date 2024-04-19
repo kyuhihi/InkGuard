@@ -133,7 +133,7 @@ void UPlayerNetwork::SendPlayerInputData(float DeltaTime, const FPlayerInputStru
 }
 
 void UPlayerNetwork::RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tOutInputs)
-{
+{//추가 패킷사이즈는 플레이어
 	S2C_PACKET_PLAYER_INPUT tRecvPacket;
 
 	if (m_pNetworkMgr->RecvPlayerInputData(tRecvPacket))
