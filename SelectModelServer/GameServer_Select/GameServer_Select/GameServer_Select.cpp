@@ -9,9 +9,26 @@ CMatchMakingMgr MatchMakingMgr;
 // 소켓 정보 관리 함수
 bool AddSocketInfo(SOCKET sock);
 void RemoveSocketInfo(int nIndex);
+void ExitMain();
+
+void ExitMain() {
+	// 윈속 종료
+	WSACleanup();
+
+	CMemoryPooler::GetInstance()->DestroyInstance();
+
+	_CrtDumpMemoryLeaks();
+}
+
 
 int main(int argc, char* argv[])
 {
+#ifdef _DEBUG
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif // _DEBUG
+	atexit(ExitMain);
+
+
 	int retval;
 #pragma region 윈속 초기화
 	for (int i = 0; i < FD_SETSIZE; ++i)
@@ -27,7 +44,7 @@ int main(int argc, char* argv[])
 
 	// bind()
 	struct sockaddr_in serveraddr;
-	memset(&			serveraddr, 0, sizeof(serveraddr));
+	memset(&serveraddr, 0, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serveraddr.sin_port = htons(SERVER_PORT);
@@ -109,10 +126,6 @@ int main(int argc, char* argv[])
 	// 소켓 닫기
 	closesocket(listen_sock);
 
-	// 윈속 종료
-	WSACleanup();
-
-	CMemoryPooler::GetInstance()->DestroyInstance();
 	return 0;
 }
 

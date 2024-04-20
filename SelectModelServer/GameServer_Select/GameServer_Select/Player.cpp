@@ -29,6 +29,8 @@ void CPlayer::SetInputs(const C2S_PACKET_PLAYER_INPUT& tPacket)
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_VAULT] = tPacket.bInputs[PLAYER_INPUT::INPUT_VAULT];
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_DODGE] = tPacket.bInputs[PLAYER_INPUT::INPUT_DODGE];
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_SPRINT] = tPacket.bInputs[PLAYER_INPUT::INPUT_SPRINT];
+	m_tInputs.bInputs[PLAYER_INPUT::INPUT_CROUCH] = tPacket.bInputs[PLAYER_INPUT::INPUT_CROUCH];
+	m_tInputs.bInputs[PLAYER_INPUT::INPUT_CLIMBING] = tPacket.bInputs[PLAYER_INPUT::INPUT_CLIMBING];
 
 	m_tInputs.fMontagePlayTime = tPacket.fMontagePlayTime;
 
@@ -94,6 +96,10 @@ void CPlayer::CalculateSendAdditionalPacekt(char* pOtherClientSendBuf, int& iOth
 void CPlayer::ClearUsedData()
 {
 	m_iRemAdditionalSize = 0;
+	
+	if (m_UsedData.empty())
+		return;
+
 	for (auto& iter : m_UsedData)
 	{
 		m_pMemoryPooler->DeAllocate(iter);

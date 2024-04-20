@@ -72,6 +72,12 @@ public:
 	bool Sprint = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Crouch = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Climbing = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MontagePlayTime = 0.f;
 };
 

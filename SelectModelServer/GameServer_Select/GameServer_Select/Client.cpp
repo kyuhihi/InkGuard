@@ -234,11 +234,18 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 	{
 		if ((m_tSockInfo.sendbytes == 0))
 		{
-			m_pOtherClient->CalculateSendAdditionalPacekt(m_tSockInfo.cBuf, m_tSockInfo.totalSendLen);
-			//m_tSockInfo.totalSendLen = sizeof(tSendPacket);
-			//m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
-			//memcpy(m_tSockInfo.cBuf, &tSendPacket, m_tSockInfo.totalSendLen);
+			if (m_pOtherClient != nullptr) {
+
+				m_pOtherClient->CalculateSendAdditionalPacekt(m_tSockInfo.cBuf, m_tSockInfo.totalSendLen);
+				if (m_tSockInfo.totalSendLen == 0)
+				{//만약 다른 클라이언트에서 보낼 데이터를 계산했는데 아무것도없어? 그럼 read나, write하는게 아닌 state를 바꿔야해.
+					SendComplete();
+				}
+			}
+			else
+				SendComplete();
 		}
+		
 		break;
 	}
 	case STATE_END:
@@ -262,16 +269,15 @@ void CClient::SendComplete()
 	case STATE_INPUT: {
 		strState = " Input";
 		SetClientState(STATE_ADDITIONAL);
-		//if (m_pPlayer->IsAnyAdditionalData()) 
-		//	SetClientState(STATE_ADDITIONAL); //인풋 다보냈는데 추가 데이터 보내야할게 잇다면 additional로 이동.
-		//else
-		//	SetClientState(STATE_TRANSFORM); // 다시 처음 루틴으로 복귀.
+
 		break;
 	}
 	case STATE_ADDITIONAL:
 		strState = " Additional";
 		SetClientState(STATE_TRANSFORM);
-		m_pOtherClient->ClearPlayerUsedData();
+		if(m_pOtherClient)
+			m_pOtherClient->ClearPlayerUsedData();
+
 		break;
 	case STATE_END:
 	default:

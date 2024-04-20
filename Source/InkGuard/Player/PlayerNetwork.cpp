@@ -123,6 +123,8 @@ void UPlayerNetwork::SendPlayerInputData(float DeltaTime, const FPlayerInputStru
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_VAULT] = tBakuInputData.Vault;
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_DODGE] = tBakuInputData.Dodge;
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_SPRINT] = tBakuInputData.Sprint;
+	tSendPacket.bInputs[PLAYER_INPUT::INPUT_CROUCH] = tBakuInputData.Crouch;
+	tSendPacket.bInputs[PLAYER_INPUT::INPUT_CLIMBING] = tBakuInputData.Climbing;
 	tSendPacket.fMontagePlayTime = tBakuInputData.MontagePlayTime;
 
 	//SendPlayerInputData
@@ -143,6 +145,8 @@ void UPlayerNetwork::RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tO
 		tOutInputs.Vault = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_VAULT];
 		tOutInputs.Dodge = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_DODGE];
 		tOutInputs.Sprint = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_SPRINT];
+		tOutInputs.Crouch = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_CROUCH];
+		tOutInputs.Climbing = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_CLIMBING];
 		tOutInputs.MontagePlayTime = tRecvPacket.fMontagePlayTime;
 
 	}
