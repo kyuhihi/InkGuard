@@ -23,7 +23,7 @@ CPacket::CPacket(const CLIENT_STATE& eState)
 		m_pBuf = new char[m_iBufferSize];
 		break;
 	}
-	case STATE_ADDITIONAL: //에디셔널 패킷이면 패킷의 버퍼를 할당하지않아.
+	case STATE_ADDITIONAL:				//에디셔널 패킷이면 패킷의 버퍼를 할당하지않아.
 	case STATE_END:
 	default:
 		break;

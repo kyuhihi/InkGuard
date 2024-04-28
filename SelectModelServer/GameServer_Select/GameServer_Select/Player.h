@@ -3,12 +3,12 @@
 #include "MemoryPooler.h"
 #include "Include.h"
 
-//class CClient;
+class CClient;
 
 class CPlayer : public CGameObject 
 {
 public:
-	CPlayer();
+	CPlayer(CClient* pClient);
 	~CPlayer();
 
 public:
@@ -21,7 +21,8 @@ public:
 	const bool IsAnyAdditionalData() { return !m_AdditionalDataList.empty(); }
 	pair<int, CMemoryPooler::MemoryBlock*>& GetLastDataBlock(); // 마지막 메모리블럭에 값을 recv하기위해 레퍼런스로 return 해준다.
 	
-	void CalculateSendAdditionalPacekt (char* pOtherClientSendBuf, int& iOtherSendBufferSize);
+	const int& GetRemAdditionalSize() const { return m_iRemAdditionalSize; }
+	void CalculateSendAdditionalPacket (char*& pOtherClientSendBuf, int& iOtherSendBufferSize);
 	void ClearUsedData();
 
 private:
@@ -33,5 +34,9 @@ private:
 	list<CMemoryPooler::MemoryBlock*> m_UsedData;
 
 	int m_iRemAdditionalSize = 0;// 클라이언트쪽에서 input에서 가져간만큼 기다리고있을거니까 input패킷을 받으러 get 할때 확정된 사이즈를 저장해둔변수.
+
+	list<string>m_StringTable;
+
+	class CClient* m_pOwner = nullptr;
 };
 

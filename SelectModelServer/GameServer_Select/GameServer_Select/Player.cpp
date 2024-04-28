@@ -1,16 +1,19 @@
 #include "Player.h"
+#include "Client.h"
 
-CPlayer::CPlayer()
+CPlayer::CPlayer(CClient* pClient)
 {
 	m_pMemoryPooler = CMemoryPooler::GetInstance();
+	m_pOwner = pClient;
 }
 
 CPlayer::~CPlayer()
 {
+	ClearUsedData();
 	for (auto Memory : m_AdditionalDataList)
 		m_pMemoryPooler->DeAllocate(Memory.second);
-
 	m_AdditionalDataList.clear();
+	m_pOwner = nullptr;
 }
 
 void CPlayer::SetTransform(const C2S_PACKET_PLAYER_TRANSFORM& tPacket)
@@ -37,26 +40,34 @@ void CPlayer::SetInputs(const C2S_PACKET_PLAYER_INPUT& tPacket)
 	if (tPacket.sAdditionalPacketSize == 0)
 		return;
 
+	if (m_pOwner->GetSocketInfo()->eGamePlayTeam == GAME_BLUE_TEAM)
+	{
+		int i = 0;
+	}
+
 	m_AdditionalDataList.push_back(make_pair(tPacket.sAdditionalPacketSize, m_pMemoryPooler->Allocate(tPacket.sAdditionalPacketSize))); 
 
 	m_tInputs.sAdditionalPacketSize = 0;
-	for (auto iter : m_AdditionalDataList)
+	for (auto& iter : m_AdditionalDataList)
 	{
-		m_tInputs.sAdditionalPacketSize +=	iter.first;// ∆–≈∂ √— ªÁ¿Ã¡Ó ∞ËªÍ«ÿµ÷!
+		m_tInputs.sAdditionalPacketSize +=	iter.first; // ∆–≈∂ √— ªÁ¿Ã¡Ó ∞ËªÍ«ÿµ÷!
 	}
+//	m_StringTable.push_back(to_string(m_tInputs.sAdditionalPacketSize));
 
 }
 
 const S2C_PACKET_PLAYER_INPUT CPlayer::GetInputs()
 {
-	m_iRemAdditionalSize = m_tInputs.sAdditionalPacketSize;
+	S2C_PACKET_PLAYER_INPUT newInput = m_tInputs;
+	newInput.sAdditionalPacketSize = m_iRemAdditionalSize;
 
-	return m_tInputs;
+	return newInput;
 }
 
 pair<int, CMemoryPooler::MemoryBlock*>& CPlayer::GetLastDataBlock()
 {
 	if (!m_AdditionalDataList.empty()) {
+		m_iRemAdditionalSize += m_AdditionalDataList.back().first;
 		return m_AdditionalDataList.back();
 	}
 	else {
@@ -65,10 +76,15 @@ pair<int, CMemoryPooler::MemoryBlock*>& CPlayer::GetLastDataBlock()
 	}
 }
 
-void CPlayer::CalculateSendAdditionalPacekt(char* pOtherClientSendBuf, int& iOtherSendBufferSize)
+void CPlayer::CalculateSendAdditionalPacket(char*& pOtherClientSendBuf, int& iOtherSendBufferSize)
 {
 	if (m_AdditionalDataList.empty())
 		return;
+	if (m_iRemAdditionalSize == 0)
+	{
+		return;
+	}
+	cout << "Other AditionalSize : " << m_iRemAdditionalSize << endl;
 	iOtherSendBufferSize = m_iRemAdditionalSize;
 	pOtherClientSendBuf = new char[m_iRemAdditionalSize];
 
@@ -97,6 +113,7 @@ void CPlayer::ClearUsedData()
 {
 	m_iRemAdditionalSize = 0;
 	
+	m_StringTable.push_back(to_string(m_iRemAdditionalSize));
 	if (m_UsedData.empty())
 		return;
 

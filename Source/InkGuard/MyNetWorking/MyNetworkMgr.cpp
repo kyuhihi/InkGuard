@@ -323,6 +323,7 @@ void MyNetworkMgr::AppendDataToAdditionalList(bool bSendVec, EAdditionalPacketTy
 			m_SendAdditionalPacketVec[iRemainVectorIndex].ePacketType = eNewType;
 			m_SendAdditionalPacketVec[iRemainVectorIndex].iDataSize = iNewPacketSize;
 			memcpy(m_SendAdditionalPacketVec[iRemainVectorIndex].pData,&tNewPacket, iNewPacketSize);
+			m_sSendAdditionalPacketSize += iNewPacketSize;
 		}
 		else
 		{
@@ -332,7 +333,6 @@ void MyNetworkMgr::AppendDataToAdditionalList(bool bSendVec, EAdditionalPacketTy
 			memcpy(m_RecvAdditionalPacketVec[iRemainVectorIndex].pData, &tNewPacket, iNewPacketSize);
 		}
 
-		m_sSendAdditionalPacketSize += iNewPacketSize;
 	}
 }
 

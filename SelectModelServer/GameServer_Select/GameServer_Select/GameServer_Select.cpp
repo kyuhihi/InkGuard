@@ -5,15 +5,25 @@
 int nTotalSockets = 0;
 CClient* ClientArray[FD_SETSIZE];// 총 64개의 소켓을 받을수있다.
 CMatchMakingMgr MatchMakingMgr;
+SOCKET listen_sock;
 
 // 소켓 정보 관리 함수
 bool AddSocketInfo(SOCKET sock);
 void RemoveSocketInfo(int nIndex);
 void ExitMain();
 
-void ExitMain() {
+void ExitMain() 
+{
 	// 윈속 종료
+	for (int i = 0; i < nTotalSockets; i++) {
+		const CClient::SOCKETINFO* ptr = ClientArray[i]->GetSocketInfo();
+		RemoveSocketInfo(i);
+	}
+	
 	WSACleanup();
+
+	closesocket(listen_sock);
+
 
 	CMemoryPooler::GetInstance()->DestroyInstance();
 
@@ -39,7 +49,7 @@ int main(int argc, char* argv[])
 		return 1;
 
 	// 소켓 생성
-	SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
+	listen_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (listen_sock == INVALID_SOCKET) err_quit("socket()");
 
 	// bind()
@@ -124,7 +134,6 @@ int main(int argc, char* argv[])
 	} /* end of while (1) */
 
 	// 소켓 닫기
-	closesocket(listen_sock);
 
 	return 0;
 }

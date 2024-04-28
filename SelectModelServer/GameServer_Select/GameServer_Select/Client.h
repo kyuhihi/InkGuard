@@ -18,6 +18,8 @@ public:
 		char* cBuf = nullptr;
 	};
 
+	enum ADDITIONAL_STATE_CONDITION { CONDITION_RECV, CONDITION_SEND, CONDITION_END };
+
 public:
 	CClient(SOCKET sock);
 	~CClient();
@@ -35,13 +37,20 @@ public:	//Getter Setter
 	void GetGameStartPacket(S2C_PACKET_GAMESTART& tOutGameStartPacket);
 	const S2C_PACKET_PLAYER_TRANSFORM GetOtherPlayerTransform() { return m_pPlayer->GetTransform(); }
 	const S2C_PACKET_PLAYER_INPUT GetOtherPlayerInputs() { return m_pPlayer->GetInputs(); }
-	void CalculateSendAdditionalPacekt(char* pOtherClientSendBuf, int& iOtherSendBufferSize) { m_pPlayer->CalculateSendAdditionalPacekt(pOtherClientSendBuf, iOtherSendBufferSize); };
+
+	void CalculateSendAdditionalPacket(char*& pOtherClientSendBuf, int& iOtherSendBufferSize) { m_pPlayer->CalculateSendAdditionalPacket(pOtherClientSendBuf, iOtherSendBufferSize); };
+	const int& GetRemAdditionalSize() const { return m_pPlayer->GetRemAdditionalSize(); };
 	void ClearPlayerUsedData() { m_pPlayer->ClearUsedData(); };
 
 	void SetTeam(const GAME_PLAY& eTeam) { m_tSockInfo.eGamePlayTeam = eTeam; }
 	void SetOtherClient(CClient* pOtherClient);
 	void SetClientState(const CLIENT_STATE eNewState) { m_eState = eNewState; }
+
+	void MakeDebugStringtable(const char* FuncName);
 	
+private:
+	void ReserveAdditionalState();
+	void ClearSendBuffer();
 
 public:		//Public Packet
 	bool RecvPacket();
@@ -62,5 +71,10 @@ private:
 
 	CClient* m_pOtherClient = nullptr;
 	CSoldierMgr* m_pSoldierMgr = nullptr; // 솔져로 포함된 다카와 스피어맨을 관리하는 집약체임. 내팀 9마리만 관리할거임.
+
+	bool m_bReserved_Additional_State[CONDITION_END] = { false,false };
+
+	list<string>m_StringTable; //디버그용.
+
 };
 
