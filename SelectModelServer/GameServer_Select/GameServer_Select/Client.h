@@ -19,6 +19,7 @@ public:
 	};
 
 	enum ADDITIONAL_STATE_CONDITION { CONDITION_RECV, CONDITION_SEND, CONDITION_END };
+	enum FRAME_SET { FRAME_WRITE, FRAME_READ, FRAME_END };
 
 public:
 	CClient(SOCKET sock);
@@ -28,7 +29,7 @@ public://일반함수
 	void Initialize(SOCKET sock);
 	void Release();
 
-	void PutInReadOrWriteSet(const fd_set& ReadSet, const fd_set& WriteSet);
+	bool PutInReadOrWriteSet(const fd_set& ReadSet, const fd_set& WriteSet); // return 값이 false라면 다시 호출할것.
 
 public:	//Getter Setter
 	bool IsInitializedSoldierMgr();
@@ -60,7 +61,7 @@ public:		//Public Packet
 
 private:	//Private Packet
 	void ConductPacket(const CPacket& Packet);
-	void SendComplete();
+	void SendComplete(bool doDebugString = true);
 
 private:
 	SOCKETINFO m_tSockInfo;
@@ -75,6 +76,8 @@ private:
 	bool m_bReserved_Additional_State[CONDITION_END] = { false,false };
 
 	list<string>m_StringTable; //디버그용.
+
+	FRAME_SET m_eCurSet = FRAME_SET::FRAME_END;
 
 };
 

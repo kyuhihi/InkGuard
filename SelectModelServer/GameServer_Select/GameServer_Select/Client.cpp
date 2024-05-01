@@ -1,5 +1,7 @@
 #include "Client.h"
 
+#define MAX_DEBUG_STRING_WRITE 20
+
 CClient::CClient(SOCKET sock)
 {
 	Initialize(sock);
@@ -47,30 +49,51 @@ void CClient::Release()
 	m_pSoldierMgr = nullptr;
 }
 
-void CClient::PutInReadOrWriteSet(const fd_set& ReadSet, const fd_set& WriteSet) 
+bool CClient::PutInReadOrWriteSet(const fd_set& ReadSet, const fd_set& WriteSet) 
 {
+	FRAME_SET eCurSet = FRAME_SET::FRAME_END;
 	if (m_eState == STATE_ADDITIONAL)
 	{
 		if (m_bReserved_Additional_State[CONDITION_RECV])
 		{
 			FD_SET(m_tSockInfo.sock, &ReadSet);// ReadSet에 추가
+			eCurSet = FRAME_READ;
 		}
 		else if (m_bReserved_Additional_State[CONDITION_SEND])
 		{
 			FD_SET(m_tSockInfo.sock, &WriteSet);// Write에 추가
+			eCurSet = FRAME_WRITE;
 		}
 		else {
-			SendComplete();
+			SendComplete(false);  
+			return false;
 		}
 	}
 	else {
 		if ((m_tSockInfo.totalSendLen != 0)) { // 다른 클라이언트가 없다면 ready해야해서 readSet에 넣어야함.
 			FD_SET(m_tSockInfo.sock, &WriteSet);	// 해당 소켓에 대해 데이터를 보내야하는 타이밍이다?-> WriteSet에 추가
+			eCurSet = FRAME_WRITE;
 		}
 		else {
 			FD_SET(m_tSockInfo.sock, &ReadSet);		// 해당 소켓에 대해 데이터를 받아야하는 타이밍이다?-> ReadSet에 추가
+			eCurSet = FRAME_READ;
 		}
 	}
+	m_eCurSet = eCurSet;
+	//switch (eCurSet)
+	//{
+	//case CClient::FRAME_WRITE:
+	//	MakeDebugStringtable("WriteSet");
+	//	break;
+	//case CClient::FRAME_READ:
+	//	MakeDebugStringtable("ReadSet");
+	//	break;
+	//case CClient::FRAME_END:
+	//	MakeDebugStringtable("FinishSet");
+	//	break;
+	//}
+
+	return true;
 }
 
 
@@ -131,14 +154,17 @@ void CClient::MakeDebugStringtable(const char* FuncName)
 		statename = " Why";
 		break;
 	}
+
+
+
 	Temp += statename;
 	m_StringTable.push_back(Temp);
-	if (m_StringTable.size() > 10)
+	if (m_StringTable.size() > MAX_DEBUG_STRING_WRITE)
 		m_StringTable.pop_front();
 }
 
 void CClient::ReserveAdditionalState()
-{
+{//input state 일때 예약하러 들어옴.
 	//recv할지 결정하자.
 	if (m_pPlayer->IsAnyAdditionalData()) 
 	{
@@ -150,9 +176,8 @@ void CClient::ReserveAdditionalState()
 	{
 		m_bReserved_Additional_State[CONDITION_SEND] = true;
 		m_pOtherClient->CalculateSendAdditionalPacket(m_tSockInfo.cBuf, m_tSockInfo.totalSendLen);
-
-		int i = 0;
 	}
+
 }
 
 void CClient::ClearSendBuffer()
@@ -190,6 +215,8 @@ bool CClient::RecvPacket()
 		else if (retval == 0) { 
 			return false;
 		}
+		if (retval != tNewPacket.m_iBufferSize)
+			cout << "Fuck Normal" << endl;
 
 		ConductPacket(tNewPacket);
 	}
@@ -205,6 +232,11 @@ bool CClient::RecvPacket()
 			else if (retval == 0) {
 				return false;
 			}
+
+			if (retval != Buf.first)
+				cout << "RECV 다 못했음. ADD" << endl;
+
+			cout << "size Additional" << retval << endl;
 			m_bReserved_Additional_State[CONDITION_RECV] = false; //다받았다아ㅏ
 		}
 
@@ -236,6 +268,10 @@ bool CClient::SendPacket()
 		m_tSockInfo.sendbytes += retval;
 		//cout << retval << "만큼 보냄" << endl;
 		if (m_tSockInfo.totalSendLen == m_tSockInfo.sendbytes) {//SEND ALL COMPLETE
+			if (m_eState == STATE_ADDITIONAL)
+			{
+				int it = 0;
+			}
 			SendComplete();
 		}
 	}
@@ -265,7 +301,7 @@ void CClient::SendGameStartPacket()
 
 void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 패킷의 구조체를 저장해둔다.
 {
-	MakeDebugStringtable("ConductPacket");
+	//MakeDebugStringtable("ConductPacket");
 
 	switch (m_eState)
 	{
@@ -335,36 +371,30 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 	}
 }
 
-void CClient::SendComplete()
+void CClient::SendComplete(bool doDebugString)
 {
-	MakeDebugStringtable("SendComplete");
+	if(doDebugString)
+		MakeDebugStringtable("SendComplete");
 
 	string strState;
 	switch (m_eState)
 	{
 	case STATE_READY:
-		strState = " Ready";
 		break;
 	case STATE_TRANSFORM:
-		strState = " Transform";
 		SetClientState(STATE_INPUT);
 		break;
 	case STATE_INPUT: {
-		strState = " Input";//여기서 상태 체크해.
 		SetClientState(STATE_ADDITIONAL);
 		ClearSendBuffer();
 		ReserveAdditionalState();
-		
-		return;											//여긴 return 임.
-
+		return;											//여긴 return 임!!!!
 	}
 	case STATE_ADDITIONAL:
-		strState = " Additional";
 		SetClientState(STATE_TRANSFORM);
 		m_bReserved_Additional_State[CONDITION_SEND] = false;  //다보냈다아
 		if(m_pOtherClient)
 			m_pOtherClient->ClearPlayerUsedData();
-
 		break;
 	case STATE_END:
 	default:
@@ -378,7 +408,6 @@ void CClient::SendComplete()
 
 
 	ClearSendBuffer();
-	//cout << ntohs(clientaddr.sin_port)<< strState << " 다 보냈어." << endl;
 
 }
 

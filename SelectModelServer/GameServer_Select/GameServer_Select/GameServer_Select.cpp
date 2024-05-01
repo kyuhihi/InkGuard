@@ -89,9 +89,11 @@ int main(int argc, char* argv[])
 		FD_SET(listen_sock, &ReadSet);	// ReadSet에 관찰 대상인 ListenSocket을 등록한다.
 		
 		for (int i = 0; i < nTotalSockets; i++) {
-			ClientArray[i]->PutInReadOrWriteSet(ReadSet, WriteSet);
+			if (ClientArray[i]->PutInReadOrWriteSet(ReadSet, WriteSet) == false)
+				ClientArray[i]->PutInReadOrWriteSet(ReadSet, WriteSet);// 한번더 호출할것.
 		}
-
+																
+																	
 		// select()
  		nready = select(0, &ReadSet, &WriteSet, NULL, NULL);
 		if (nready == SOCKET_ERROR) err_quit("select()");

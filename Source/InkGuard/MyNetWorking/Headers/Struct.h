@@ -78,7 +78,7 @@ struct S2C_PACKET_PLAYER_TRANSFORM
 #pragma pack(1)
 struct S2C_PACKET_PLAYER_INPUT
 {
-	bool bInputs[PLAYER_INPUT::INPUT_END];
+	bool bInputs[PLAYER_INPUT::INPUT_END] = { false,false,false,false,false,false,false };
 	float fMontagePlayTime = 0.f;
 	short sAdditionalPacketSize = 0;
 };
