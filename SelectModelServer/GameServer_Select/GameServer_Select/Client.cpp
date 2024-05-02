@@ -248,7 +248,7 @@ bool CClient::RecvPacket()
 
 			}
 
-			cout << "size Additional" << retval << endl;
+			//cout << "size Additional" << retval << endl;
 			m_bReserved_Additional_State[CONDITION_RECV] = false; //다받았다아ㅏ
 		}
 
