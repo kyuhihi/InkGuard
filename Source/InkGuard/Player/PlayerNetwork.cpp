@@ -157,7 +157,13 @@ void UPlayerNetwork::RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tO
 
 void UPlayerNetwork::SendAdditionalData(float DeltaTime)
 {
-	m_pNetworkMgr->SendAdditionalData();
+	if (m_pNetworkMgr->GetAdditionalSendPacketSize() > 0) {
+		int iSendByte = m_pNetworkMgr->SendAdditionalData();
+		if (iSendByte > 0)
+		{
+			UE_LOG(InkGuardNetErr, Warning, TEXT("Additional SendByte %d"), iSendByte);
+		}
+	}
 }
 
 void UPlayerNetwork::RecvAdditionalData(float DeltaTime)

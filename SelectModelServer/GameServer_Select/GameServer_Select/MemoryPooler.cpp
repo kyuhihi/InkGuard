@@ -10,7 +10,8 @@ CMemoryPooler::~CMemoryPooler()
 {
 	for (auto& Memory : m_FreeBlocks)
 	{
-		delete[] Memory.pData;
+		delete[] Memory->pData;
+        Memory = nullptr;
 	}
 	m_FreeBlocks.clear();
 }
@@ -20,9 +21,9 @@ CMemoryPooler::MemoryBlock* CMemoryPooler::Allocate(int iRequestDataSize)
     size_t iNewBlockSize = Resize2PowerOfTwo(iRequestDataSize);
     // 사용 가능한 블록 중 요청된 크기보다 큰 첫 번째 블록을 찾음
     for (auto it = m_FreeBlocks.begin(); it != m_FreeBlocks.end(); ++it) {
-        if ((*it).iDataSize >= iNewBlockSize) {
+        if ((*it)->iDataSize >= iNewBlockSize) {
             // 요청된 크기보다 큰 블록을 찾았으므로 반환
-            MemoryBlock* pReturnBlock = &(*it);
+            MemoryBlock* pReturnBlock = (*it);
             m_FreeBlocks.erase(it);
             return pReturnBlock;
         }

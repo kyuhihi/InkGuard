@@ -224,17 +224,29 @@ bool CClient::RecvPacket()
 	{
 		if (m_pPlayer->IsAnyAdditionalData()) {//이제 여기 반드시 트루임.
 			pair<int, CMemoryPooler::MemoryBlock*>& Buf = m_pPlayer->GetLastDataBlock();
-			retval = recv(m_tSockInfo.sock, Buf.second->pData, Buf.first, 0);//first는 사이즈 second는 구조체.
-			if (retval == SOCKET_ERROR) {
+
+			retval = recv(m_tSockInfo.sock, Buf.second->pData, Buf.first, 0);	//first는 사이즈 second는 구조체.
+			if (retval == SOCKET_ERROR || retval == 0) {
 				err_display("recvAdditional()");
 				return false;
 			}
-			else if (retval == 0) {
-				return false;
-			}
+			int iRemainData = Buf.first - retval;
+			if (iRemainData != 0) {// - 여도 문제임 
+				cout << "RECV 다 못했음. ADD " << iRemainData << endl;
+				////여기에 코드 추가할것 
+				//while (iRemainData > 0)
+				//{
+				//	int iRecvByte = recv(m_tSockInfo.sock, Buf.second->pData + retval, iRemainData, 0);
+				//	if (iRecvByte == SOCKET_ERROR || iRecvByte == 0)
+				//	{
+				//		err_display("recv Additional While");
+				//		return false;
+				//	}
+				//	retval += iRecvByte;
+				//	iRemainData -= iRecvByte;
+				//}
 
-			if (retval != Buf.first)
-				cout << "RECV 다 못했음. ADD" << endl;
+			}
 
 			cout << "size Additional" << retval << endl;
 			m_bReserved_Additional_State[CONDITION_RECV] = false; //다받았다아ㅏ

@@ -41,12 +41,12 @@ public:
 public:
 	MemoryBlock* Allocate(int iRequestDataSize);
 
-	void DeAllocate(MemoryBlock* pReturnMemory) { m_FreeBlocks.push_back(*pReturnMemory); };
+	void DeAllocate(MemoryBlock* pReturnMemory) { m_FreeBlocks.push_back(pReturnMemory); };
 
 private:
 	size_t Resize2PowerOfTwo(size_t n);
 
 private:
-	list<MemoryBlock> m_FreeBlocks; // 사용 가능한 미사용 블록들의 목록
+	list<MemoryBlock*> m_FreeBlocks; // 사용 가능한 미사용 블록들의 목록
 };
 

@@ -61,7 +61,7 @@ public:
 	bool RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket);
 
 	void AppendDataToAdditionalList(bool bSendVec, EAdditionalPacketType eNewType, const C2S_PACKET_ADDITIONAL_FLOAT3x3 tNewPacket);
-	void SendAdditionalData();
+	int SendAdditionalData();
 	void RecvAdditionalData();
 	void ConductAdditionalData(const char* pNewPacket);
 	void FindAdditionalData(EAdditionalPacketType eFindType, C2S_PACKET_ADDITIONAL_FLOAT3x3& tOutData);
@@ -77,6 +77,8 @@ public:
 
 	void SetReservedOpenLevel(bool bNewValue);
 	const bool& GetReservedOpenLevel() { return m_bReservedOpenLevel; };
+
+	const short& GetAdditionalSendPacketSize() { return m_sSendAdditionalPacketSize; }
 
 private:
 	void ClearAdditionalPacket(); //이 함수는 Recv Input Packet에서 클리어 한번처리함.
@@ -103,6 +105,10 @@ private:
 	vector<AdditionalPacket> m_RecvAdditionalPacketVec;
 	short m_sRecvAdditionalPacketSize = 0;
 
+
+
+	list<string> m_DebugStringTable;
+	void MakeDebugStringTable(const char* pString);
 };
 
 

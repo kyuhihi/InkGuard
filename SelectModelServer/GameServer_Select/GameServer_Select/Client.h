@@ -55,6 +55,7 @@ private:
 
 public:		//Public Packet
 	bool RecvPacket();
+	//bool RecvRemainPacket(char*& pBuf, );
 	bool SendPacket();
 
 	void SendGameStartPacket();

@@ -10,7 +10,7 @@ MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 SOLDIERINFO MyNetworkMgr::m_tSoldierInfo[SOLDIER_MAX_CNT];
 SOLDIERINFO MyNetworkMgr::m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
 
-#define MAX_ADDITIONAL_SIZE 100
+#define MAX_ADDITIONAL_SIZE 128
 
 MyNetworkMgr::MyNetworkMgr()
 {
@@ -89,6 +89,21 @@ void MyNetworkMgr::Tidy()
 	m_SendAdditionalPacketVec.clear();
 	m_pSpawnMgr = nullptr;
 
+	ofstream outFile;
+
+	outFile.open("InkGuardNetworkLog.txt");
+
+	if (!outFile.is_open()) { // 파일이 열리지 않은 경우
+		return;
+	}
+
+	// 리스트의 각 요소를 파일에 작성
+	for (const auto& str : m_DebugStringTable) {
+		outFile << str << std::endl;
+	}
+
+	outFile.close(); // 파일 닫기
+
 }
 
 void MyNetworkMgr::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
@@ -155,6 +170,14 @@ bool MyNetworkMgr::RequestRemainVectorIndex(bool bSendVec, int& iOutVectorIndex)
 
 
 	return bCanReturn;
+}
+
+void MyNetworkMgr::MakeDebugStringTable(const char* pString)
+{
+	m_DebugStringTable.push_back(pString);
+
+	if(m_DebugStringTable.size() > 10)
+		m_DebugStringTable.pop_front();
 }
 
 #pragma region Packet
@@ -244,6 +267,7 @@ bool MyNetworkMgr::RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket)
 {
 	if (!m_tClientSock.bConnectSuccess || !m_bSyncTime)
 		return false;
+	ClearAdditionalPacket();
 
 	int retval{ 0 };
 	retval = recv(m_tClientSock.sock, (char*)&tOutPacket, sizeof(S2C_PACKET_PLAYER_TRANSFORM), MSG_WAITALL);
@@ -282,7 +306,7 @@ bool MyNetworkMgr::RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket)
 	if (!m_tClientSock.bConnectSuccess)
 		return false;
 
-	ClearAdditionalPacket();
+
 
 	unsigned long long llPacketSize(sizeof(S2C_PACKET_PLAYER_INPUT));
 
@@ -317,13 +341,16 @@ void MyNetworkMgr::AppendDataToAdditionalList(bool bSendVec, EAdditionalPacketTy
 	if (RequestRemainVectorIndex(bSendVec, iRemainVectorIndex))
 	{
 		int iNewPacketSize = sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3);
+
 		if (bSendVec)
 		{
 			m_SendAdditionalPacketVec[iRemainVectorIndex].bUse = true;
 			m_SendAdditionalPacketVec[iRemainVectorIndex].ePacketType = eNewType;
 			m_SendAdditionalPacketVec[iRemainVectorIndex].iDataSize = iNewPacketSize;
 			memcpy(m_SendAdditionalPacketVec[iRemainVectorIndex].pData,&tNewPacket, iNewPacketSize);
-			m_sSendAdditionalPacketSize += iNewPacketSize;
+			
+			
+			m_sSendAdditionalPacketSize += sizeof(char) + iNewPacketSize;
 		}
 		else
 		{
@@ -336,10 +363,10 @@ void MyNetworkMgr::AppendDataToAdditionalList(bool bSendVec, EAdditionalPacketTy
 	}
 }
 
-void MyNetworkMgr::SendAdditionalData()
+int MyNetworkMgr::SendAdditionalData()
 {
 	if (m_sSendAdditionalPacketSize <= 0)
-		return;
+		return -1;
 
 	char* SendBuffer = new char[m_sSendAdditionalPacketSize];
 	int iOffset(0);
@@ -350,8 +377,8 @@ void MyNetworkMgr::SendAdditionalData()
 		if (Packet.bUse == false)
 			break;
 
-		char cPacketType = (char)Packet.ePacketType;		//패킷타입 넣어주고
-		memcpy(SendBuffer + iOffset, &cPacketType, sizeOfChar);//short만큼 복사하고
+		char cPacketType = (char)Packet.ePacketType;			//패킷타입 넣어주고
+		memcpy(SendBuffer + iOffset, &cPacketType, sizeOfChar);	//char만큼 복사하고
 		iOffset += sizeOfChar;//오프셋 더해주고
 
 		memcpy(SendBuffer + iOffset, &Packet.pData, sizeof(Packet.iDataSize));//데이터 그 뒤에 넣어주고
@@ -365,12 +392,16 @@ void MyNetworkMgr::SendAdditionalData()
 	{
 		err_quit("SendAdditionalData");
 		Tidy();
-		return;
+		return -1;
 	}
-
+	string strSend = "SendAdditionalData "+ to_string(retval);
+	MakeDebugStringTable(strSend.c_str());
+	
 
 	delete[] SendBuffer;
 	SendBuffer = nullptr;
+
+	return retval;
 }
 
 void MyNetworkMgr::RecvAdditionalData()

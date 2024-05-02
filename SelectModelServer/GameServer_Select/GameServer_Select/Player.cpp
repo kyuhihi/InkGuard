@@ -40,11 +40,6 @@ void CPlayer::SetInputs(const C2S_PACKET_PLAYER_INPUT& tPacket)
 	if (tPacket.sAdditionalPacketSize == 0)
 		return;
 
-	if (m_pOwner->GetSocketInfo()->eGamePlayTeam == GAME_BLUE_TEAM)
-	{
-		int i = 0;
-	}
-
 	m_AdditionalDataList.push_back(make_pair(tPacket.sAdditionalPacketSize, m_pMemoryPooler->Allocate(tPacket.sAdditionalPacketSize))); 
 
 	m_tInputs.sAdditionalPacketSize = 0;
@@ -113,7 +108,7 @@ void CPlayer::ClearUsedData()
 {
 	m_iRemAdditionalSize = 0;
 	
-	m_StringTable.push_back(to_string(m_iRemAdditionalSize));
+	//m_StringTable.push_back(to_string(m_iRemAdditionalSize));
 	if (m_UsedData.empty())
 		return;
 
