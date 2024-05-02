@@ -1,8 +1,10 @@
 #pragma once
 
 #define SERVER_PORT		7777
-#define BUFFER_SIZE    512
+
 #define SOLDIER_MAX_CNT 9
+#define MAX_ADDITIONAL_SIZE 100 //추가로 오는 패킷은 최대 백개ㄲㅏ지받을수있다.
+
 
 #define _float3	XMFLOAT3
 #define _float4 XMFLOAT4
@@ -15,3 +17,17 @@
 
 #define _float4x4 XMFLOAT4X4
 
+#ifdef _DEBUG
+
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+#ifndef DBG_NEW 
+
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ ) 
+#define new DBG_NEW 
+
+#endif
+
+#endif // _DEBUG

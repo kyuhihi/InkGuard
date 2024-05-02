@@ -10,6 +10,6 @@
 #pragma comment(lib, "ws2_32") // ws2_32.lib 링크
 
 //Link2005 에러로인해 헤더와 cpp분리.
-void err_quit(const char* msg);
+void err_quit(const char* msg);			//진짜 어지간해서는 quit쓰지말것. 메모리풀러 destroyInstance해야함.
 void err_display(const char* msg);
 void err_display(int errcode);

@@ -135,6 +135,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameServer_Select.cpp" />
     <ClCompile Include="MatchMakingMgr.cpp" />
+    <ClCompile Include="MemoryPooler.cpp" />
     <ClCompile Include="Packet.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Soldier.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Include.h" />
     <ClInclude Include="MatchMakingMgr.h" />
+    <ClInclude Include="MemoryPooler.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Soldier.h" />

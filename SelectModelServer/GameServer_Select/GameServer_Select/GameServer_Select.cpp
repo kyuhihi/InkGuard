@@ -5,13 +5,40 @@
 int nTotalSockets = 0;
 CClient* ClientArray[FD_SETSIZE];// 총 64개의 소켓을 받을수있다.
 CMatchMakingMgr MatchMakingMgr;
+SOCKET listen_sock;
 
 // 소켓 정보 관리 함수
 bool AddSocketInfo(SOCKET sock);
 void RemoveSocketInfo(int nIndex);
+void ExitMain();
+
+void ExitMain() 
+{
+	// 윈속 종료
+	for (int i = 0; i < nTotalSockets; i++) {
+		const CClient::SOCKETINFO* ptr = ClientArray[i]->GetSocketInfo();
+		RemoveSocketInfo(i);
+	}
+	
+	WSACleanup();
+
+	closesocket(listen_sock);
+
+
+	CMemoryPooler::GetInstance()->DestroyInstance();
+
+	_CrtDumpMemoryLeaks();
+}
+
 
 int main(int argc, char* argv[])
 {
+#ifdef _DEBUG
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif // _DEBUG
+	atexit(ExitMain);
+
+
 	int retval;
 #pragma region 윈속 초기화
 	for (int i = 0; i < FD_SETSIZE; ++i)
@@ -22,12 +49,12 @@ int main(int argc, char* argv[])
 		return 1;
 
 	// 소켓 생성
-	SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
+	listen_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (listen_sock == INVALID_SOCKET) err_quit("socket()");
 
 	// bind()
 	struct sockaddr_in serveraddr;
-	memset(&			serveraddr, 0, sizeof(serveraddr));
+	memset(&serveraddr, 0, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serveraddr.sin_port = htons(SERVER_PORT);
@@ -62,9 +89,11 @@ int main(int argc, char* argv[])
 		FD_SET(listen_sock, &ReadSet);	// ReadSet에 관찰 대상인 ListenSocket을 등록한다.
 		
 		for (int i = 0; i < nTotalSockets; i++) {
-			ClientArray[i]->PutInReadOrWriteSet(ReadSet, WriteSet);
+			if (ClientArray[i]->PutInReadOrWriteSet(ReadSet, WriteSet) == false)
+				ClientArray[i]->PutInReadOrWriteSet(ReadSet, WriteSet);// 한번더 호출할것.
 		}
-
+																
+																	
 		// select()
  		nready = select(0, &ReadSet, &WriteSet, NULL, NULL);
 		if (nready == SOCKET_ERROR) err_quit("select()");
@@ -107,10 +136,7 @@ int main(int argc, char* argv[])
 	} /* end of while (1) */
 
 	// 소켓 닫기
-	closesocket(listen_sock);
 
-	// 윈속 종료
-	WSACleanup();
 	return 0;
 }
 
