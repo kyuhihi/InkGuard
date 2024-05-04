@@ -29,6 +29,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "KeyPressingEvent")
 	const FPlayerInputStruct GetPlayerInputData();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "TeamColor")
+	const int GetColor();
+
 };
 
 

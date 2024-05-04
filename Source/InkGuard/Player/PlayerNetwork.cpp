@@ -199,7 +199,8 @@ const FPlayerStruct& UPlayerNetwork::GetPlayerStruct()
 void UPlayerNetwork::TidyNetworkTickRoutine()
 {
 	m_pNetworkMgr->SetSyncTime(false);
-	
+	m_pNetworkMgr->ClearAdditionalPacket();
+
 }
 
 
