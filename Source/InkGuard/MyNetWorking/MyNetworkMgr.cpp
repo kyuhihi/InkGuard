@@ -14,13 +14,13 @@ SOLDIERINFO MyNetworkMgr::m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
 
 MyNetworkMgr::MyNetworkMgr()
 {
-	//Initialize(); //네트워킹 커넥트 작업.
-	//ASpawnMgr::Initialize();
+	Initialize(); //네트워킹 커넥트 작업.
+	ASpawnMgr::Initialize();
 }
 
 MyNetworkMgr::~MyNetworkMgr()
 {
-	//Tidy();
+	Tidy();
 }
 
 void MyNetworkMgr::Initialize()
@@ -405,8 +405,9 @@ int MyNetworkMgr::SendAdditionalData()
 
 void MyNetworkMgr::RecvAdditionalData()
 {
-	if (m_sRecvAdditionalPacketSize == 0) 
+	if (m_sRecvAdditionalPacketSize <= 0) 
 		return;
+
 	char* RecvPacket = new char[m_sRecvAdditionalPacketSize];
 
 	int retval{ 0 };
