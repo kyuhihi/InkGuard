@@ -66,6 +66,8 @@ public:
 	void ConductAdditionalData(const char* pNewPacket);
 	void FindAdditionalData(EAdditionalPacketType eFindType, C2S_PACKET_ADDITIONAL_FLOAT3x3& tOutData);
 
+	void ClearAdditionalPacket();
+
 public:
 	const bool& GetGameStart() { return m_bGameStart; }
 	const GAME_PLAY& GetTeamColor() { return m_eGameTeam; }
@@ -81,7 +83,6 @@ public:
 	const short& GetAdditionalSendPacketSize() { return m_sSendAdditionalPacketSize; }
 
 private:
-	void ClearAdditionalPacket(); //이 함수는 Recv Input Packet에서 클리어 한번처리함.
 	bool RequestRemainVectorIndex(bool bSendVec, int& iOutVectorIndex);
 
 public:

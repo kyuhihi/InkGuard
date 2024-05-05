@@ -267,7 +267,6 @@ bool MyNetworkMgr::RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket)
 {
 	if (!m_tClientSock.bConnectSuccess || !m_bSyncTime)
 		return false;
-	ClearAdditionalPacket();
 
 	int retval{ 0 };
 	retval = recv(m_tClientSock.sock, (char*)&tOutPacket, sizeof(S2C_PACKET_PLAYER_TRANSFORM), MSG_WAITALL);
@@ -406,8 +405,9 @@ int MyNetworkMgr::SendAdditionalData()
 
 void MyNetworkMgr::RecvAdditionalData()
 {
-	if (m_sRecvAdditionalPacketSize == 0) 
+	if (m_sRecvAdditionalPacketSize <= 0) 
 		return;
+
 	char* RecvPacket = new char[m_sRecvAdditionalPacketSize];
 
 	int retval{ 0 };
