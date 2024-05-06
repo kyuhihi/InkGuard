@@ -32,6 +32,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "TeamColor")
 	const int GetColor();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CharacterPlayingAnimation")
+	void DoreraeAnimation();
+
 };
 
 
