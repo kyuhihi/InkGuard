@@ -39,6 +39,7 @@ void ASoldierSpawner::InitializeAboutSpawnerBySoldierInterface(AActor* pActor)
 {
 	ISoldierInterface* pTargetInterface = nullptr; 
 	pTargetInterface  = Cast<ISoldierInterface>(pActor);
+	//pActor->SetAboutColor()
 	if (pTargetInterface)
 	{
 		pTargetInterface->SetAboutColor(iSpawnerColor);
