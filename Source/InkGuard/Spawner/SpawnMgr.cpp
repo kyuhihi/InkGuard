@@ -41,11 +41,27 @@ void ASpawnMgr::Tick(float DeltaTime)
 void ASpawnMgr::RegisterSpawner(ASoldierSpawner* pCallSoldierSpawner, const int iSpawnerColor, const int iTargetTerritory)
 {
 	m_pSpawners.Add(pCallSoldierSpawner);
+	EMainGameState eGameMode = m_pInkGuardGameMode->GetCurGameMode();
+	
+	switch (eGameMode)
+	{
+	case EMainGameState::GAME_WAITING:
+		return;
+	case EMainGameState::GAME_MAINGAME:
+		break;
+	default:
+		break;
+	}
+
 	GAME_PLAY eSpawnerColor = (GAME_PLAY)iSpawnerColor;
+
+
 
 	bool bTeamRedColor{ true };
 	m_pInkGuardGameMode->GetTeamColor(bTeamRedColor);
 	
+
+
 	GAME_PLAY eTeamColor = GAME_PLAY::GAME_BLUE_TEAM;
 	if (bTeamRedColor)
 		eTeamColor = GAME_RED_TEAM;
