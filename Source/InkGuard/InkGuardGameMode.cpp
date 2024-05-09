@@ -27,6 +27,11 @@ void AInkGuardGameMode::Initialize()
 {
 }
 
+void AInkGuardGameMode::ModifyIP(FString NewIPAddr)
+{
+	MyNetworkMgr::SERVERIP = TCHAR_TO_UTF8(*NewIPAddr);
+}
+
 void AInkGuardGameMode::SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory)
 {
 	if (m_pNetWorkMgr == nullptr)
