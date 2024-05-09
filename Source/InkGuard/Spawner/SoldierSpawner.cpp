@@ -27,13 +27,13 @@ void ASoldierSpawner::Tick(float DeltaTime)
 
 }
 
-void ASoldierSpawner::AppendNewDuty(const int& iSoldierType)
-{
-	FSpawnDutyStruct NewDuty;
-	NewDuty.iSpawnType = iSoldierType;
-
-	m_tSpawnInfos.Add(NewDuty);
-}
+//void ASoldierSpawner::AppendNewDuty(const int& iSoldierType)
+//{
+//	FSpawnDutyStruct NewDuty;
+//	NewDuty.iSpawnType = iSoldierType;
+//
+//	m_tSpawnInfos.Add(NewDuty);
+//}
 
 void ASoldierSpawner::InitializeAboutSpawnerBySoldierInterface(AActor* pActor)
 {
@@ -45,5 +45,11 @@ void ASoldierSpawner::InitializeAboutSpawnerBySoldierInterface(AActor* pActor)
 		pTargetInterface->SetAboutColor(iSpawnerColor);
 		pTargetInterface->SetAboutSpawner(this);
 	}
+}
+
+const TArray<FSpawnDutyStruct>& ASoldierSpawner::GetSpawnerInfo()
+{
+	return m_tSpawnInfos;
+	// TODO: 여기에 return 문을 삽입합니다.
 }
 
