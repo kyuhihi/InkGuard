@@ -52,7 +52,14 @@ void ASpawnMgr::RegisterSpawner(ASoldierSpawner* pCallSoldierSpawner, const int 
 	default:
 		break;
 	}
-
+	for (int i = 0; i < SOLDIER_MAX_CNT; i++)
+	{
+		UE_LOG(InkGuardNetErr, Warning, TEXT("Other Soldier: %d        Target: %d"), MyNetworkMgr::m_tOtherSoldierInfo[i].eSoldierType, MyNetworkMgr::m_tOtherSoldierInfo[i].eTargetTerritory);
+	}
+	for (int i = 0; i < SOLDIER_MAX_CNT; i++)
+	{
+		UE_LOG(InkGuardNetErr, Warning, TEXT("NOrmal Soldier: %d        Target: %d"), MyNetworkMgr::m_tSoldierInfo[i].eSoldierType, MyNetworkMgr::m_tSoldierInfo[i].eTargetTerritory);
+	}
 	GAME_PLAY eSpawnerColor = (GAME_PLAY)iSpawnerColor;
 
 

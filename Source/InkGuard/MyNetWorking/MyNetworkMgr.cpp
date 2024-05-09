@@ -14,13 +14,13 @@ SOLDIERINFO MyNetworkMgr::m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
 
 MyNetworkMgr::MyNetworkMgr()
 {
-	//Initialize(); //네트워킹 커넥트 작업.
-	//ASpawnMgr::Initialize();
+	Initialize(); //네트워킹 커넥트 작업.
+	ASpawnMgr::Initialize();
 }
 
 MyNetworkMgr::~MyNetworkMgr()
 {
-	//Tidy();
+	Tidy();
 }
 
 void MyNetworkMgr::Initialize()
@@ -229,6 +229,11 @@ void MyNetworkMgr::RecvGameStart()
 	SetReservedOpenLevel(true);		//오픈 레벨 예약이 되었습니까? 예.
 
 	ASpawnMgr::SetOtherSoldierInfo(tGameStartPacket); //적팀것 셋팅
+
+	/*for (int i = 0; i < SOLDIER_MAX_CNT; i++)
+	{
+		UE_LOG(InkGuardNetErr, Warning, TEXT("Other Soldier: %d        Target: %d"), m_tOtherSoldierInfo[i].eSoldierType, m_tOtherSoldierInfo[i].eTargetTerritory);
+	}*/
 
 	return;
 }
