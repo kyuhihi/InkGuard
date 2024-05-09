@@ -47,6 +47,9 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void ModifyIP(FString NewIPAddr);
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void SetSoldierInfo(int iIndex,int iSoldierType, int iTargetTerritory);
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")

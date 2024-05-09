@@ -88,9 +88,9 @@ private:
 public:
 	static SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT];
 	static SOLDIERINFO m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
+	static string SERVERIP; /*= (char*)"192.168.0.104";*/
 
 private:
-	char* SERVERIP = (char*)"192.168.0.104";
 	bool m_bSyncTime = false;
 	SOCKETINFO m_tClientSock;
 
