@@ -52,7 +52,14 @@ void ASpawnMgr::RegisterSpawner(ASoldierSpawner* pCallSoldierSpawner, const int 
 	default:
 		break;
 	}
-
+	//for (int i = 0; i < SOLDIER_MAX_CNT; i++)
+	//{
+	//	UE_LOG(InkGuardNetErr, Warning, TEXT("Other Soldier: %d        Target: %d"), MyNetworkMgr::m_tOtherSoldierInfo[i].eSoldierType, MyNetworkMgr::m_tOtherSoldierInfo[i].eTargetTerritory);
+	//}
+	//for (int i = 0; i < SOLDIER_MAX_CNT; i++)
+	//{
+	//	UE_LOG(InkGuardNetErr, Warning, TEXT("NOrmal Soldier: %d        Target: %d"), MyNetworkMgr::m_tSoldierInfo[i].eSoldierType, MyNetworkMgr::m_tSoldierInfo[i].eTargetTerritory);
+	//}
 	GAME_PLAY eSpawnerColor = (GAME_PLAY)iSpawnerColor;
 
 
@@ -72,7 +79,7 @@ void ASpawnMgr::RegisterSpawner(ASoldierSpawner* pCallSoldierSpawner, const int 
 		{
 			if (iTargetTerritory == MyNetworkMgr::m_tSoldierInfo[i].eTargetTerritory)
 			{
-				pCallSoldierSpawner->AppendNewDuty(MyNetworkMgr::m_tSoldierInfo[i].eSoldierType);
+				pCallSoldierSpawner->AppendNewDuty((int)MyNetworkMgr::m_tSoldierInfo[i].eSoldierType);
 			}
 		}
 	}
@@ -82,11 +89,27 @@ void ASpawnMgr::RegisterSpawner(ASoldierSpawner* pCallSoldierSpawner, const int 
 		{
 			if (iTargetTerritory == MyNetworkMgr::m_tOtherSoldierInfo[i].eTargetTerritory)
 			{
-				pCallSoldierSpawner->AppendNewDuty(MyNetworkMgr::m_tOtherSoldierInfo[i].eSoldierType);
+				pCallSoldierSpawner->AppendNewDuty((int)MyNetworkMgr::m_tOtherSoldierInfo[i].eSoldierType);
 			}
 		}
 	}
 
+	if (m_pSpawners.Num() == 6) {
+		for (auto& pTestSpawners : m_pSpawners)
+		{
+			const TArray<FSpawnDutyStruct>& tSpawnerInfo = pTestSpawners->GetSpawnerInfo();
+			for (auto& temp : tSpawnerInfo) 
+			{
+				UE_LOG(InkGuardNetErr, Warning, TEXT("Duty Soldier: %d    "), temp.iSpawnType);
+			}
+			//UE_LOG(InkGuardNetErr, Warning, TEXT("Duty Soldier: %d        Target: %d"), temp.iSpawnType, iTargetTerritory);
+		}
+	}
+	//const TArray<FSpawnDutyStruct>& tSpawnerInfo = pCallSoldierSpawner->GetSpawnerInfo();
+	//for (auto& temp : tSpawnerInfo)
+	//{
+	//	UE_LOG(InkGuardNetErr, Warning, TEXT("Duty Soldier: %d        Target: %d"), temp.iSpawnType, iTargetTerritory);
+	//}
 }
 
 #pragma region static func

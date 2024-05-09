@@ -230,6 +230,11 @@ void MyNetworkMgr::RecvGameStart()
 
 	ASpawnMgr::SetOtherSoldierInfo(tGameStartPacket); //적팀것 셋팅
 
+	/*for (int i = 0; i < SOLDIER_MAX_CNT; i++)
+	{
+		UE_LOG(InkGuardNetErr, Warning, TEXT("Other Soldier: %d        Target: %d"), m_tOtherSoldierInfo[i].eSoldierType, m_tOtherSoldierInfo[i].eTargetTerritory);
+	}*/
+
 	return;
 }
 #pragma endregion

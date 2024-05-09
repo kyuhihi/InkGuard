@@ -27,12 +27,16 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	void AppendNewDuty(const int& iSoldierType);
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Setting to Object")
+	void AppendNewDuty(const int iSoldierType);
 
 	UFUNCTION(BlueprintCallable, Category = "Setting to Object")
 	void InitializeAboutSpawnerBySoldierInterface(AActor* pActor);
 
-protected:
+	UFUNCTION(BlueprintCallable, Category = "Setting to Object")
+	const TArray<FSpawnDutyStruct>& GetSpawnerInfo();
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int iTargetTerritoryType = TERRITORY_END;
 
