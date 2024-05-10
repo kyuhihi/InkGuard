@@ -173,6 +173,14 @@ bool MyNetworkMgr::RequestRemainVectorIndex(bool bSendVec, int& iOutVectorIndex)
 	return bCanReturn;
 }
 
+void MyNetworkMgr::ChangeSendSoldierTransformCnt()
+{
+	if (m_iSendSoldierCnt == 4)
+		m_iSendSoldierCnt = 5;
+	else
+		m_iSendSoldierCnt = 4;
+}
+
 void MyNetworkMgr::MakeDebugStringTable(const char* pString)
 {
 	m_DebugStringTable.push_back(pString);
@@ -247,25 +255,40 @@ void MyNetworkMgr::SendPlayerTransform(const FVector& vPlayerPosition, const FRo
 	if (!m_tClientSock.bConnectSuccess)
 		return;
 
+	const unsigned long long& size_TransformPacket = sizeof(C2S_PACKET_PLAYER_TRANSFORM);
+	const unsigned long long& size_SoldiersPacket = sizeof(C2S_PACKET_SOLDIER_TRANSFORM) * m_iSendSoldierCnt;
+	const unsigned long long size_Total= size_TransformPacket + size_SoldiersPacket;
+
 	C2S_PACKET_PLAYER_TRANSFORM tTransformPacket;
-	const unsigned long long& tPacketSize = sizeof(tTransformPacket);
-
-	ZeroMemory(&tTransformPacket, tPacketSize);
-
 	tTransformPacket.vPosition = UCustomFunctional::FVector_To_float3(vPlayerPosition);
 	tTransformPacket.fYaw = vPlayerRotation.Yaw;
 	tTransformPacket.fSpeed = fSpeed;
 	tTransformPacket.fVelocityZ = fVelocityZ;
 	tTransformPacket.bRecvTransform = m_bSyncTime;
 
+	C2S_PACKET_SOLDIER_TRANSFORM SoldierTransforms[SOLDIER_MAX_CNT];
+	m_pSpawnMgr->GetSoldierData(SoldierTransforms); //값을 채워 올거임.
+	
+	char* SendBuffer = new char[size_Total];
+	memcpy(SendBuffer, &tTransformPacket, size_TransformPacket);//플레이어거 먼저담아갈거임.
+
+	int iSendIndex = 0;
+	if (m_iSendSoldierCnt == 5)
+		iSendIndex = 4;//근데 4개 일때는 앞에, 5개일땐 뒤... 정말싫다.
+	memcpy(SendBuffer + size_TransformPacket, &((SoldierTransforms[iSendIndex])), size_SoldiersPacket);//병사거 담을거임.
+
 	int retval{ 0 };
-	retval = send(m_tClientSock.sock, reinterpret_cast<char*>(&tTransformPacket), tPacketSize, 0);
-	if ((retval == SOCKET_ERROR) || (retval != tPacketSize))
+	retval = send(m_tClientSock.sock, SendBuffer, size_Total, 0);
+	if ((retval == SOCKET_ERROR) || (retval != size_Total))
 	{
 		err_quit("SendPlayerTransform");
 		Tidy();
+		delete[] SendBuffer;
+
 		return;
 	}
+
+	delete[] SendBuffer;
 
 }
 
@@ -274,14 +297,33 @@ bool MyNetworkMgr::RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket)
 	if (!m_tClientSock.bConnectSuccess || !m_bSyncTime)
 		return false;
 
+	const unsigned long long& size_TransformPacket = sizeof(C2S_PACKET_PLAYER_TRANSFORM);
+	const unsigned long long& size_SoldiersPacket = sizeof(C2S_PACKET_SOLDIER_TRANSFORM) * m_iSendSoldierCnt;
+	const unsigned long long size_Total = size_TransformPacket + size_SoldiersPacket;
+	char* RecvBuffer = new char[size_Total];
+
 	int retval{ 0 };
-	retval = recv(m_tClientSock.sock, (char*)&tOutPacket, sizeof(S2C_PACKET_PLAYER_TRANSFORM), MSG_WAITALL);
-	if ((retval == SOCKET_ERROR) || (retval != sizeof(S2C_PACKET_PLAYER_TRANSFORM))) {
+	retval = recv(m_tClientSock.sock, RecvBuffer, size_Total, MSG_WAITALL);
+	if ((retval == SOCKET_ERROR) || (retval != size_Total)) {
 		err_quit("RecvPlayerTransform");
 		Tidy();
+		delete[] RecvBuffer;
 		return false;
 	}
 
+	memcpy(&tOutPacket, RecvBuffer, size_TransformPacket);//플레이어거 먼저담아갈거임.
+	C2S_PACKET_SOLDIER_TRANSFORM SoldierTransforms[SOLDIER_MAX_CNT];
+
+	int iRecvIndex = 0;
+	if (m_iSendSoldierCnt == 5)
+		iRecvIndex = 4;//근데 4개 일때는 앞에, 5개일땐 뒤... 정말싫다.
+
+	memcpy(&SoldierTransforms[iRecvIndex], RecvBuffer + size_TransformPacket, size_SoldiersPacket);//병사거 담을거임.
+
+	m_pSpawnMgr->SetSoldierData(SoldierTransforms, iRecvIndex);
+	ChangeSendSoldierTransformCnt();
+
+	delete[] RecvBuffer;
 	return true;
 }
 

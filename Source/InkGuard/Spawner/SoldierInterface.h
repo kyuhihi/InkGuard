@@ -30,4 +30,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
 	const bool IsOurTeam();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
+	void SetValueOfPacket(FPACKET_SOLDIER_TRANSFORM_BLUEPRINT tRecvPacket);
+
 };

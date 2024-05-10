@@ -69,7 +69,31 @@ void CSoldierMgr::SetGameStartPacket(const C2S_PACKET_GAMESTART& tGameStartPacke
 	for (int i = 0; i < SOLDIER_MAX_CNT; i++) 
 	{
 		m_pSoldiers[i]->SetTargetTerritory((CSoldier::TERRITORY_TYPE)tGameStartPacket.cTargetTerritory[i]);
-		//tGameStartPacket.cSoldierInfo
 		m_pSoldiers[i]->SetSoldierIndex(i);
+	}
+}
+
+void CSoldierMgr::SetSoldiersPacket(const S2C_PACKET_SOLDIER_TRANSFORM* pRecvPacket, const int iStartIndex)
+{
+	int iEndIndex = 4; //디폴트로 0~4 임.
+	if (iStartIndex == 4)
+	{//0,1,2,3		//4,5,6,7,8
+		iEndIndex = SOLDIER_MAX_CNT;
+	}
+
+	for (int i = iStartIndex; i < iEndIndex; i++)
+	{
+		m_pSoldiers[i]->SetSoldierTransform(pRecvPacket[i]);
+	}
+
+	
+
+}
+
+void CSoldierMgr::GetSoldiersPacket(S2C_PACKET_SOLDIER_TRANSFORM* pSendPacket)
+{
+	for(int i=0; i< SOLDIER_MAX_CNT; i++)
+	{
+		pSendPacket[i] = m_pSoldiers[i]->GetSoldierTransform();
 	}
 }

@@ -53,7 +53,8 @@ private:
 public:
 	void SendGameStart();
 	void RecvGameStart();
-
+	
+	void RegisterSpawnMgr(class ASpawnMgr* pSpawnMgr) { m_pSpawnMgr = pSpawnMgr; }
 	void SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed);
 	bool RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket);// 앞으로 오버로딩 하지말자..
 	
@@ -84,6 +85,7 @@ public:
 
 private:
 	bool RequestRemainVectorIndex(bool bSendVec, int& iOutVectorIndex);
+	void ChangeSendSoldierTransformCnt();
 
 public:
 	static SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT];
@@ -106,7 +108,7 @@ private:
 	vector<AdditionalPacket> m_RecvAdditionalPacketVec;
 	short m_sRecvAdditionalPacketSize = 0;
 
-
+	int m_iSendSoldierCnt = 4;
 
 	list<string> m_DebugStringTable;
 	void MakeDebugStringTable(const char* pString);

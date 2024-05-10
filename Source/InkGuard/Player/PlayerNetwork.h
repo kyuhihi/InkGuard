@@ -7,6 +7,7 @@
 #include "../MyNetWorking/Headers/Include.h"
 #include "Components/ActorComponent.h"
 #include "../InkGuardGameMode.h"
+#include "../Spawner/SpawnMgr.h"
 #include "PlayerNetwork.generated.h"
 
 class MyNetworkMgr;
