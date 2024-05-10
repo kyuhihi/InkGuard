@@ -34,6 +34,8 @@ void CPlayer::SetInputs(const C2S_PACKET_PLAYER_INPUT& tPacket)
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_SPRINT] = tPacket.bInputs[PLAYER_INPUT::INPUT_SPRINT];
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_CROUCH] = tPacket.bInputs[PLAYER_INPUT::INPUT_CROUCH];
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_CLIMBING] = tPacket.bInputs[PLAYER_INPUT::INPUT_CLIMBING];
+	m_tInputs.bInputs[PLAYER_INPUT::INPUT_QSKILL] = tPacket.bInputs[PLAYER_INPUT::INPUT_QSKILL];
+
 
 	m_tInputs.fMontagePlayTime = tPacket.fMontagePlayTime;
 

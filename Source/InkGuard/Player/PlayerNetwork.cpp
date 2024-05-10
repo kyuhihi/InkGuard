@@ -125,6 +125,8 @@ void UPlayerNetwork::SendPlayerInputData(float DeltaTime, const FPlayerInputStru
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_SPRINT] = tBakuInputData.Sprint;
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_CROUCH] = tBakuInputData.Crouch;
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_CLIMBING] = tBakuInputData.Climbing;
+	tSendPacket.bInputs[PLAYER_INPUT::INPUT_QSKILL] = tBakuInputData.QSkill;
+
 	tSendPacket.fMontagePlayTime = tBakuInputData.MontagePlayTime;
 
 	//SendPlayerInputData
@@ -147,6 +149,7 @@ void UPlayerNetwork::RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tO
 		tOutInputs.Sprint = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_SPRINT];
 		tOutInputs.Crouch = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_CROUCH];
 		tOutInputs.Climbing = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_CLIMBING];
+		tOutInputs.QSkill = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_QSKILL];
 		tOutInputs.MontagePlayTime = tRecvPacket.fMontagePlayTime;
 
 	}

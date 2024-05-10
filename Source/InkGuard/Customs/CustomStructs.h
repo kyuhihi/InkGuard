@@ -78,6 +78,9 @@ public:
 	bool Climbing = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool QSkill = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MontagePlayTime = 0.f;
 };
 
