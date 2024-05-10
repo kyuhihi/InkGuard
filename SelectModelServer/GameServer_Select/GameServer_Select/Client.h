@@ -53,7 +53,7 @@ public:	//Getter Setter
 private:
 	void ReserveAdditionalState();
 	void ClearSendBuffer();
-	void ChangeRecvSoldierTransformCnt();
+	void ChangeRecvSoldierTransformCnt(int& iChangeCnt);
 	void ConductTransformPacket(bool& bSendTransformDuty, const CPacket& Packet);
 
 public:		//Public Packet
@@ -84,6 +84,7 @@ private:
 	FRAME_SET m_eCurSet = FRAME_SET::FRAME_END;
 
 
+	int m_iSendSoldiersCnt = 4;
 	int m_iRecvSoldiersCnt = 4;
 };
 

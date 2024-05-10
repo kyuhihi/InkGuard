@@ -173,12 +173,12 @@ bool MyNetworkMgr::RequestRemainVectorIndex(bool bSendVec, int& iOutVectorIndex)
 	return bCanReturn;
 }
 
-void MyNetworkMgr::ChangeSendSoldierTransformCnt()
+void MyNetworkMgr::ChangeSendSoldierTransformCnt(int& iChangeCnt)
 {
-	if (m_iSendSoldierCnt == 4)
-		m_iSendSoldierCnt = 5;
+	if (iChangeCnt == 4)
+		iChangeCnt = 5;
 	else
-		m_iSendSoldierCnt = 4;
+		iChangeCnt = 4;
 }
 
 void MyNetworkMgr::MakeDebugStringTable(const char* pString)
@@ -289,7 +289,7 @@ void MyNetworkMgr::SendPlayerTransform(const FVector& vPlayerPosition, const FRo
 	}
 
 	delete[] SendBuffer;
-
+	ChangeSendSoldierTransformCnt(m_iSendSoldierCnt);
 }
 
 bool MyNetworkMgr::RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket)
@@ -298,7 +298,7 @@ bool MyNetworkMgr::RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket)
 		return false;
 
 	const unsigned long long& size_TransformPacket = sizeof(C2S_PACKET_PLAYER_TRANSFORM);
-	const unsigned long long& size_SoldiersPacket = sizeof(C2S_PACKET_SOLDIER_TRANSFORM) * m_iSendSoldierCnt;
+	const unsigned long long& size_SoldiersPacket = sizeof(C2S_PACKET_SOLDIER_TRANSFORM) * m_iRecvSoldierCnt;
 	const unsigned long long size_Total = size_TransformPacket + size_SoldiersPacket;
 	char* RecvBuffer = new char[size_Total];
 
@@ -315,15 +315,16 @@ bool MyNetworkMgr::RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket)
 	C2S_PACKET_SOLDIER_TRANSFORM SoldierTransforms[SOLDIER_MAX_CNT];
 
 	int iRecvIndex = 0;
-	if (m_iSendSoldierCnt == 5)
+	if (m_iRecvSoldierCnt == 5)
 		iRecvIndex = 4;//근데 4개 일때는 앞에, 5개일땐 뒤... 정말싫다.
 
 	memcpy(&SoldierTransforms[iRecvIndex], RecvBuffer + size_TransformPacket, size_SoldiersPacket);//병사거 담을거임.
 
 	m_pSpawnMgr->SetSoldierData(SoldierTransforms, iRecvIndex);
-	ChangeSendSoldierTransformCnt();
 
 	delete[] RecvBuffer;
+
+	ChangeSendSoldierTransformCnt(m_iRecvSoldierCnt);
 	return true;
 }
 

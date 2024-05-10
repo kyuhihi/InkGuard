@@ -85,7 +85,7 @@ public:
 
 private:
 	bool RequestRemainVectorIndex(bool bSendVec, int& iOutVectorIndex);
-	void ChangeSendSoldierTransformCnt();
+	void ChangeSendSoldierTransformCnt(int& iChangeCnt);
 
 public:
 	static SOLDIERINFO m_tSoldierInfo[SOLDIER_MAX_CNT];
@@ -109,6 +109,7 @@ private:
 	short m_sRecvAdditionalPacketSize = 0;
 
 	int m_iSendSoldierCnt = 4;
+	int m_iRecvSoldierCnt = 4;
 
 	list<string> m_DebugStringTable;
 	void MakeDebugStringTable(const char* pString);

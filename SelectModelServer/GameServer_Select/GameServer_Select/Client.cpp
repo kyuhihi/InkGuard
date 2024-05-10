@@ -194,16 +194,16 @@ void CClient::ClearSendBuffer()
 	}
 }
 
-void CClient::ChangeRecvSoldierTransformCnt()
+void CClient::ChangeRecvSoldierTransformCnt(int& iChangeCnt)
 {
-	if (m_iRecvSoldiersCnt == 4)
-		m_iRecvSoldiersCnt = 5;
+	if (iChangeCnt == 4)
+		iChangeCnt = 5;
 	else
-		m_iRecvSoldiersCnt = 4;
+		iChangeCnt = 4;
 }
 
 void CClient::ConductTransformPacket(bool& bSendTransformDuty, const CPacket& Packet)
-{
+{//Recv임.
 	size_t size_TransformPacket = sizeof(C2S_PACKET_PLAYER_TRANSFORM);
 	size_t size_SoldiersPacket = sizeof(C2S_PACKET_SOLDIER_TRANSFORM) * m_iRecvSoldiersCnt;
 
@@ -222,6 +222,8 @@ void CClient::ConductTransformPacket(bool& bSendTransformDuty, const CPacket& Pa
 	m_pPlayer->SetTransform(tPlayerTransform);
 	m_pSoldierMgr->SetSoldiersPacket(SoldierTransforms, iRecvIndex);
 
+
+	ChangeRecvSoldierTransformCnt(m_iRecvSoldiersCnt);
 }
 
 #pragma region Packet
@@ -353,7 +355,7 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 		if ((bSendTransform) && (m_tSockInfo.sendbytes == 0))// 받아야하는 타이밍이고 보내고있지 않는다면.
 		{
 			const unsigned long long& size_TransformPacket = sizeof(S2C_PACKET_PLAYER_TRANSFORM);
-			const unsigned long long& size_SoldiersPacket = sizeof(C2S_PACKET_SOLDIER_TRANSFORM) * m_iRecvSoldiersCnt;
+			const unsigned long long& size_SoldiersPacket = sizeof(C2S_PACKET_SOLDIER_TRANSFORM) * m_iSendSoldiersCnt;
 			S2C_PACKET_PLAYER_TRANSFORM tSendPacket = m_pOtherClient->GetOtherPlayerTransform();
 			m_tSockInfo.totalSendLen = sizeof(size_TransformPacket + size_SoldiersPacket);
 			m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
@@ -362,9 +364,11 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 			C2S_PACKET_SOLDIER_TRANSFORM SoldierTransforms[SOLDIER_MAX_CNT];
 			m_pOtherClient->GetOtherSoldiersTransform(SoldierTransforms);
 			int iSendIndex = 0;
-			if (m_iRecvSoldiersCnt == 5)
+			if (m_iSendSoldiersCnt == 5)
 				iSendIndex = 4;
 			memcpy(m_tSockInfo.cBuf + size_TransformPacket, &(SoldierTransforms[iSendIndex]), size_SoldiersPacket);
+
+			ChangeRecvSoldierTransformCnt(m_iSendSoldiersCnt);
 		}
 		else
 		{// 보낼 패킷 타이밍이 아니라면 바로 스테이트를 변경해도됨.
