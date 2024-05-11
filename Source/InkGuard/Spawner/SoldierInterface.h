@@ -30,4 +30,11 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
 	const bool IsOurTeam();
+
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
+	const bool IsDead();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
+	void Respawn();
 };
