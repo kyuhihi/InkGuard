@@ -96,43 +96,15 @@ bool ASpawnMgr::SetSoldierData(const C2S_PACKET_SOLDIER_TRANSFORM* pRecvPacket, 
 		iEndIndex = SOLDIER_MAX_CNT;
 	}
 
-
-	for (auto& OtherTeamSpawner : m_pOtherSpawners)
+	for (int i = iStartIndex; i < iEndIndex; i++)
 	{
-		const TArray<FSpawnDutyStruct>& SpawnerInfoArray = OtherTeamSpawner->GetSpawnerInfo();
-		if (SpawnerInfoArray.Num() == 0)
-			continue;
-
-		for (auto& Soldier : SpawnerInfoArray)
-		{
-			ACharacter* pCharacter = Soldier.pTargetActor.Get();
-			ISoldierInterface* pInterfaceActor =  Cast<ISoldierInterface>(pCharacter);
-
-			if (pInterfaceActor)
-			{
-				for (int i = iStartIndex; i < iEndIndex; i++)
-				{
-					if (Soldier.iSpawnMgrIndex == i)
-					{
-						FPACKET_SOLDIER_TRANSFORM_BLUEPRINT tCastedPacket;
-						tCastedPacket.fSoldier_MontagePlayTime = pRecvPacket[i].fSoldier_MontagePlayTime;
-						tCastedPacket.fSoldier_Speed= pRecvPacket[i].fSoldier_Speed;
-						tCastedPacket.fSoldier_Yaw = pRecvPacket[i].fSoldier_Yaw;
-						tCastedPacket.vSoldier_Position = UCustomFunctional::float3_To_FVector(pRecvPacket[i].vSoldier_Position);
-						pInterfaceActor->SetValueOfPacket(tCastedPacket);
-
-						break;
-					}
-				}
-
-			}
-			
-		}
+			FPACKET_SOLDIER_TRANSFORM_BLUEPRINT tCastedPacket;
+			tCastedPacket.fSoldier_MontagePlayTime = pRecvPacket[i].fSoldier_MontagePlayTime;
+			tCastedPacket.fSoldier_Speed = pRecvPacket[i].fSoldier_Speed;
+			tCastedPacket.fSoldier_Yaw = pRecvPacket[i].fSoldier_Yaw;
+			tCastedPacket.vSoldier_Position = UCustomFunctional::float3_To_FVector(pRecvPacket[i].vSoldier_Position);
+			m_OtherSoldiersTransform[i] = tCastedPacket;
 	}
-
-
-	
-
 
 	return true;
 }
@@ -184,6 +156,11 @@ void ASpawnMgr::RegisterSpawner(ASoldierSpawner* pCallSoldierSpawner, const int 
 
 	m_bInitialized = true;
 
+}
+
+FPACKET_SOLDIER_TRANSFORM_BLUEPRINT ASpawnMgr::GetOtherData(const int iSpawnMgrIndex)
+{
+	return m_OtherSoldiersTransform[iSpawnMgrIndex];
 }
 
 #pragma region static func

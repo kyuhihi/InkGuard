@@ -204,13 +204,14 @@ void CClient::ChangeRecvSoldierTransformCnt(int& iChangeCnt)
 
 void CClient::ConductTransformPacket(bool& bSendTransformDuty, const CPacket& Packet)
 {//Recv임.
-	cout << "받아야하는 카운트: " << m_iRecvSoldiersCnt << "  보내야하는 카운트: " <<m_iSendSoldiersCnt << endl;
+	//cout << "받아야하는 카운트: " << m_iRecvSoldiersCnt << "  보내야하는 카운트: " <<m_iSendSoldiersCnt << endl;
 	size_t size_TransformPacket = sizeof(C2S_PACKET_PLAYER_TRANSFORM);
 	size_t size_SoldiersPacket = sizeof(C2S_PACKET_SOLDIER_TRANSFORM) * m_iRecvSoldiersCnt;
 
 	C2S_PACKET_PLAYER_TRANSFORM tPlayerTransform;
 
 	memcpy(&tPlayerTransform, Packet.m_pBuf, size_TransformPacket);//플레이어거 먼저담아갈거임.
+	bSendTransformDuty = tPlayerTransform.bRecvTransform;
 	C2S_PACKET_SOLDIER_TRANSFORM SoldierTransforms[SOLDIER_MAX_CNT];
 
 	int iRecvIndex = 0;
@@ -297,7 +298,8 @@ bool CClient::SendPacket()
 	}
 	else {// SendPacket Success
 		m_tSockInfo.sendbytes += retval;
-		//cout << retval << "만큼 보냄" << endl;
+		//cout << "보내야할 사이즈 : " << m_tSockInfo.totalSendLen<< "  받은 패킷양 : " << m_tSockInfo.sendbytes << endl;
+
 		if (m_tSockInfo.totalSendLen == m_tSockInfo.sendbytes) {//SEND ALL COMPLETE
 			if (m_eState == STATE_ADDITIONAL)
 			{
@@ -372,6 +374,7 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 			memcpy(m_tSockInfo.cBuf + size_TransformPacket, &(SoldierTransforms[iSendIndex]), size_SoldiersPacket);
 
 			ChangeRecvSoldierTransformCnt(m_iSendSoldiersCnt);
+			//cout << "Send Trans준비완료." << endl;
 		}
 		else
 		{// 보낼 패킷 타이밍이 아니라면 바로 스테이트를 변경해도됨.
