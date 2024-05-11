@@ -37,7 +37,6 @@ struct C2S_PACKET_PLAYER_TRANSFORM
 	float fSpeed = 0.f;
 	float fVelocityZ = 0.f;
 	float fYaw = 0.f;
-	C2S_PACKET_SOLDIER_TRANSFORM tSoldiersTransform[SOLDIER_MAX_CNT];
 };
 
 #pragma pack(1)

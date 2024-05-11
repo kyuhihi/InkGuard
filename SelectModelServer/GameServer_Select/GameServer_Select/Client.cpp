@@ -204,6 +204,7 @@ void CClient::ChangeRecvSoldierTransformCnt(int& iChangeCnt)
 
 void CClient::ConductTransformPacket(bool& bSendTransformDuty, const CPacket& Packet)
 {//Recv임.
+	cout << "받아야하는 카운트: " << m_iRecvSoldiersCnt << "  보내야하는 카운트: " <<m_iSendSoldiersCnt << endl;
 	size_t size_TransformPacket = sizeof(C2S_PACKET_PLAYER_TRANSFORM);
 	size_t size_SoldiersPacket = sizeof(C2S_PACKET_SOLDIER_TRANSFORM) * m_iRecvSoldiersCnt;
 
@@ -216,8 +217,8 @@ void CClient::ConductTransformPacket(bool& bSendTransformDuty, const CPacket& Pa
 	if (m_iRecvSoldiersCnt == 5)
 		iRecvIndex = 4;//
 
-	char* srcPtr = reinterpret_cast<char*>(Packet.m_pBuf);
-	memcpy(&SoldierTransforms[iRecvIndex], srcPtr + size_TransformPacket, size_SoldiersPacket);//병사거 담을거임.
+	Packet.m_pBuf;
+	memcpy(&SoldierTransforms[iRecvIndex], Packet.m_pBuf + size_TransformPacket, size_SoldiersPacket);//병사거 담을거임.
 
 	m_pPlayer->SetTransform(tPlayerTransform);
 	m_pSoldierMgr->SetSoldiersPacket(SoldierTransforms, iRecvIndex);
@@ -248,7 +249,7 @@ bool CClient::RecvPacket()
 			return false;
 		}
 		if (retval != tNewPacket.m_iBufferSize)
-			cout << "Fuck Normal" << endl;
+			cout << "받아야할 사이즈: " << tNewPacket.m_iBufferSize<<"  받은 패킷양: " << retval << endl;
 
 		ConductPacket(tNewPacket);
 	}
@@ -357,12 +358,14 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 			const unsigned long long& size_TransformPacket = sizeof(S2C_PACKET_PLAYER_TRANSFORM);
 			const unsigned long long& size_SoldiersPacket = sizeof(C2S_PACKET_SOLDIER_TRANSFORM) * m_iSendSoldiersCnt;
 			S2C_PACKET_PLAYER_TRANSFORM tSendPacket = m_pOtherClient->GetOtherPlayerTransform();
-			m_tSockInfo.totalSendLen = sizeof(size_TransformPacket + size_SoldiersPacket);
+
+			m_tSockInfo.totalSendLen = size_TransformPacket + size_SoldiersPacket;
 			m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
+
 			memcpy(m_tSockInfo.cBuf, &tSendPacket, size_TransformPacket);
 
 			C2S_PACKET_SOLDIER_TRANSFORM SoldierTransforms[SOLDIER_MAX_CNT];
-			m_pOtherClient->GetOtherSoldiersTransform(SoldierTransforms);
+			m_pOtherClient->GetOtherSoldiersTransform(SoldierTransforms); //여기서 9마리 다받아옴.
 			int iSendIndex = 0;
 			if (m_iSendSoldiersCnt == 5)
 				iSendIndex = 4;

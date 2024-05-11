@@ -275,7 +275,7 @@ void MyNetworkMgr::SendPlayerTransform(const FVector& vPlayerPosition, const FRo
 	int iSendIndex = 0;
 	if (m_iSendSoldierCnt == 5)
 		iSendIndex = 4;//근데 4개 일때는 앞에, 5개일땐 뒤... 정말싫다.
-	memcpy(SendBuffer + size_TransformPacket, &((SoldierTransforms[iSendIndex])), size_SoldiersPacket);//병사거 담을거임.
+	memcpy(SendBuffer + size_TransformPacket, &(SoldierTransforms[iSendIndex]), size_SoldiersPacket);//병사거 담을거임.
 
 	int retval{ 0 };
 	retval = send(m_tClientSock.sock, SendBuffer, size_Total, 0);
@@ -297,7 +297,7 @@ bool MyNetworkMgr::RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket)
 	if (!m_tClientSock.bConnectSuccess || !m_bSyncTime)
 		return false;
 
-	const unsigned long long& size_TransformPacket = sizeof(C2S_PACKET_PLAYER_TRANSFORM);
+	const unsigned long long& size_TransformPacket = sizeof(S2C_PACKET_PLAYER_TRANSFORM);
 	const unsigned long long& size_SoldiersPacket = sizeof(C2S_PACKET_SOLDIER_TRANSFORM) * m_iRecvSoldierCnt;
 	const unsigned long long size_Total = size_TransformPacket + size_SoldiersPacket;
 	char* RecvBuffer = new char[size_Total];
