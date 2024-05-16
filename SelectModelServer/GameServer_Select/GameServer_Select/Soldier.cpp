@@ -13,3 +13,8 @@ void CSoldier::SetSoldierInfo(const SOLDIER_TYPE eNewSoldierType, const TERRITOR
 	m_tSoldierInfo.eSoldierType = eNewSoldierType;
 	m_tSoldierInfo.eTargetTerritory = eNewTargetTerritoryType;
 }
+
+void CSoldier::SetSoldierTransform(const S2C_PACKET_SOLDIER_TRANSFORM tRecvPacket)
+{
+	m_tSoldierTransform = tRecvPacket;
+}

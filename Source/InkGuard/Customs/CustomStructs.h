@@ -34,7 +34,28 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int iSpawnType = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int iSpawnMgrIndex = 0;
 };
+
+USTRUCT(Atomic, BlueprintType)
+struct FPACKET_SOLDIER_TRANSFORM_BLUEPRINT
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector	vSoldier_Position;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float		fSoldier_Speed = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float		fSoldier_MontagePlayTime = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float		fSoldier_Yaw = 0.f;
+};
+
 
 USTRUCT(Atomic, BlueprintType)
 struct FPlayerStruct

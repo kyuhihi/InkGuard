@@ -26,9 +26,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	const int GetDutyStructSize() const { return m_tSpawnInfos.Num(); }
+
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Setting to Object")
-	void AppendNewDuty(const int iSoldierType);
+	void AppendNewDuty(const int iSoldierType, const int iSpawnMgrIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "Setting to Object")
 	void InitializeAboutSpawnerBySoldierInterface(AActor* pActor);

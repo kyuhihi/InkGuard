@@ -37,6 +37,7 @@ public:	//Getter Setter
 
 	void GetGameStartPacket(S2C_PACKET_GAMESTART& tOutGameStartPacket);
 	const S2C_PACKET_PLAYER_TRANSFORM GetOtherPlayerTransform() { return m_pPlayer->GetTransform(); }
+	void GetOtherSoldiersTransform(C2S_PACKET_SOLDIER_TRANSFORM* pSendBuffer) { return m_pSoldierMgr->GetSoldiersPacket(pSendBuffer); }
 	const S2C_PACKET_PLAYER_INPUT GetOtherPlayerInputs() { return m_pPlayer->GetInputs(); }
 
 	void CalculateSendAdditionalPacket(char*& pOtherClientSendBuf, int& iOtherSendBufferSize) { m_pPlayer->CalculateSendAdditionalPacket(pOtherClientSendBuf, iOtherSendBufferSize); };
@@ -52,6 +53,8 @@ public:	//Getter Setter
 private:
 	void ReserveAdditionalState();
 	void ClearSendBuffer();
+	void ChangeRecvSoldierTransformCnt(int& iChangeCnt);
+	void ConductTransformPacket(bool& bSendTransformDuty, const CPacket& Packet);
 
 public:		//Public Packet
 	bool RecvPacket();
@@ -80,5 +83,8 @@ private:
 
 	FRAME_SET m_eCurSet = FRAME_SET::FRAME_END;
 
+
+	int m_iSendSoldiersCnt = 4;
+	int m_iRecvSoldiersCnt = 4;
 };
 

@@ -19,6 +19,15 @@ struct C2S_PACKET_GAMESTART {
 };
 
 #pragma pack(1)
+typedef struct C2S_PACKET_SOLDIER_TRANSFORM
+{
+	XMFLOAT3	vSoldier_Position = XMFLOAT3();
+	float		fSoldier_Speed = 0.f;
+	float		fSoldier_MontagePlayTime = 0.f;
+	float		fSoldier_Yaw = 0.f;
+}S2C_PACKET_SOLDIER_TRANSFORM;
+
+#pragma pack(1)
 struct C2S_PACKET_PLAYER_TRANSFORM
 {
 	short sPacketType = PACKET_TRANSFORM;

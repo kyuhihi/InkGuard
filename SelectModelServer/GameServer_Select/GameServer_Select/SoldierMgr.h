@@ -17,9 +17,11 @@ public:
 	void GetGameStartPacket(S2C_PACKET_GAMESTART& tOutGameStartPacket);
 
 	void SetGameStartPacket(const C2S_PACKET_GAMESTART& tGameStartPacket);
-
+	
+	void SetSoldiersPacket(const S2C_PACKET_SOLDIER_TRANSFORM* pRecvPacket,const int iStartIndex);
+	void GetSoldiersPacket(S2C_PACKET_SOLDIER_TRANSFORM* pSendPacket);
 
 private:
-	vector<class CSoldier*>m_pSoldiers;
+	vector<class CSoldier*>m_pSoldiers; // 9
 };
 

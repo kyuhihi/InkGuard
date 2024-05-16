@@ -4,7 +4,7 @@ CPacket::CPacket()
 {
 }
 
-CPacket::CPacket(const CLIENT_STATE& eState)
+CPacket::CPacket(const CLIENT_STATE& eState, const int iRecvSoldierCnt)
 {
 	switch (eState)
 	{
@@ -14,7 +14,7 @@ CPacket::CPacket(const CLIENT_STATE& eState)
 		break;
 	}
 	case STATE_TRANSFORM: {
-		m_iBufferSize = sizeof(C2S_PACKET_PLAYER_TRANSFORM);
+		m_iBufferSize = sizeof(C2S_PACKET_PLAYER_TRANSFORM) + sizeof(C2S_PACKET_SOLDIER_TRANSFORM) * iRecvSoldierCnt;
 		m_pBuf = new char[m_iBufferSize];
 		break;
 	}

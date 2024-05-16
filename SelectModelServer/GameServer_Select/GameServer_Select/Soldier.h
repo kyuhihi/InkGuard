@@ -15,6 +15,7 @@ public:
 		TERRITORY_TYPE eTargetTerritory = TERRITORY_END;
 		int iSoldierIndex;
 	};
+	
 
 public:// virtual
 	virtual void Initialize() override;
@@ -28,8 +29,12 @@ public:// virtual
 
 public:// normal
 	void SetSoldierIndex(int iNewSoldierIndex) { m_tSoldierInfo.iSoldierIndex = iNewSoldierIndex; }
+	void SetSoldierTransform(const S2C_PACKET_SOLDIER_TRANSFORM tRecvPacket);
+	const S2C_PACKET_SOLDIER_TRANSFORM GetSoldierTransform() { return m_tSoldierTransform; };
+
 
 protected:
 	SOLDIERINFO m_tSoldierInfo;
+	S2C_PACKET_SOLDIER_TRANSFORM m_tSoldierTransform;
 };
 
