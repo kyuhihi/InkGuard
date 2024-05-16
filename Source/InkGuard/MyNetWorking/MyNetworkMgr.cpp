@@ -15,13 +15,13 @@ string MyNetworkMgr::SERVERIP = "192.168.0.104";
 
 MyNetworkMgr::MyNetworkMgr()
 {
-	Initialize(); //네트워킹 커넥트 작업.
-	ASpawnMgr::Initialize();
+	//Initialize(); //네트워킹 커넥트 작업.
+	//ASpawnMgr::Initialize();
 }
 
 MyNetworkMgr::~MyNetworkMgr()
 {
-	Tidy();
+	//Tidy();
 }
 
 void MyNetworkMgr::Initialize()
