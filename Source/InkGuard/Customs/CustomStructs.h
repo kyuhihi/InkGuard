@@ -36,6 +36,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int iSpawnMgrIndex = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float fSoldierHP = 100.f;
+
+
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -54,6 +59,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float		fSoldier_Yaw = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float		fHP = 100.f;
 };
 
 
@@ -70,6 +78,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float fSpeed = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float fHP = 100.f;
 };
 
 USTRUCT(Atomic, BlueprintType)

@@ -75,6 +75,7 @@ bool ASpawnMgr::GetSoldierData(C2S_PACKET_SOLDIER_TRANSFORM* pSendPacket)
 					pSendPacket[i].fSoldier_MontagePlayTime = fPlayTime;
 					pSendPacket[i].fSoldier_Speed = (float)Velocity.Length();
 					pSendPacket[i].fSoldier_Yaw = tPlayerRotation.Yaw;
+					pSendPacket[i].fHP = Soldier.fSoldierHP;
 					pSendPacket[i].vSoldier_Position = UCustomFunctional::FVector_To_float3(Position);
 					break;
 				}

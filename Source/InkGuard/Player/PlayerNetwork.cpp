@@ -75,13 +75,14 @@ void UPlayerNetwork::SendPlayerTransform(float DeltaTime)
 	FVector vPlayerPosition{ m_tPlayerStruct.pPlayer->GetActorLocation() };
 	FRotator tPlayerRotation{ m_tPlayerStruct.pPlayer->GetActorRotation() };
 	FVector vPlayerVelocity{ m_tPlayerStruct.pPlayer->GetVelocity() };
+
 	
 	
 	if (m_fSyncTimer > SERVER_SYNC_TIME){
 		m_pNetworkMgr->SetSyncTime(true);
 	}
 	
-	m_pNetworkMgr->SendPlayerTransform(vPlayerPosition, tPlayerRotation, vPlayerVelocity.Z, vPlayerVelocity.Length());
+	m_pNetworkMgr->SendPlayerTransform(vPlayerPosition, tPlayerRotation, vPlayerVelocity.Z, vPlayerVelocity.Length(),m_fBakuHealth);
 
 	//UE_LOG(InkGuardNetErr, Warning, TEXT("SendPlayerTransform"));
 }
@@ -107,6 +108,7 @@ void UPlayerNetwork::RecvPlayerTransform(float DeltaTime)
 	GetOwner()->SetActorRotation(PlayerRotation);
 	m_tPlayerStruct.fSpeed = tRecvPacket.fSpeed;
 	m_tPlayerStruct.fVelocityZ= tRecvPacket.fVelocityZ;
+	m_tPlayerStruct.fHP = tRecvPacket.fHP;
 
 	m_fSyncTimer = 0.f;// recv해야하는 타이밍인지 초기화.
 
@@ -195,6 +197,11 @@ void UPlayerNetwork::SetPlayerStruct(FPlayerStruct tPlayerData)
 const FPlayerStruct& UPlayerNetwork::GetPlayerStruct()
 {
 	return m_tPlayerStruct;
+}
+
+void UPlayerNetwork::SetPlayerHpForSendTransform(float fNewHP)
+{
+	m_fBakuHealth = fNewHP;
 }
 
 

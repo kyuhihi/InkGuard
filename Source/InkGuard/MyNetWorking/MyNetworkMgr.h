@@ -55,7 +55,7 @@ public:
 	void RecvGameStart();
 	
 	void RegisterSpawnMgr(class ASpawnMgr* pSpawnMgr) { m_pSpawnMgr = pSpawnMgr; }
-	void SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed);
+	void SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed, const float& fBakuHP);
 	bool RecvPlayerTransform(S2C_PACKET_PLAYER_TRANSFORM& tOutPacket);// 앞으로 오버로딩 하지말자..
 	
 	void SendPlayerInputData(C2S_PACKET_PLAYER_INPUT& tBakuInputData);

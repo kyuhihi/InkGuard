@@ -37,6 +37,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	const FPlayerStruct& GetPlayerStruct();
 
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	void SetPlayerHpForSendTransform(float fNewHP);
 
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void AddAdditionalData(const FVaultingPacket tNewPacket); //반드시 빌더 패턴 사용해서 입력할것. <= my blueprint function library static 함수참고.
@@ -81,5 +83,5 @@ private:
 
 	FPlayerStruct m_tPlayerStruct; 
 	float m_fSyncTimer = 0.f;
-
+	float m_fBakuHealth = 100.f;
 };

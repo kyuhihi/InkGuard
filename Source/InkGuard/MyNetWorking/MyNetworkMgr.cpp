@@ -15,13 +15,13 @@ string MyNetworkMgr::SERVERIP = "192.168.0.104";
 
 MyNetworkMgr::MyNetworkMgr()
 {
-	//Initialize(); //네트워킹 커넥트 작업.
-	//ASpawnMgr::Initialize();
+	Initialize(); //네트워킹 커넥트 작업.
+	ASpawnMgr::Initialize();
 }
 
 MyNetworkMgr::~MyNetworkMgr()
 {
-	//Tidy();
+	Tidy();
 }
 
 void MyNetworkMgr::Initialize()
@@ -250,7 +250,7 @@ void MyNetworkMgr::RecvGameStart()
 
 #pragma region SendPlayerTransform
 
-void MyNetworkMgr::SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed)
+void MyNetworkMgr::SendPlayerTransform(const FVector& vPlayerPosition, const FRotator& vPlayerRotation, const float& fVelocityZ, const float& fSpeed, const float& fBakuHP)
 {
 	if (!m_tClientSock.bConnectSuccess)
 		return;
@@ -264,6 +264,7 @@ void MyNetworkMgr::SendPlayerTransform(const FVector& vPlayerPosition, const FRo
 	tTransformPacket.fYaw = vPlayerRotation.Yaw;
 	tTransformPacket.fSpeed = fSpeed;
 	tTransformPacket.fVelocityZ = fVelocityZ;
+	tTransformPacket.fHP = fBakuHP;
 	tTransformPacket.bRecvTransform = m_bSyncTime;
 
 	C2S_PACKET_SOLDIER_TRANSFORM SoldierTransforms[SOLDIER_MAX_CNT];

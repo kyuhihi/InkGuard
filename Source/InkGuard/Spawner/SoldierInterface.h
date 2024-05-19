@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "../Customs/CustomStructs.h"
 #include "SoldierInterface.generated.h"
 
 // This class does not need to be modified.
@@ -40,5 +41,8 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
 	void SetValueOfPacket(FPACKET_SOLDIER_TRANSFORM_BLUEPRINT tRecvPacket);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
+	float GetHP();
 
 };
