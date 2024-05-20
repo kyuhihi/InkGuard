@@ -97,6 +97,11 @@ bool ASpawnMgr::SetSoldierData(const C2S_PACKET_SOLDIER_TRANSFORM* pRecvPacket, 
 		iEndIndex = SOLDIER_MAX_CNT;
 	}
 
+	for (int i = 0; i < SOLDIER_MAX_CNT; ++i)
+	{
+		m_OtherSoldiersUpdate[i] = false;
+	}
+
 	for (int i = iStartIndex; i < iEndIndex; i++)
 	{
 			FPACKET_SOLDIER_TRANSFORM_BLUEPRINT tCastedPacket;
@@ -105,6 +110,7 @@ bool ASpawnMgr::SetSoldierData(const C2S_PACKET_SOLDIER_TRANSFORM* pRecvPacket, 
 			tCastedPacket.fSoldier_Yaw = pRecvPacket[i].fSoldier_Yaw;
 			tCastedPacket.vSoldier_Position = UCustomFunctional::float3_To_FVector(pRecvPacket[i].vSoldier_Position);
 			m_OtherSoldiersTransform[i] = tCastedPacket;
+			m_OtherSoldiersUpdate[i] = true;
 	}
 
 	return true;
@@ -162,6 +168,11 @@ void ASpawnMgr::RegisterSpawner(ASoldierSpawner* pCallSoldierSpawner, const int 
 FPACKET_SOLDIER_TRANSFORM_BLUEPRINT ASpawnMgr::GetOtherData(const int iSpawnMgrIndex)
 {
 	return m_OtherSoldiersTransform[iSpawnMgrIndex];
+}
+
+bool ASpawnMgr::IsOtherDataUpdate(const int iSpawnMgrIndex) const
+{
+	return m_OtherSoldiersUpdate[iSpawnMgrIndex];
 }
 
 #pragma region static func

@@ -45,4 +45,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
 	float GetHP();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
+	void SpawnerTick(float fTimeDelta);
+
 };

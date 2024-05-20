@@ -38,7 +38,10 @@ public://Spawner Call
 	void RegisterSpawner(ASoldierSpawner* pCallSoldierSpawner, const int iSpawnerColor, const int iTargetTerritory); //지금 caller 스포너가 스폰해야할 객체를 물어보고 가져오는 코드.
 	
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
-	FPACKET_SOLDIER_TRANSFORM_BLUEPRINT GetOtherData(const int iSpawnMgrIndex); //지금 caller 스포너가 스폰해야할 객체를 물어보고 가져오는 코드.
+	FPACKET_SOLDIER_TRANSFORM_BLUEPRINT GetOtherData(const int iSpawnMgrIndex); 
+
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	bool IsOtherDataUpdate(const int iSpawnMgrIndex) const;
 
 public:
 	static void Initialize();
@@ -50,6 +53,7 @@ private:
 	TArray<ASoldierSpawner*> m_pOtherSpawners;	//적 스포너 객체.
 	
 	FPACKET_SOLDIER_TRANSFORM_BLUEPRINT m_OtherSoldiersTransform[SOLDIER_MAX_CNT];
+	bool m_OtherSoldiersUpdate[SOLDIER_MAX_CNT] = {false,};
 
 private:
 	MyNetworkMgr* m_pNetworkMgr = nullptr;

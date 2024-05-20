@@ -62,6 +62,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float		fHP = 100.f;
+
 };
 
 
