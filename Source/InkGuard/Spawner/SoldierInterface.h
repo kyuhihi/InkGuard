@@ -48,4 +48,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
 	void SpawnerTick(float fTimeDelta);
 
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
+	int GetSoldierTypeForCpp();
+
 };
