@@ -16,7 +16,7 @@ public:
 	HRESULT Render(class CShader* pShader, class CVIBufferRect* pVIBuffer);
 
 public:
-	const LIGHTDESC* GetLightDesc() const {
+	LIGHTDESC* GetLightDesc() {
 		return &m_lightDesc;
 	}
 

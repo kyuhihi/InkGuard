@@ -5,7 +5,7 @@
 
 CGround::CGround(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
-	, GROUND_SIZE(1000.f)
+	, GROUND_SIZE(70.F)
 {
 }
 
@@ -28,14 +28,14 @@ HRESULT CGround::Initialize(void * pArg)
 
 	//m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSet(static_cast<_float>(rand() % 10), 0.f, static_cast<_float>(rand() % 10), 1.f));
 	m_pTransformCom->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f),XMConvertToRadians(90.f));
-	m_pTransformCom->SetScale(XMVectorSet(GROUND_SIZE, GROUND_SIZE, GROUND_SIZE, 1.f));
+	m_pTransformCom->SetScale(XMVectorSet(GROUND_SIZE, GROUND_SIZE, 1.f, 1.f));
 
 	return S_OK;
 }
 
 void CGround::Tick(_float fTimeDelta)
 {
-
+	m_pTransformCom->EditTransform(true);
 }
 
 void CGround::LateTick(_float fTimeDelta)
@@ -43,14 +43,14 @@ void CGround::LateTick(_float fTimeDelta)
 	if (nullptr == m_pRendererCom)
 		return;
 
-	m_pRendererCom->AddRenderGroup(CRenderer::RENDER_SHADOW_DEPTH, this);
+	//m_pRendererCom->AddRenderGroup(CRenderer::RENDER_SHADOW_DEPTH, this);
 	m_pRendererCom->AddRenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
 HRESULT CGround::Render(_uint eRenderGroup)
 {
 
-	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	if (FAILED(m_pShaderCom->SetRawValue("g_WorldMatrix", &m_pTransformCom->GetWorldFloat4x4TP(), sizeof(_float4x4))))
 		return E_FAIL;
@@ -59,42 +59,13 @@ HRESULT CGround::Render(_uint eRenderGroup)
 	if (FAILED(m_pShaderCom->SetRawValue("g_ProjMatrix", &pGameInstance->GetTransformFloat4x4TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
-	//if (FAILED(pGameInstance->BindRenderTargetSRV(TEXT("Target_Depth"), m_pShaderCom, "g_DepthTexture")))
-	//	return E_FAIL;
 	RELEASE_INSTANCE(CGameInstance);
+
 
 	if (FAILED(m_pTextureCom->SetSRV(m_pShaderCom, "g_DiffuseTexture", 0)))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Begin(0, 0)))
-		return E_FAIL;
-
-	if (FAILED(m_pVIBufferCom->Render()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CGround::RenderLightDepth(CLight* pLight) {
-
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-
-	if (FAILED(m_pShaderCom->SetRawValue("g_WorldMatrix",
-		&m_pTransformCom->GetWorldFloat4x4TP(), sizeof(_float4x4))))
-		return E_FAIL;
-
-	_float4x4 lightViewMatrix = pLight->GetViewMatrixTP();
-	if (FAILED(m_pShaderCom->SetRawValue("g_ViewMatrix",
-		&lightViewMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-
-	_float4x4 lightProjMatrix = pLight->GetProjectionMatrixTP();
-	if (FAILED(m_pShaderCom->SetRawValue("g_ProjMatrix",
-		&lightProjMatrix, sizeof(_float4x4))))
-		return E_FAIL;
-
-	_float fProjFar = pGameInstance->GetProjectionFar();
-	if (FAILED(m_pShaderCom->SetRawValue("g_fProjFar", &fProjFar, sizeof(_float))))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBufferCom->Render()))
@@ -113,19 +84,19 @@ HRESULT CGround::Ready_Components()
 	/* For.Com_Renderer */
 	if (FAILED(__super::AddComponent(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
-		
+
 	/* For.Com_Shader */
-	if (FAILED(__super::AddComponent(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxTex"), TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
+	if (FAILED(__super::AddComponent(m_iCurrentLevel, TEXT("Prototype_Component_Shader_Terrain"), TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::AddComponent(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom)))
+	if (FAILED(__super::AddComponent(m_iCurrentLevel, TEXT("Prototype_Component_VIBuffer_Cube"), TEXT("Com_VIBuffer"), (CComponent**)&m_pVIBufferCom)))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::AddComponent(m_iCurrentLevel, TEXT("Prototype_Component_Texture_Ground"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
+	if (FAILED(__super::AddComponent(m_iCurrentLevel, TEXT("Prototype_Component_Texture_Terrain"), TEXT("Com_Texture"), (CComponent**)&m_pTextureCom)))
 		return E_FAIL;
-	
+
 	return S_OK;
 }
 
@@ -135,7 +106,7 @@ CGround* CGround::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 
 	if (FAILED(pInstance->InitializePrototype()))
 	{
-		MSG_BOX(TEXT("Failed To Created : CForkLift"));
+		MSG_BOX(TEXT("Failed To Created : CGround"));
 		SafeRelease(pInstance);
 	}
 

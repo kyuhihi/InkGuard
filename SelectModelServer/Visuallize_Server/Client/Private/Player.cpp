@@ -32,7 +32,10 @@ HRESULT CPlayer::Initialize(void * pArg)
 	m_pTransformCom->SetScale(XMVectorSet(1.f, 1.f, 1.f, 0.f));
 	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(180.f));
 	
-	m_pModelCom->SetAnimIndex(25);
+	m_iAnim[ANIMATION::ANIM_SLEEP] = 29;
+	m_iAnim[ANIMATION::ANIM_RUN] = 25;
+
+
 	return S_OK;
 }
 
@@ -47,6 +50,15 @@ void CPlayer::LateTick(_float fTimeDelta)
 {
 	if (nullptr == m_pRendererCom)
 		return;
+	_float4 vLightPosition;
+	XMStoreFloat4(&vLightPosition, m_pTransformCom->GetState(CTransform::STATE_POSITION));
+	vLightPosition.y += 10.f;
+	m_pLight->GetLightDesc()->vPosition = vLightPosition;
+
+	if (m_bKeyPressed)
+		m_pModelCom->SetAnimIndex(m_iAnim[ANIM_RUN]);
+	else
+		m_pModelCom->SetAnimIndex(m_iAnim[ANIM_SLEEP]);
 
 	m_pModelCom->PlayAnimation(fTimeDelta);
 	
@@ -124,6 +136,8 @@ HRESULT CPlayer::RenderLightDepth(CLight* pLight) {
 			return E_FAIL;
 	}
 
+	m_bKeyPressed = false;
+
 	return S_OK;
 }
 
@@ -151,6 +165,7 @@ void CPlayer::KeyInput(CTransform* pCamTransform, const _float fTimeDelta)
 		pCamTransform->GoRight(fTimeDelta);
 	
 
+
 	_vector PlayerLocation = m_pTransformCom->GetState(CTransform::STATE_POSITION);
 	_vector CamLocation = pCamTransform->GetState(CTransform::STATE_POSITION);
 	
@@ -161,7 +176,7 @@ void CPlayer::KeyInput(CTransform* pCamTransform, const _float fTimeDelta)
 	pCamTransform->SetState(CTransform::STATE_POSITION, XMVectorLerp(CamLocation, pCamLerpLocation, fTimeDelta*3.F));
 	pCamTransform->LookAt(m_pTransformCom->GetState(CTransform::STATE_POSITION));
 
-	m_pTransformCom->LookAt_ForLandObject(PlayerLocation + pCamTransform->GetState(CTransform::STATE_LOOK));
+	//m_pTransformCom->LookAt_ForLandObject(PlayerLocation + pCamTransform->GetState(CTransform::STATE_LOOK));
 
 	_float MoveValue = WALK_SPEED;
 
@@ -171,11 +186,13 @@ void CPlayer::KeyInput(CTransform* pCamTransform, const _float fTimeDelta)
 	if (pGameInstance->GetDIKState(DIK_W) & 0x80)
 	{
 		m_pTransformCom->GoStraight(MoveValue * fTimeDelta);
+		m_bKeyPressed = true;
 	}
 
 	if (pGameInstance->GetDIKState(DIK_S) & 0x80)
 	{
 		m_pTransformCom->GoBackward(MoveValue * fTimeDelta);
+		m_bKeyPressed = true;
 	}
 
 
@@ -189,8 +206,6 @@ void CPlayer::KeyInput(CTransform* pCamTransform, const _float fTimeDelta)
 		m_pTransformCom->GoDown(MoveValue * fTimeDelta);
 	}
 
-	
-
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -200,7 +215,7 @@ HRESULT CPlayer::Ready_Components()
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
 	TransformDesc.fSpeedPerSec = WALK_SPEED;
-	TransformDesc.fRotationPerSec = XMConvertToRadians(90.0f);
+	TransformDesc.fRotationPerSec = XMConvertToRadians(180.f);
 
 	if (FAILED(__super::AddComponent(LEVEL_STATIC, TEXT("Prototype_Component_Transform"), TEXT("Com_Transform"), (CComponent**)&m_pTransformCom, &TransformDesc)))
 		return E_FAIL;
@@ -221,6 +236,21 @@ HRESULT CPlayer::Ready_Components()
 	if (FAILED(__super::AddComponent(m_iCurrentLevel, TEXT("Prototype_Component_Model_Player"), TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
 		return E_FAIL;
 
+	LIGHTDESC			LightDesc;
+
+	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+	LightDesc.eType = LIGHTDESC::TYPE_POINT;
+	LightDesc.bShadow = true;
+	LightDesc.vPosition = _float4(25.0f, 5.0f, 15.0f, 1.f);
+	LightDesc.fRange = 100.f;
+	LightDesc.vDiffuse = _float4(1.0f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(0.5f, 0.5f, 0.5f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	m_pGameInstance = CGameInstance::GetInstance();
+	m_pLight = CGameInstance::GetInstance()->AddLight(m_pDevice, m_pContext, LightDesc);
+	if (m_pLight == nullptr)
+		return E_FAIL;
 
 	return S_OK;
 }

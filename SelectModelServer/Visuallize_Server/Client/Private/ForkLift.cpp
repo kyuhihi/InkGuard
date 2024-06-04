@@ -128,7 +128,7 @@ HRESULT CForkLift::Ready_Components()
 
 	/* For.Com_Model */
 	if (FAILED(__super::AddComponent(m_iCurrentLevel, TEXT("Prototype_Component_Model_ForkLift"), TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
-		return E_FAIL;
+		return E_FAIL; 
 
 	return S_OK;
 }

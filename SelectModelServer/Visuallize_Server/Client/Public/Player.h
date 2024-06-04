@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "GameInstance.h"
 
 BEGIN(Engine)
 class CLight;
@@ -13,7 +14,7 @@ class CRenderer;
 class CInterval;
 class CTransform;
 class CNavigation;
-
+class CLight;
 class CHierarchyNode;
 END
 
@@ -21,6 +22,8 @@ BEGIN(Client)
 
 class CPlayer final : public CGameObject
 {
+private:
+	enum ANIMATION { ANIM_SLEEP, ANIM_RUN, ANIM_END };
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& rhs);
@@ -60,6 +63,13 @@ private:
 	CTransform* m_pTransformCom = nullptr;
 	CModel* m_pModelCom = nullptr;
 	CInterval* m_pIntervalComponent = nullptr;
+
+	int m_iAnim[ANIMATION::ANIM_END];
+	bool m_bKeyPressed = false;
+
+	CGameInstance* m_pGameInstance = nullptr;
+	CLight* m_pLight = nullptr;
+
 
 private:
 	HRESULT Ready_Components();

@@ -516,6 +516,9 @@ HRESULT CRenderer::RenderShadow()
 
 	for (_uint i = 0; i < iNumLights; ++i) {
 		CLight* pLight = m_pLightManager->GetLight(i);
+		LIGHTDESC lightDesc = *(pLight->GetLightDesc());
+		if (!lightDesc.bShadow)
+			continue;
 
 		if (FAILED(RenderShadowDepth(pLight)))
 			return E_FAIL;

@@ -89,8 +89,8 @@ HRESULT CLevelGamePlay::Loading(_int eLevelID)
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_Texture_Snow */
-	if (FAILED(pGameInstance->AddPrototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Ground"),
+	/* For.Prototype_Component_Texture_Terrain*/
+	if (FAILED(pGameInstance->AddPrototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.jpg"), 1))))
 		return E_FAIL;
 	
@@ -130,6 +130,10 @@ HRESULT CLevelGamePlay::Loading(_int eLevelID)
 
 	if (FAILED(pGameInstance->AddPrototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Territory_Rect"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/InkGuard/Rect/", "SM_Plains_Floors_Block01_Mod.fbx", PivotMatrix))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->AddPrototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Cube"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ground/", "Ground.fbx", PivotMatrix))))
 		return E_FAIL;
 	
 	
@@ -228,7 +232,7 @@ HRESULT CLevelGamePlay::Ready_Lights()
 	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
 
 	LIGHTDESC			LightDesc;
-	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+	/*ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
 	LightDesc.eType = LIGHTDESC::TYPE_POINT;
 	LightDesc.vPosition = _float4(15.0f, 5.0f, 15.0f, 1.f);
 	LightDesc.fRange = 10.f;
@@ -237,27 +241,29 @@ HRESULT CLevelGamePlay::Ready_Lights()
 	LightDesc.vSpecular = LightDesc.vDiffuse;
 
 	if (FAILED(pGameInstance->AddLight(m_pDevice, m_pContext, LightDesc)))
-		return E_FAIL;
+		return E_FAIL;*/
+
+	//ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+	//LightDesc.eType = LIGHTDESC::TYPE_POINT;
+	//LightDesc.bShadow = true;
+	//LightDesc.vPosition = _float4(25.0f, 5.0f, 15.0f, 1.f);
+	//LightDesc.fRange = 100.f;
+	//LightDesc.vDiffuse = _float4(1.0f, 1.f, 1.f, 1.f);
+	//LightDesc.vAmbient = _float4(0.5f, 0.5f, 0.5f, 1.f);
+	//LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	//if (FAILED(pGameInstance->AddLight(m_pDevice, m_pContext, LightDesc)))
+	//	return E_FAIL;
 
 	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
-	LightDesc.eType = LIGHTDESC::TYPE_POINT;
-	LightDesc.vPosition = _float4(25.0f, 5.0f, 15.0f, 1.f);
-	LightDesc.fRange = 10.f;
-	LightDesc.vDiffuse = _float4(0.0f, 1.f, 0.f, 1.f);
-	LightDesc.vAmbient = _float4(0.5f, 0.5f, 0.5f, 1.f);
-	LightDesc.vSpecular = LightDesc.vDiffuse;
-
-	if (FAILED(pGameInstance->AddLight(m_pDevice, m_pContext, LightDesc)))
-		return E_FAIL;
-
-	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
+	LightDesc.bShadow = false;
 	LightDesc.eType = LIGHTDESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
 	LightDesc.vDiffuse = _float4(0.5, 0.5, 0.5, 1.f);
 	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 
-	if (FAILED(pGameInstance->AddLight(m_pDevice, m_pContext, LightDesc)))
+	if ( nullptr == pGameInstance->AddLight(m_pDevice, m_pContext, LightDesc))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -316,8 +322,8 @@ HRESULT CLevelGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Ground"), LEVEL_GAMEPLAY, pLayerTag))
 		return E_FAIL;
 
-	if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_ForkLift"), LEVEL_GAMEPLAY, pLayerTag))
-		return E_FAIL;
+	//if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_ForkLift"), LEVEL_GAMEPLAY, pLayerTag))
+	//	return E_FAIL;
 	
 	CTerritory::DebugTerritoryStruct tNewInfo;
 	tNewInfo.eNewShape = CTerritory::SHAPE_CIRCLE;

@@ -15,7 +15,3 @@ xcopy /y %InPath%\Engine\ThirdParty\x86\*.* %InPath%\Reference\Librarys\x86\
 :: Client
 xcopy /y %InPath%\Engine\Bin\*.dll %InPath%\Client\Bin\
 xcopy /y %InPath%\Engine\Bin\ShaderFiles\*.hlsl %InPath%\Client\Bin\ShaderFiles\
-
-:: Tool
-xcopy /y %InPath%\Engine\Bin\*.dll %InPath%\Tool\Bin\
-xcopy /y %InPath%\Engine\Bin\ShaderFiles\*.hlsl %InPath%\Tool\Bin\ShaderFiles\

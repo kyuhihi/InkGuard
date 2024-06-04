@@ -8,7 +8,7 @@ class CShader;
 class CTexture;
 class CRenderer;
 class CTransform;
-class CVIBufferRect; 
+class CVIBufferCube;
 END
 
 BEGIN(Client)
@@ -26,15 +26,14 @@ public:
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render(_uint eRenderGroup) override;
-	virtual HRESULT RenderLightDepth(CLight* pLight) override;
 
 
 private:
 	CShader*		m_pShaderCom = nullptr;
-	CTexture*		m_pTextureCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;
 	CTransform*		m_pTransformCom = nullptr;
-	CVIBufferRect*	m_pVIBufferCom = nullptr;
+	CVIBufferCube* m_pVIBufferCom = nullptr;
+	CTexture* m_pTextureCom = nullptr;
 
 private:
 	HRESULT Ready_Components();

@@ -12,7 +12,7 @@ public:
 	virtual ~CLightManager() = default;
 
 public:
-	HRESULT AddLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc);
+	CLight* AddLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc);
 	HRESULT Render(class CShader* pShader, class CVIBufferRect* pVIBuffer);
 	const LIGHTDESC* GetLightDesc(_uint iIndex);
 

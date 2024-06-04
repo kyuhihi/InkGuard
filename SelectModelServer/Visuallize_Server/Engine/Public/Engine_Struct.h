@@ -26,6 +26,7 @@ namespace Engine
 		XMFLOAT4 vDiffuse;
 		XMFLOAT4 vAmbient;
 		XMFLOAT4 vSpecular;
+		bool bShadow;
 
 		float fBias;
 

@@ -78,7 +78,7 @@ public: /* For.PipeLine */
 
 public: /* For.Light_Manager */
 	const LIGHTDESC* GetLightDesc(_uint iIndex);
-	HRESULT AddLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc);
+	CLight* AddLight(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const LIGHTDESC& LightDesc);
 
 public: /* For.Frustum */
 	_bool isInFrustumWorldSpace(_fvector vWorldPos, float fRadius = 0.f);
