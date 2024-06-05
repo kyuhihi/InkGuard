@@ -151,6 +151,10 @@ void CPlayer::RenderIMGUI()
 	ImGui::Text(to_string(vPositon.y).data()); ImGui::SameLine();
 	ImGui::Text(to_string(vPositon.z).data());
 
+	const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon" };
+	static int item_current = 1;
+	ImGui::ListBox("listbox", &item_current, items, IM_ARRAYSIZE(items), 5);
+
 	ImGui::End();
 }
 
@@ -185,6 +189,7 @@ void CPlayer::KeyInput(CTransform* pCamTransform, const _float fTimeDelta)
 
 	if (pGameInstance->GetDIKState(DIK_W) & 0x80)
 	{
+		m_pTransformCom->LookAt_ForLandObject(PlayerLocation + pCamTransform->GetState(CTransform::STATE_LOOK));
 		m_pTransformCom->GoStraight(MoveValue * fTimeDelta);
 		m_bKeyPressed = true;
 	}

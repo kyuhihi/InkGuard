@@ -5,6 +5,10 @@
 #pragma warning (disable : 4251)
 #pragma warning (disable : 4996)
 
+#ifndef NOMINMAX
+# define NOMINMAX
+#endif // rapidjson내 max 매크로 경고 문제 수정
+
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <FX11/d3dx11effect.h>
@@ -20,6 +24,7 @@
 
 #include <DirectXCollision.h>
 
+#include <fstream>
 
 #include <Assimp/scene.h>
 #include <Assimp/Importer.hpp>
@@ -30,6 +35,17 @@
 
 #include <DirectXMath.h>
 using namespace DirectX;
+
+/* Json */
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/filereadstream.h"
+#include "rapidjson/filewritestream.h"
+#include "rapidjson/istreamwrapper.h"
+#include "rapidjson/prettywriter.h"
+using namespace rapidjson;
+
 #include <vector>
 #include <list>
 #include <map>
@@ -38,6 +54,7 @@ using namespace DirectX;
 #include <functional>
 #include <process.h>
 #include <iostream>
+#include <random>
 
 #include <io.h> 
 #include <Fmod/fmod.h>
@@ -55,6 +72,8 @@ using namespace DirectX;
 #include "Engine_Typedef.h"
 #include "Engine_Functor.h"
 #include "Engine_Function.h"
+
+
 
 #ifdef _DEBUG
 

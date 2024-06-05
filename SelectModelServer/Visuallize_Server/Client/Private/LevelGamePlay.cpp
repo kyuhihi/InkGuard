@@ -11,6 +11,8 @@
 #include "Sky.h"
 #include "Ground.h"
 #include "Territory.h"
+#include "SkyStar.h"
+#include "ModelSky.h"
 
 #include "GameInstance.h"
 #include "CameraFree.h"
@@ -75,6 +77,14 @@ HRESULT CLevelGamePlay::Loading(_int eLevelID)
 		CTerritory::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->AddPrototype(TEXT("Prototype_GameObject_SkyStar"),
+		CSkyStar::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->AddPrototype(TEXT("Prototype_GameObject_ModelSky"),
+		CModelSky::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐를 로딩중입니다. "));
 	/* 텍스쳐를 로드한다. */
 	
@@ -92,6 +102,10 @@ HRESULT CLevelGamePlay::Loading(_int eLevelID)
 	/* For.Prototype_Component_Texture_Terrain*/
 	if (FAILED(pGameInstance->AddPrototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.jpg"), 1))))
+		return E_FAIL;
+
+	if (FAILED(pGameInstance->AddPrototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_SkyEffect"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/SkyEffect/SkyEffect_%d.png"), 3))))
 		return E_FAIL;
 	
 	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다. "));
@@ -135,8 +149,14 @@ HRESULT CLevelGamePlay::Loading(_int eLevelID)
 	if (FAILED(pGameInstance->AddPrototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_Cube"),
 		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/Ground/", "Ground.fbx", PivotMatrix))))
 		return E_FAIL;
-	
-	
+
+	_matrix SkyMat = XMMatrixScaling(0.001f, 0.001f, 0.001f);
+	if (FAILED(pGameInstance->AddPrototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Model_ModelSky"),
+		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../Bin/Resources/Meshes/SkyModel/","SkyBlueA.fbx"))))
+		return E_FAIL;
+
+
+
 	///* For.Prototype_Component_VIBuffer_Cube */
 	if (FAILED(pGameInstance->AddPrototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"),
 		CVIBufferCube::Create(m_pDevice, m_pContext))))
@@ -192,6 +212,7 @@ HRESULT CLevelGamePlay::Initialize()
 {
 	if (FAILED(__super::Initialize()))
 		return E_FAIL;
+	ReadyStarPos();
 
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
@@ -227,33 +248,36 @@ HRESULT CLevelGamePlay::Render()
 	return S_OK;
 }
 
+void CLevelGamePlay::ReadyStarPos()
+{
+	string InputJsonPath = "../Bin/Data/SkyStar.json";
+
+	ifstream ifs(InputJsonPath);
+	IStreamWrapper isStreamWrapper = ifs;
+
+	Document doc;
+	doc.ParseStream(isStreamWrapper);
+	StringBuffer buffer;
+	PrettyWriter<StringBuffer> write(buffer);
+	doc.Accept(write);
+
+	Value& Parent = doc["StarPos"];
+	if (Parent.IsArray())
+	{
+		for (SizeType i = 0; i < Parent.Size(); ++i)
+		{
+			Value& v = Parent[i];
+			_float3 vGoombaPos{ v["X"].GetFloat(),v["Y"].GetFloat(),v["Z"].GetFloat() };
+			m_StarPosList.push_back(vGoombaPos);
+		}
+	}
+}
+
 HRESULT CLevelGamePlay::Ready_Lights()
 {
 	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
 
 	LIGHTDESC			LightDesc;
-	/*ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
-	LightDesc.eType = LIGHTDESC::TYPE_POINT;
-	LightDesc.vPosition = _float4(15.0f, 5.0f, 15.0f, 1.f);
-	LightDesc.fRange = 10.f;
-	LightDesc.vDiffuse = _float4(1.f, 0.0f, 0.f, 1.f);
-	LightDesc.vAmbient = _float4(0.5f, 0.5f, 0.5f, 1.f);
-	LightDesc.vSpecular = LightDesc.vDiffuse;
-
-	if (FAILED(pGameInstance->AddLight(m_pDevice, m_pContext, LightDesc)))
-		return E_FAIL;*/
-
-	//ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
-	//LightDesc.eType = LIGHTDESC::TYPE_POINT;
-	//LightDesc.bShadow = true;
-	//LightDesc.vPosition = _float4(25.0f, 5.0f, 15.0f, 1.f);
-	//LightDesc.fRange = 100.f;
-	//LightDesc.vDiffuse = _float4(1.0f, 1.f, 1.f, 1.f);
-	//LightDesc.vAmbient = _float4(0.5f, 0.5f, 0.5f, 1.f);
-	//LightDesc.vSpecular = LightDesc.vDiffuse;
-
-	//if (FAILED(pGameInstance->AddLight(m_pDevice, m_pContext, LightDesc)))
-	//	return E_FAIL;
 
 	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
 	LightDesc.bShadow = false;
@@ -316,8 +340,14 @@ HRESULT CLevelGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	SafeAddRef(pGameInstance);
 
 
-	if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Sky"), LEVEL_GAMEPLAY, pLayerTag))
-		return E_FAIL;
+	//if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Sky"), LEVEL_GAMEPLAY, pLayerTag))
+	//	return E_FAIL;
+
+	CModelSky* pModelSky = (CModelSky*)pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_ModelSky"), LEVEL_GAMEPLAY, pLayerTag);
+	pModelSky->SetNight();
+
+	Ready_Layer_SkyStar(TEXT(""));
+	
 
 	if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Ground"), LEVEL_GAMEPLAY, pLayerTag))
 		return E_FAIL;
@@ -362,6 +392,24 @@ HRESULT CLevelGamePlay::Ready_Layer_Effect(const _tchar * pLayerTag)
 	SafeRelease(pGameInstance);
 
 
+	return S_OK;
+}
+
+HRESULT CLevelGamePlay::Ready_Layer_SkyStar(const _tchar* pLayerTag)
+{
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+
+	CGameObject* pObject = nullptr;
+
+	for (const auto& iter : m_StarPosList)
+	{
+		_float3 vStarPos{ iter };
+		pObject = pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_SkyStar"), LEVEL_GAMEPLAY, TEXT("Layer_Stars"), &vStarPos);
+		if (!pObject)
+			return E_FAIL;
+	}
+
+	
 	return S_OK;
 }
 

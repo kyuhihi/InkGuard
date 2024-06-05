@@ -79,6 +79,9 @@
     <Filter Include="02.GameObjects\Territory">
       <UniqueIdentifier>{ffb86be3-3f55-4534-89f0-3bcc4134fe48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Sky\ModelSky">
+      <UniqueIdentifier>{f61d19b1-279d-47ca-b513-892b78945afb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -162,6 +165,12 @@
     <ClInclude Include="..\Public\Territory.h">
       <Filter>02.GameObjects\Territory</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SkyStar.h">
+      <Filter>02.GameObjects\Sky\ModelSky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ModelSky.h">
+      <Filter>02.GameObjects\Sky\ModelSky</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -229,6 +238,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Territory.cpp">
       <Filter>02.GameObjects\Territory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkyStar.cpp">
+      <Filter>02.GameObjects\Sky\ModelSky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ModelSky.cpp">
+      <Filter>02.GameObjects\Sky\ModelSky</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -52,8 +52,10 @@ void CMainApp::Tick(_float fTimeDelta)
 	if (m_pGameInstance->GetDIKDownState(DIK_F1)) {
 		g_bDebug = !g_bDebug;
 	}
-
+	
+	
 	m_pGameInstance->TickEngine(fTimeDelta);
+
 }
 
 HRESULT CMainApp::Render()

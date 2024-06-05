@@ -8,6 +8,9 @@
 #include "targetver.h"
 
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용은 Windows 헤더에서 제외합니다.
+#ifndef NOMINMAX
+# define NOMINMAX
+#endif // rapidjson내 max 매크로 경고 문제 수정
 // Windows 헤더 파일:
 #include <windows.h>
 
