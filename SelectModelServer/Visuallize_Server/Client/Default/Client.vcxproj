@@ -171,12 +171,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
+    <ClInclude Include="..\Network\Common.h" />
+    <ClInclude Include="..\Network\Network_Define.h" />
+    <ClInclude Include="..\Network\Network_Enum.h" />
+    <ClInclude Include="..\Network\Network_Include.h" />
+    <ClInclude Include="..\Network\Network_Struct.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\CameraFree.h" />
     <ClInclude Include="..\public\ChaseCamera.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Effect.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
+    <ClInclude Include="..\Public\Glass.h" />
     <ClInclude Include="..\Public\Ground.h" />
     <ClInclude Include="..\Public\LevelGamePlay.h" />
     <ClInclude Include="..\Public\LevelLoading.h" />
@@ -200,11 +206,13 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Network\Common.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\Private\CameraFree.cpp" />
     <ClCompile Include="..\private\ChaseCamera.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
+    <ClCompile Include="..\Private\Glass.cpp" />
     <ClCompile Include="..\Private\Ground.cpp" />
     <ClCompile Include="..\Private\LevelGamePlay.cpp" />
     <ClCompile Include="..\Private\LevelLoading.cpp" />

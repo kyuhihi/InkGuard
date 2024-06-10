@@ -32,6 +32,7 @@ public:
 
 private:
 	void AuroraColorChangeTick(_float fTimeDelta);
+	void BillboardTick(_float fTimeDelta, const _float3 vCurStarPos);
 	void CheckAuroraFinish();
 	_uint CheckArraySize(_uint iSequence);
 

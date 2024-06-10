@@ -107,6 +107,10 @@ HRESULT CLevelGamePlay::Loading(_int eLevelID)
 	if (FAILED(pGameInstance->AddPrototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_SkyEffect"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/SkyEffect/SkyEffect_%d.png"), 3))))
 		return E_FAIL;
+
+	if (FAILED(pGameInstance->AddPrototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_InnerEmptyCircle"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/rc_ringglow0.dds"), 1))))
+		return E_FAIL;
 	
 	lstrcpy(m_szLoadingText, TEXT("모델을 로딩중입니다. "));
 	/* 모델를 로드한다. */

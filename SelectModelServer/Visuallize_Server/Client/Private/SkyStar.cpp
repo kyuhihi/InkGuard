@@ -21,6 +21,7 @@ HRESULT CSkyStar::Initialize(void * pArg)
 {
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
+
 	_float3 fInitPos = *(_float3*)pArg;
 	_vector vFixPos = XMVector3Normalize(XMLoadFloat3(&fInitPos))*70.f;
 
@@ -35,7 +36,6 @@ HRESULT CSkyStar::Initialize(void * pArg)
 	random_device rd;
 	default_random_engine dre{ rd() };
 	uniform_int_distribution<_int> uid(AURORA_YELLOW, AURORA_ORANGE);
-
 
 	m_iCurAuroraSequence = (_uint)uid(dre);
 
@@ -76,6 +76,9 @@ void CSkyStar::LateTick(_float fTimeDelta)
 	if (nullptr == m_pRendererCom)
 		return;
 	
+
+
+
 	_vector vCamPos = XMLoadFloat4(&CGameInstance::GetInstance()->GetCamPosition());
 	_vector vStarPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
 	_vector vBillBoardLook = XMVector3Normalize(vStarPos- vCamPos);

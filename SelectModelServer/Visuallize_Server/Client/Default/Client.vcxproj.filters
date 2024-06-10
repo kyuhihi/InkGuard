@@ -82,6 +82,18 @@
     <Filter Include="02.GameObjects\Sky\ModelSky">
       <UniqueIdentifier>{f61d19b1-279d-47ca-b513-892b78945afb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Player\Glass">
+      <UniqueIdentifier>{0e7d486f-8943-430b-a966-17e907b7b1a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MainApp\NetworkMainApp">
+      <UniqueIdentifier>{c6e4ca8f-11f4-42bc-a439-d0eb5ee68d36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Defines\Network Include">
+      <UniqueIdentifier>{1a6cb616-7cbc-4edc-8cbc-6606e9ec9d95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Defines\Network Include\Common">
+      <UniqueIdentifier>{79dbe0b0-2ecb-4748-a03f-04f7ae246893}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -171,6 +183,24 @@
     <ClInclude Include="..\Public\ModelSky.h">
       <Filter>02.GameObjects\Sky\ModelSky</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Glass.h">
+      <Filter>02.GameObjects\Player\Glass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Network\Network_Define.h">
+      <Filter>99.Defines\Network Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Network\Network_Enum.h">
+      <Filter>99.Defines\Network Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Network\Network_Include.h">
+      <Filter>99.Defines\Network Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Network\Network_Struct.h">
+      <Filter>99.Defines\Network Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Network\Common.h">
+      <Filter>99.Defines\Network Include\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -244,6 +274,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\ModelSky.cpp">
       <Filter>02.GameObjects\Sky\ModelSky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Glass.cpp">
+      <Filter>02.GameObjects\Player\Glass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Network\Common.cpp">
+      <Filter>99.Defines\Network Include\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
