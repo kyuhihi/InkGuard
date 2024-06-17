@@ -6,6 +6,7 @@
 #include "Client.h"
 #include "MainApp.h"
 #include "GameInstance.h"
+#include "GameServer_Select.h"
 
 #define MAX_LOADSTRING 100
 
@@ -15,6 +16,7 @@ HWND g_hWnd;
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 bool g_bDebug;
+int g_iFPS;
 
 // 이 코드 모듈에 들어 있는 함수의 정방향 선언입니다.
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -35,6 +37,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
 	CMainApp* pMainApp = nullptr;
+	CGameServer_Select* pServer = nullptr;
 
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_CLIENT, szWindowClass, MAX_LOADSTRING);
@@ -50,10 +53,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
 	g_bDebug = false;
+    g_iFPS = 60;
 
 	pMainApp = CMainApp::Create();
+    pServer = new CGameServer_Select;
+
 	if (nullptr == pMainApp)
 		return FALSE;
+
+    std::thread serverThread(&CGameServer_Select::ServerLoop,pServer);
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -64,7 +72,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	_float fTimeAcc = 0.f;
 
-	_bool bDone = false;
+	bool bDone = false;
 	while (!bDone)
 	{
 		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -86,12 +94,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		fTimeAcc += pGameInstance->GetTimeDelta(TEXT("Timer_Default"));
 
-		if (fTimeAcc >= /*1.0f / 60.0f*/0.0f)
+		if (fTimeAcc >= 1.0f / g_iFPS/*0.0f*/)
 		{
 			pGameInstance->UpdateTimer(TEXT("Timer_60"));
 			pMainApp->Tick(pGameInstance->GetTimeDelta(TEXT("Timer_60")));
 			pMainApp->Render();
-
+            
 			fTimeAcc = 0.f;
 		}
 	}
@@ -99,6 +107,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	RELEASE_INSTANCE(CGameInstance);
 
 	SafeRelease(pMainApp);
+
+    pServer->SetbDone();
+
+    serverThread.join();
+    delete pServer;
+    pServer = nullptr;
     
     return (int) msg.wParam;
 }

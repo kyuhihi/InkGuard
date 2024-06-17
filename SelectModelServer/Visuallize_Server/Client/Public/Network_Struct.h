@@ -1,5 +1,6 @@
 #pragma once
 #include "Common.h"
+#include "GameInstance.h"
 #include "Network_Define.h"
 #include "Network_Enum.h"
 

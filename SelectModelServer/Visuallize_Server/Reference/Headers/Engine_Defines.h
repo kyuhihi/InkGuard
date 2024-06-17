@@ -51,7 +51,6 @@ using namespace rapidjson;
 #include <map>
 #include <algorithm>
 #include <typeinfo>
-#include <functional>
 #include <process.h>
 #include <iostream>
 #include <random>

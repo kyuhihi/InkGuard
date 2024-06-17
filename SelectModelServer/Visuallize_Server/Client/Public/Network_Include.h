@@ -20,6 +20,10 @@ using namespace std;
 #include <map>
 #include <string>
 
+#include <thread>
+#include <mutex>
+
+
 #include "Network_Enum.h"
 #include "Network_Define.h"
 #include "Network_Struct.h"

@@ -24,7 +24,7 @@ HRESULT CPlayer::InitializePrototype()
 {
 	return S_OK;
 }
-
+ 
 HRESULT CPlayer::Initialize(void * pArg)
 {
 	if (FAILED(Ready_Components()))
@@ -150,6 +150,7 @@ void CPlayer::RenderIMGUI()
 	ImGui::Text(to_string(vPositon.x).data()); ImGui::SameLine();
 	ImGui::Text(to_string(vPositon.y).data()); ImGui::SameLine();
 	ImGui::Text(to_string(vPositon.z).data());
+	
 
 	//const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon" };
 	//static int item_current = 1;

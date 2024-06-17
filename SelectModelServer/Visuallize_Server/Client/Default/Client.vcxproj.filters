@@ -85,14 +85,44 @@
     <Filter Include="02.GameObjects\Player\Glass">
       <UniqueIdentifier>{0e7d486f-8943-430b-a966-17e907b7b1a8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00.MainApp\NetworkMainApp">
-      <UniqueIdentifier>{c6e4ca8f-11f4-42bc-a439-d0eb5ee68d36}</UniqueIdentifier>
+    <Filter Include="03. Network">
+      <UniqueIdentifier>{56fefe7d-8401-435d-aa53-ad5bd6ab9320}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Defines\Network Include">
+    <Filter Include="03. Network\Include">
       <UniqueIdentifier>{1a6cb616-7cbc-4edc-8cbc-6606e9ec9d95}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99.Defines\Network Include\Common">
+    <Filter Include="03. Network\Include\Common">
       <UniqueIdentifier>{79dbe0b0-2ecb-4748-a03f-04f7ae246893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\GameObject">
+      <UniqueIdentifier>{28b70f33-51a2-49e9-ae11-65dfdf743132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\GameObject\Network_Player">
+      <UniqueIdentifier>{3c33f30c-3fd0-44ea-b248-d7641cd3b9f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\Network Client">
+      <UniqueIdentifier>{8d9a0667-232d-4175-8402-030265a3dfca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\MatchMakingMgr">
+      <UniqueIdentifier>{23fac3b8-12cb-4a61-82d3-46675fb3ec5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\Utils">
+      <UniqueIdentifier>{cae763a9-6348-4c8e-94b0-c0d489d7a51b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\Utils\MemoryPooler">
+      <UniqueIdentifier>{c28b9aba-e09c-4713-842a-36c2e337ded7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\Utils\Packet">
+      <UniqueIdentifier>{c94da28c-70c2-4383-a2d7-ae38531b5564}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\GameObject\Soldier">
+      <UniqueIdentifier>{613bdc4a-ea00-4eea-adfd-6ea54c4c5428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\GameObject\SpearMan">
+      <UniqueIdentifier>{69a0fa73-83b0-4da0-b1c0-71445a64c59b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\GameObject\Daka">
+      <UniqueIdentifier>{1fe940b1-35bc-4464-864e-9e89a7e7f443}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -186,20 +216,44 @@
     <ClInclude Include="..\Public\Glass.h">
       <Filter>02.GameObjects\Player\Glass</Filter>
     </ClInclude>
-    <ClInclude Include="..\Network\Network_Define.h">
-      <Filter>99.Defines\Network Include</Filter>
+    <ClInclude Include="..\Public\Common.h">
+      <Filter>03. Network\Include\Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Network\Network_Enum.h">
-      <Filter>99.Defines\Network Include</Filter>
+    <ClInclude Include="..\Public\Daka.h">
+      <Filter>03. Network\GameObject\Daka</Filter>
     </ClInclude>
-    <ClInclude Include="..\Network\Network_Include.h">
-      <Filter>99.Defines\Network Include</Filter>
+    <ClInclude Include="..\Public\GameServer_Select.h">
+      <Filter>03. Network</Filter>
     </ClInclude>
-    <ClInclude Include="..\Network\Network_Struct.h">
-      <Filter>99.Defines\Network Include</Filter>
+    <ClInclude Include="..\Public\MatchMakingMgr.h">
+      <Filter>03. Network\MatchMakingMgr</Filter>
     </ClInclude>
-    <ClInclude Include="..\Network\Common.h">
-      <Filter>99.Defines\Network Include\Common</Filter>
+    <ClInclude Include="..\Public\MemoryPooler.h">
+      <Filter>03. Network\Utils\MemoryPooler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Network_Include.h">
+      <Filter>03. Network\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Network_Struct.h">
+      <Filter>03. Network\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Network_Client.h">
+      <Filter>03. Network\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Network_Define.h">
+      <Filter>03. Network\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Network_Enum.h">
+      <Filter>03. Network\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Packet.h">
+      <Filter>03. Network\Utils\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Soldier.h">
+      <Filter>03. Network\GameObject\Soldier</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SoldierMgr.h">
+      <Filter>03. Network\GameObject\Soldier</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -278,8 +332,41 @@
     <ClCompile Include="..\Private\Glass.cpp">
       <Filter>02.GameObjects\Player\Glass</Filter>
     </ClCompile>
-    <ClCompile Include="..\Network\Common.cpp">
-      <Filter>99.Defines\Network Include\Common</Filter>
+    <ClCompile Include="..\Private\GameServer_Select.cpp">
+      <Filter>03. Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MatchMakingMgr.cpp">
+      <Filter>03. Network\MatchMakingMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MemoryPooler.cpp">
+      <Filter>03. Network\Utils\MemoryPooler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Network_Client.cpp">
+      <Filter>03. Network\Network Client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Network_GameObject.cpp">
+      <Filter>03. Network\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Network_Player.cpp">
+      <Filter>03. Network\GameObject\Network_Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Packet.cpp">
+      <Filter>03. Network\Utils\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Soldier.cpp">
+      <Filter>03. Network\GameObject\Soldier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SoldierMgr.cpp">
+      <Filter>03. Network\GameObject\Soldier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpearMan.cpp">
+      <Filter>03. Network\GameObject\SpearMan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Daka.cpp">
+      <Filter>03. Network\GameObject\Daka</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Common.cpp">
+      <Filter>03. Network\Include\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

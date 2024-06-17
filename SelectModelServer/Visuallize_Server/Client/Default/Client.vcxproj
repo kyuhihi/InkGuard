@@ -171,17 +171,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Bin\ShaderFiles\Client_Shader_Defines.hpp" />
-    <ClInclude Include="..\Network\Common.h" />
-    <ClInclude Include="..\Network\Network_Define.h" />
-    <ClInclude Include="..\Network\Network_Enum.h" />
-    <ClInclude Include="..\Network\Network_Include.h" />
-    <ClInclude Include="..\Network\Network_Struct.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\CameraFree.h" />
     <ClInclude Include="..\public\ChaseCamera.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
+    <ClInclude Include="..\Public\Common.h" />
+    <ClInclude Include="..\Public\Daka.h" />
     <ClInclude Include="..\Public\Effect.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
+    <ClInclude Include="..\Public\GameServer_Select.h" />
     <ClInclude Include="..\Public\Glass.h" />
     <ClInclude Include="..\Public\Ground.h" />
     <ClInclude Include="..\Public\LevelGamePlay.h" />
@@ -189,7 +187,15 @@
     <ClInclude Include="..\Public\LevelLogo.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
+    <ClInclude Include="..\Public\MatchMakingMgr.h" />
+    <ClInclude Include="..\Public\MemoryPooler.h" />
     <ClInclude Include="..\Public\ModelSky.h" />
+    <ClInclude Include="..\Public\Network_Client.h" />
+    <ClInclude Include="..\Public\Network_Define.h" />
+    <ClInclude Include="..\Public\Network_Enum.h" />
+    <ClInclude Include="..\Public\Network_Include.h" />
+    <ClInclude Include="..\Public\Network_Struct.h" />
+    <ClInclude Include="..\Public\Packet.h" />
     <ClInclude Include="..\Public\ParticlePoint.h" />
     <ClInclude Include="..\Public\ParticleRect.h" />
     <ClInclude Include="..\Public\Player.h" />
@@ -197,6 +203,8 @@
     <ClInclude Include="..\Public\ShaderCam.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\SkyStar.h" />
+    <ClInclude Include="..\Public\Soldier.h" />
+    <ClInclude Include="..\Public\SoldierMgr.h" />
     <ClInclude Include="..\Public\Territory.h" />
     <ClInclude Include="..\Public\TestEffect.h" />
     <ClInclude Include="..\Public\UI.h" />
@@ -206,12 +214,14 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Network\Common.cpp" />
     <ClCompile Include="..\Private\BackGround.cpp" />
     <ClCompile Include="..\Private\CameraFree.cpp" />
     <ClCompile Include="..\private\ChaseCamera.cpp" />
+    <ClCompile Include="..\Private\Common.cpp" />
+    <ClCompile Include="..\Private\Daka.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
+    <ClCompile Include="..\Private\GameServer_Select.cpp" />
     <ClCompile Include="..\Private\Glass.cpp" />
     <ClCompile Include="..\Private\Ground.cpp" />
     <ClCompile Include="..\Private\LevelGamePlay.cpp" />
@@ -219,7 +229,13 @@
     <ClCompile Include="..\Private\LevelLogo.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
+    <ClCompile Include="..\Private\MatchMakingMgr.cpp" />
+    <ClCompile Include="..\Private\MemoryPooler.cpp" />
     <ClCompile Include="..\Private\ModelSky.cpp" />
+    <ClCompile Include="..\Private\Network_Client.cpp" />
+    <ClCompile Include="..\Private\Network_GameObject.cpp" />
+    <ClCompile Include="..\Private\Network_Player.cpp" />
+    <ClCompile Include="..\Private\Packet.cpp" />
     <ClCompile Include="..\Private\ParticlePoint.cpp" />
     <ClCompile Include="..\Private\ParticleRect.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
@@ -227,6 +243,9 @@
     <ClCompile Include="..\Private\ShaderCam.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\SkyStar.cpp" />
+    <ClCompile Include="..\Private\Soldier.cpp" />
+    <ClCompile Include="..\Private\SoldierMgr.cpp" />
+    <ClCompile Include="..\Private\SpearMan.cpp" />
     <ClCompile Include="..\Private\Territory.cpp" />
     <ClCompile Include="..\Private\TestEffect.cpp" />
     <ClCompile Include="..\Private\UI.cpp" />
