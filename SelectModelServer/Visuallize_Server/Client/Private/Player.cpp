@@ -42,7 +42,7 @@ HRESULT CPlayer::Initialize(void * pArg)
 void CPlayer::Tick(_float fTimeDelta)
 {
 	m_pIntervalComponent->Update(fTimeDelta);
-
+	
 	RenderIMGUI();
 }
 
@@ -94,7 +94,7 @@ HRESULT CPlayer::Render(_uint eRenderGroup)
 		if (FAILED(m_pModelCom->SetUpOnShader(m_pShaderCom, m_pModelCom->GetMaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->SetUpOnShader(m_pShaderCom, m_pModelCom->GetMaterialIndex(i), aiTextureType_NORMALS, "g_DiffuseTexture"))) {
+		if (FAILED(m_pModelCom->SetUpOnShader(m_pShaderCom, m_pModelCom->GetMaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture"))) {
 			ID3D11ShaderResourceView* pNullTexture = nullptr;
 			m_pShaderCom->SetRawValue("g_NormalTexture", &pNullTexture, sizeof(ID3D11ShaderResourceView*));
 		}
@@ -151,9 +151,9 @@ void CPlayer::RenderIMGUI()
 	ImGui::Text(to_string(vPositon.y).data()); ImGui::SameLine();
 	ImGui::Text(to_string(vPositon.z).data());
 
-	const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon" };
-	static int item_current = 1;
-	ImGui::ListBox("listbox", &item_current, items, IM_ARRAYSIZE(items), 5);
+	//const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon" };
+	//static int item_current = 1;
+	//ImGui::ListBox("listbox", &item_current, items, IM_ARRAYSIZE(items), 5);
 
 	ImGui::End();
 }

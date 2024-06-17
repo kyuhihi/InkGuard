@@ -36,13 +36,20 @@ private:
 	CTransform*				m_pTransformCom = nullptr;
 	CVIBufferRect*			m_pVIBufferCom = nullptr;
 
+	CTransform*				m_pTargetTransform = nullptr;
 private:
 	HRESULT Ready_Components();
+	void RenderIMGUI();
+
+	const _float m_fScale;
+	const _float m_fOffsetY;
 
 public:
 	static CGlass* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
+
+
 };
 
 END

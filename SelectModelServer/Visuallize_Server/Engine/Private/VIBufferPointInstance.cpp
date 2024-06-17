@@ -94,7 +94,7 @@ HRESULT CVIBufferPointInstance::InitializePrototype(_uint iNumInstance)
 		pInstanceVtx[i].vRight = _float4(1.0f, 0.f, 0.f, 0.f);
 		pInstanceVtx[i].vUp = _float4(0.f, 1.0f, 0.f, 0.f);
 		pInstanceVtx[i].vLook = _float4(0.f, 0.f, 1.0f, 0.f);
-		pInstanceVtx[i].vPosition = _float4(static_cast<_float>(rand() % 5 - 2), 0.f, static_cast<_float>(rand() % 5 - 2), 1.f);
+		pInstanceVtx[i].vPosition = _float4(static_cast<_float>(rand() % 3 - 1.5f), 0.f, static_cast<_float>(rand() % 3 - 1.5f), 1.f);
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));

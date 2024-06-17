@@ -10,8 +10,6 @@
 	strcpy_s(szMessage, typeid(CLASSNAME).name());								\
 	strcat_s(szMessage, "is nullptr");											\
 	MessageBoxA(0, szMessage, nullptr, MB_OK);}									\
-	else {																		\
-	pInstance->AddRef();}														\
 	return pInstance;															\
 	}();
 
@@ -22,9 +20,7 @@
 	strcpy_s(szMessage, typeid(CLASSNAME).name());								\
 	strcat_s(szMessage, "is nullptr");											\
 	MessageBoxA(0, szMessage, nullptr, MB_OK);}									\
-	else {																		\
-	pInstance->Release();}														\
-	}();
+	}();																		\
 
 
 
@@ -39,7 +35,7 @@
 #endif
 
 #define MSG_BOX(message)								\
-::MessageBox(nullptr, message, L"System Message", MB_OK)
+::MessageBox(nullptr, message, L"System Message", MB_OK) 
 
 #define NO_COPY(ClassName)								\
 ClassName(const ClassName&) = delete;					\

@@ -4,11 +4,15 @@
 
 CGlass::CGlass(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
+	, m_fScale(1.8f)
+	, m_fOffsetY(1.f)
 {
 }
 
 CGlass::CGlass(const CGlass& rhs)
 	: CGameObject(rhs)
+	, m_fScale(rhs.m_fScale)
+	, m_fOffsetY(rhs.m_fOffsetY)
 {
 }
 
@@ -21,23 +25,25 @@ HRESULT CGlass::Initialize(void * pArg)
 {
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
-	_float3 fInitPos = *(_float3*)pArg;
-	
+
+	m_pTransformCom->SetScale(XMVectorSet(m_fScale, m_fScale, m_fScale, 1.f));
 
 	return S_OK;
 }
 
 void CGlass::Tick(_float fTimeDelta)
 {
-	/*if (CGameInstance::GetInstance()->isInFrustumWorldSpace(m_pTransformCom->GetState(CTransform::STATE_POSITION)))
-		m_bCulling = false;
-	else {
-		m_bCulling = true;
-		return;
-	}*/
-		
-	
-	
+
+	if (m_pTargetTransform == nullptr)
+	{
+		m_pTargetTransform = (CTransform*)CGameInstance::GetInstance()->GetComponentPtr(m_iCurrentLevel, TEXT("Layer_Player"), TEXT("Com_Transform"), 0);
+	}
+	//m_pTransformCom->EditTransform(true);
+	_vector vPlayerPos = m_pTargetTransform->GetState(CTransform::STATE_POSITION);
+	vPlayerPos.m128_f32[1] += m_fOffsetY;
+	m_pTransformCom->SetState(CTransform::STATE_POSITION, vPlayerPos);
+	//RenderIMGUI();
+
 
 }
 
@@ -46,7 +52,7 @@ void CGlass::LateTick(_float fTimeDelta)
 
 	if (nullptr == m_pRendererCom)
 		return;
-	
+
 	_vector vCamPos = XMLoadFloat4(&CGameInstance::GetInstance()->GetCamPosition());
 	_vector vMyPos= m_pTransformCom->GetState(CTransform::STATE_POSITION);
 	_vector vBillBoardLook = XMVector3Normalize(vMyPos - vCamPos);
@@ -73,6 +79,11 @@ HRESULT CGlass::Render(_uint eRenderGroup)
 	RELEASE_INSTANCE(CGameInstance);
 
 	if (FAILED(m_pTextureCom->SetSRV(m_pShaderCom, "g_DiffuseTexture", 0)))
+		return E_FAIL;
+
+	_float4 vMultipleColor = _float4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(m_pShaderCom->SetRawValue("g_fMultipleColor", &vMultipleColor, sizeof(_float4))))
 		return E_FAIL;
 
 	if (FAILED(m_pShaderCom->Begin(0, 2)))
@@ -111,6 +122,19 @@ HRESULT CGlass::Ready_Components()
 	return S_OK;
 }
 
+void CGlass::RenderIMGUI()
+{
+	ImGui::Begin("Glass");
+	_float3 vPositon;
+	XMStoreFloat3(&vPositon, m_pTransformCom->GetState(CTransform::STATE_POSITION));
+	ImGui::Text("[Position]");
+	ImGui::Text(to_string(vPositon.x).data()); ImGui::SameLine();
+	ImGui::Text(to_string(vPositon.y).data()); ImGui::SameLine();
+	ImGui::Text(to_string(vPositon.z).data());
+
+	ImGui::End();
+}
+
 CGlass* CGlass::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CGlass*		pInstance = new CGlass(pDevice, pContext);
@@ -146,4 +170,6 @@ void CGlass::Free()
 	SafeRelease(m_pShaderCom);
 	SafeRelease(m_pRendererCom);
 	SafeRelease(m_pTransformCom);
+
+	m_pTargetTransform = nullptr;
 }

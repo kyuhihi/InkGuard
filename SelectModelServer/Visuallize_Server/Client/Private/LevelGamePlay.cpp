@@ -13,6 +13,7 @@
 #include "Territory.h"
 #include "SkyStar.h"
 #include "ModelSky.h"
+#include "Glass.h"
 
 #include "GameInstance.h"
 #include "CameraFree.h"
@@ -85,6 +86,10 @@ HRESULT CLevelGamePlay::Loading(_int eLevelID)
 		CModelSky::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(pGameInstance->AddPrototype(TEXT("Prototype_GameObject_Glass"),
+		CGlass::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐를 로딩중입니다. "));
 	/* 텍스쳐를 로드한다. */
 	
@@ -331,6 +336,8 @@ HRESULT CLevelGamePlay::Ready_Layer_Player(const _tchar * pLayerTag)
 	m_pPlayer = (CPlayer*)pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Player"), LEVEL_GAMEPLAY, pLayerTag);
 	if (!m_pPlayer)
 		return E_FAIL;
+	pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Glass"), LEVEL_GAMEPLAY, pLayerTag);
+
 
 
 	SafeRelease(pGameInstance);
@@ -344,9 +351,6 @@ HRESULT CLevelGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	SafeAddRef(pGameInstance);
 
 
-	//if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Sky"), LEVEL_GAMEPLAY, pLayerTag))
-	//	return E_FAIL;
-
 	CModelSky* pModelSky = (CModelSky*)pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_ModelSky"), LEVEL_GAMEPLAY, pLayerTag);
 	pModelSky->SetNight();
 
@@ -356,8 +360,6 @@ HRESULT CLevelGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Ground"), LEVEL_GAMEPLAY, pLayerTag))
 		return E_FAIL;
 
-	//if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_ForkLift"), LEVEL_GAMEPLAY, pLayerTag))
-	//	return E_FAIL;
 	
 	CTerritory::DebugTerritoryStruct tNewInfo;
 	tNewInfo.eNewShape = CTerritory::SHAPE_CIRCLE;
@@ -387,8 +389,8 @@ HRESULT CLevelGamePlay::Ready_Layer_Effect(const _tchar * pLayerTag)
 	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
 	SafeAddRef(pGameInstance);
 	
-	if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Particle_Rect"), LEVEL_GAMEPLAY, pLayerTag))
-		return E_FAIL;
+	//if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Particle_Rect"), LEVEL_GAMEPLAY, pLayerTag))
+	//	return E_FAIL;
 
 	if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Particle_Point"), LEVEL_GAMEPLAY, pLayerTag))
 		return E_FAIL;

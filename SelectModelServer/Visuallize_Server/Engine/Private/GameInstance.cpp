@@ -513,7 +513,7 @@ void CGameInstance::Free()
 	SafeRelease(m_pFrustum);
 	SafeRelease(m_pPicking);
 	SafeRelease(m_pLightManager);
-	SafeRelease(m_pPipeLine);
+	//SafeRelease(m_pPipeLine);
 	SafeRelease(m_pTimerManager);
 	SafeRelease(m_pComponentManager);
 	SafeRelease(m_pObjectManager);
@@ -527,5 +527,8 @@ void CGameInstance::Free()
 
 
 	SafeRelease(m_pGraphicDevice); 
-	
+	//CPipeLine::DestroyInstance();
+	//m_pPipeLine = nullptr;
+	SafeRelease(m_pPipeLine);
+
 }

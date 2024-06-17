@@ -35,7 +35,7 @@ HRESULT CGround::Initialize(void * pArg)
 
 void CGround::Tick(_float fTimeDelta)
 {
-	m_pTransformCom->EditTransform(true);
+	//m_pTransformCom->EditTransform(true);
 }
 
 void CGround::LateTick(_float fTimeDelta)

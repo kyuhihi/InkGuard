@@ -24,8 +24,6 @@ HRESULT CParticlePoint::Initialize(void * pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-
-
 	return S_OK;
 }
 
@@ -35,22 +33,26 @@ void CParticlePoint::Tick(_float fTimeDelta)
 
 	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
 
-	CTransform*		pTargetTransform = (CTransform*	)pGameInstance->GetComponentPtr(m_iCurrentLevel, TEXT("Layer_Player"), TEXT("Com_Transform"), 0);
+	if (m_pTargetTransform == nullptr) {
+		m_pTargetTransform = (CTransform*)pGameInstance->GetComponentPtr(m_iCurrentLevel, TEXT("Layer_Player"), TEXT("Com_Transform"), 0);
+	}
 
-	m_pTransformCom->SetState(CTransform::STATE_POSITION, pTargetTransform->GetState(CTransform::STATE_POSITION));
+	_vector vTargetPos = m_pTargetTransform->GetState(CTransform::STATE_POSITION);
+	_vector vTargetLook = XMVector4Normalize(m_pTargetTransform->GetState(CTransform::STATE_LOOK));
+	vTargetPos -= vTargetLook * 1.1f; //플레이어 뒤로.
+	m_pTransformCom->SetState(CTransform::STATE_POSITION, vTargetPos);
 	
 
 	RELEASE_INSTANCE(CGameInstance);
 
-	// m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), fTimeDelta);
 }
 
 void CParticlePoint::LateTick(_float fTimeDelta)
 {
 	if (nullptr == m_pRendererCom)
 		return;
-
-	m_pRendererCom->AddRenderGroup(CRenderer::RENDER_NONLIGHT, this);
+	if (CGameInstance::GetInstance()->GetDIKState(DIK_LSHIFT) & 0x80)
+		m_pRendererCom->AddRenderGroup(CRenderer::RENDER_ALPHABLEND, this);
 }
 
 HRESULT CParticlePoint::Render(_uint eRenderGroup)
@@ -159,4 +161,6 @@ void CParticlePoint::Free()
 	SafeRelease(m_pShaderCom);
 	SafeRelease(m_pRendererCom);
 	SafeRelease(m_pTransformCom);
+
+	m_pTargetTransform = nullptr;
 }

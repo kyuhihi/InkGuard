@@ -24,8 +24,9 @@ HRESULT CSkyStar::Initialize(void * pArg)
 
 	_float3 fInitPos = *(_float3*)pArg;
 	_vector vFixPos = XMVector3Normalize(XMLoadFloat3(&fInitPos))*70.f;
-
+	XMStoreFloat3(&m_vStarPosition, vFixPos);
 	m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSetW(vFixPos, 1.f));
+
 	m_pTransformCom->SetScale(XMVectorSet(5.f,5.f, 5.f, 1.f));
 
 	m_vAuroraSequence[AURORA_YELLOW] = XMVectorSet(141.f, 255.f, 0.f, 256.f);
@@ -75,11 +76,11 @@ void CSkyStar::LateTick(_float fTimeDelta)
 		return;
 	if (nullptr == m_pRendererCom)
 		return;
-	
-
-
 
 	_vector vCamPos = XMLoadFloat4(&CGameInstance::GetInstance()->GetCamPosition());
+	_vector vFixStarPos = XMLoadFloat3(&m_vStarPosition) + vCamPos;
+	m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSetW(vFixStarPos, 1.f));
+	
 	_vector vStarPos = m_pTransformCom->GetState(CTransform::STATE_POSITION);
 	_vector vBillBoardLook = XMVector3Normalize(vStarPos- vCamPos);
 	m_pTransformCom->LookAt(XMVectorSetW(m_pTransformCom->GetState(CTransform::STATE_POSITION) + vBillBoardLook,1.f));
@@ -216,4 +217,5 @@ void CSkyStar::Free()
 	SafeRelease(m_pShaderCom);
 	SafeRelease(m_pRendererCom);
 	SafeRelease(m_pTransformCom);
+	
 }

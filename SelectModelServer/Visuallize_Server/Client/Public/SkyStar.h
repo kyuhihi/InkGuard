@@ -32,7 +32,6 @@ public:
 
 private:
 	void AuroraColorChangeTick(_float fTimeDelta);
-	void BillboardTick(_float fTimeDelta, const _float3 vCurStarPos);
 	void CheckAuroraFinish();
 	_uint CheckArraySize(_uint iSequence);
 
@@ -52,6 +51,8 @@ private:
 	_float m_fDisappearMaxTime{ 1.f };
 	_float m_fAlphaTime{ 1.f };
 	_bool m_bCulling{ false };
+
+	_float3 m_vStarPosition = _float3();
 
 public:
 	static CSkyStar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
