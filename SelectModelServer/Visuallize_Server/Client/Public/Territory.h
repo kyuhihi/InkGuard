@@ -19,11 +19,6 @@ public:
 	enum SHAPE { SHAPE_CIRCLE, SHAPE_RECT, SHAPE_END };
 	enum ROTATE { ROTATE_LT, ROTATE_LB, ROTATE_RT, ROTATE_RB, ROTATE_END };
 
-	struct DebugTerritoryStruct
-	{
-		SHAPE eNewShape = SHAPE_END;
-		_float3 vPosition;
-	};
 
 private:
 	CTerritory(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -49,8 +44,6 @@ private:
 	CModel*					m_pCurrentModel = nullptr;
 	CModel*					m_pModelCom_Rect = nullptr;
 	CModel*					m_pModelCom_Circle = nullptr;
-
-	DebugTerritoryStruct m_tInfo;
 
 	const _float m_Territory_Radius_Circle = 11.52f;
 	const _float m_Territory_Radius_Rect = 7.68f;

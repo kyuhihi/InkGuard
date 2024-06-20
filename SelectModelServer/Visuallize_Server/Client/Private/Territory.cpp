@@ -20,7 +20,6 @@ HRESULT CTerritory::InitializePrototype()
 
 HRESULT CTerritory::Initialize(void * pArg)
 {
-	m_tInfo = *(DebugTerritoryStruct*)(pArg);
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
@@ -40,10 +39,7 @@ void CTerritory::LateTick(_float fTimeDelta)
 
 	RenderIMGUI();
 
-	if (m_iCurrentSelected == 1)
-		m_pCurrentModel = m_pModelCom_Rect;
-	else
-		m_pCurrentModel = m_pModelCom_Circle;
+	Modify_Transform();
 	
 
 	m_pRendererCom->AddRenderGroup(CRenderer::RENDER_SHADOW_DEPTH, this);
@@ -93,27 +89,33 @@ HRESULT CTerritory::RenderLightDepth(CLight* pLight) {
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	for (_uint i = 0; i < iNumMeshes; ++i) {
-		if (FAILED(m_pShaderCom->SetRawValue("g_WorldMatrix",
-			&m_pTransformCom->GetWorldFloat4x4TP(), sizeof(_float4x4))))
-			return E_FAIL;
+	_float4x4 lightViewMatrix = pLight->GetViewMatrixTP();
+	if (FAILED(m_pShaderCom->SetRawValue("g_ViewMatrix",
+		&lightViewMatrix, sizeof(_float4x4))))
+		return E_FAIL;
 
-		_float4x4 lightViewMatrix = pLight->GetViewMatrixTP();
-		if (FAILED(m_pShaderCom->SetRawValue("g_ViewMatrix",
-			&lightViewMatrix, sizeof(_float4x4))))
-			return E_FAIL;
+	_float4x4 lightProjMatrix = pLight->GetProjectionMatrixTP();
+	if (FAILED(m_pShaderCom->SetRawValue("g_ProjMatrix",
+		&lightProjMatrix, sizeof(_float4x4))))
+		return E_FAIL;
 
-		_float4x4 lightProjMatrix = pLight->GetProjectionMatrixTP();
-		if (FAILED(m_pShaderCom->SetRawValue("g_ProjMatrix",
-			&lightProjMatrix, sizeof(_float4x4))))
-			return E_FAIL;
+	_float fProjFar = pGameInstance->GetProjectionFar();
+	if (FAILED(m_pShaderCom->SetRawValue("g_fProjFar", &fProjFar, sizeof(_float))))
+		return E_FAIL;
 
-		_float fProjFar = pGameInstance->GetProjectionFar();
-		if (FAILED(m_pShaderCom->SetRawValue("g_fProjFar", &fProjFar, sizeof(_float))))
-			return E_FAIL;
+	for (int j = 0; j < 4; j++) {
 
-		if (FAILED(m_pCurrentModel->Render(m_pShaderCom, i, 1, 0)))
-			return E_FAIL;
+		for (_uint i = 0; i < iNumMeshes; ++i) {
+
+			if (FAILED(m_pShaderCom->SetRawValue("g_WorldMatrix",
+				&m_pTransformCom->GetWorldFloat4x4TP(), sizeof(_float4x4))))
+				return E_FAIL;
+
+			if (FAILED(m_pCurrentModel->Render(m_pShaderCom, i, 1, 0)))
+				return E_FAIL;
+		}		
+		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(90.f * j));
+
 	}
 
 	return S_OK;
@@ -133,18 +135,16 @@ void CTerritory::RenderIMGUI()
 
 void CTerritory::Modify_Transform()
 {
-	_float fModifyTransformScale = 0.f;
-	if (m_tInfo.eNewShape == SHAPE_CIRCLE) {
+	if (m_iCurrentSelected == 1) {
+		m_pCurrentModel = m_pModelCom_Rect;
+		m_pTransformCom->SetScale(XMVectorSet(1.f, 1.f, 1.f, 1.f));
+	}
+	else {
+		m_pCurrentModel = m_pModelCom_Circle;
 		m_pTransformCom->SetScale(XMVectorSet(1.5f, 1.5f, 1.5f, 1.5f));
-		fModifyTransformScale = -m_Territory_Radius_Circle;
-	}
-	else
-	{
-		fModifyTransformScale = -m_Territory_Radius_Rect;
-
 	}
 
-	m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSet(fModifyTransformScale,0.f, fModifyTransformScale,1.f));
+
 
 }
 

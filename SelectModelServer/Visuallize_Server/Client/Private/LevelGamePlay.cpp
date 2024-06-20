@@ -369,9 +369,7 @@ HRESULT CLevelGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 		return E_FAIL;
 
 	
-	CTerritory::DebugTerritoryStruct tNewInfo;
-	tNewInfo.eNewShape = CTerritory::SHAPE_RECT;
-	if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Territory"), LEVEL_GAMEPLAY, pLayerTag, &tNewInfo))
+	if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Territory"), LEVEL_GAMEPLAY, pLayerTag))
 		return E_FAIL;
 	
 
