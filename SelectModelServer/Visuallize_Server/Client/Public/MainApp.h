@@ -37,7 +37,7 @@ private:
 	_tchar			m_szFPS[MAX_PATH] = TEXT("");
 	_uint			m_iNumDraw = 0;
 #endif // _DEBUG
-
+	bool			m_bShowImGuiDemo = true;
 private:
 	HRESULT OpenLevel(LEVEL eLevelID);
 

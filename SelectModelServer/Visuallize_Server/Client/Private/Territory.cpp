@@ -24,6 +24,7 @@ HRESULT CTerritory::Initialize(void * pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+
 	return S_OK;
 }
 
@@ -37,47 +38,58 @@ void CTerritory::LateTick(_float fTimeDelta)
 	if (nullptr == m_pRendererCom)
 		return;
 
+	RenderIMGUI();
+
+	if (m_iCurrentSelected == 1)
+		m_pCurrentModel = m_pModelCom_Rect;
+	else
+		m_pCurrentModel = m_pModelCom_Circle;
+	
+
 	m_pRendererCom->AddRenderGroup(CRenderer::RENDER_SHADOW_DEPTH, this);
 	m_pRendererCom->AddRenderGroup(CRenderer::RENDER_NONALPHABLEND, this);
 }
 
 HRESULT CTerritory::Render(_uint eRenderGroup)
 {
-	if (nullptr == m_pModelCom ||
-		nullptr == m_pShaderCom)
-		return E_FAIL;
 
 	CGameInstance*		pGameInstance = GET_INSTANCE(CGameInstance);
-
-	if (FAILED(m_pShaderCom->SetRawValue("g_WorldMatrix", &m_pTransformCom->GetWorldFloat4x4TP(), sizeof(_float4x4))))
-		return E_FAIL;
+	
 	if (FAILED(m_pShaderCom->SetRawValue("g_ViewMatrix", &pGameInstance->GetTransformFloat4x4TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->SetRawValue("g_ProjMatrix", &pGameInstance->GetTransformFloat4x4TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
+	_uint		iNumMeshes = m_pCurrentModel->GetNumMeshes();
+
+	for (int i = 0; i < 4; i++) {
+
+		if (FAILED(m_pShaderCom->SetRawValue("g_WorldMatrix", &m_pTransformCom->GetWorldFloat4x4TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		for (_uint i = 0; i < iNumMeshes; ++i)
+		{
+			if (FAILED(m_pCurrentModel->SetUpOnShader(m_pShaderCom, m_pCurrentModel->GetMaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+				return E_FAIL;
+			if (FAILED(m_pCurrentModel->SetUpOnShader(m_pShaderCom, m_pCurrentModel->GetMaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
+				return E_FAIL;
+
+			if (FAILED(m_pCurrentModel->Render(m_pShaderCom, i)))
+				return E_FAIL;
+		}
+		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 1.f), XMConvertToRadians(90.f * i));
+	}
+
+
 	RELEASE_INSTANCE(CGameInstance);
 
 
-
-	_uint		iNumMeshes = m_pModelCom->GetNumMeshes();
-
-	for (_uint i = 0; i < iNumMeshes; ++i)
-	{	
-		if (FAILED(m_pModelCom->SetUpOnShader(m_pShaderCom, m_pModelCom->GetMaterialIndex(i), aiTextureType_DIFFUSE, "g_DiffuseTexture")))
-			return E_FAIL;
-		if (FAILED(m_pModelCom->SetUpOnShader(m_pShaderCom, m_pModelCom->GetMaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;
-
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i)))
-			return E_FAIL;
-	}	
 
 	return S_OK;
 }
 
 HRESULT CTerritory::RenderLightDepth(CLight* pLight) {
-	_uint iNumMeshes = m_pModelCom->GetNumMeshes();
+	_uint iNumMeshes = m_pCurrentModel->GetNumMeshes();
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
@@ -100,11 +112,40 @@ HRESULT CTerritory::RenderLightDepth(CLight* pLight) {
 		if (FAILED(m_pShaderCom->SetRawValue("g_fProjFar", &fProjFar, sizeof(_float))))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->Render(m_pShaderCom, i, 1, 0)))
+		if (FAILED(m_pCurrentModel->Render(m_pShaderCom, i, 1, 0)))
 			return E_FAIL;
 	}
 
 	return S_OK;
+}
+
+void CTerritory::RenderIMGUI()
+{
+	ImGui::Begin("Utils");
+	ImGui::Separator();
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Territory");
+
+	const char* items[] = { "A", "B", "C"};
+	ImGui::ListBox("Territory Site", &m_iCurrentSelected, items, IM_ARRAYSIZE(items), 3);
+
+	ImGui::End();
+}
+
+void CTerritory::Modify_Transform()
+{
+	_float fModifyTransformScale = 0.f;
+	if (m_tInfo.eNewShape == SHAPE_CIRCLE) {
+		m_pTransformCom->SetScale(XMVectorSet(1.5f, 1.5f, 1.5f, 1.5f));
+		fModifyTransformScale = -m_Territory_Radius_Circle;
+	}
+	else
+	{
+		fModifyTransformScale = -m_Territory_Radius_Rect;
+
+	}
+
+	m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSet(fModifyTransformScale,0.f, fModifyTransformScale,1.f));
+
 }
 
 
@@ -117,27 +158,18 @@ HRESULT CTerritory::Ready_Components()
 	/* For.Com_Renderer */
 	if (FAILED(__super::AddComponent(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), TEXT("Com_Renderer"), (CComponent**)&m_pRendererCom)))
 		return E_FAIL;
-		
+
 	/* For.Com_Shader */
 	if (FAILED(__super::AddComponent(m_iCurrentLevel, TEXT("Prototype_Component_Shader_Model"), TEXT("Com_Shader"), (CComponent**)&m_pShaderCom)))
 		return E_FAIL;
 
-	
-	switch (m_tInfo.eNewShape)
-	{
-	case SHAPE_CIRCLE:
-		/* For.Com_Model */
-		if (FAILED(__super::AddComponent(m_iCurrentLevel, TEXT("Prototype_Component_Model_Territory_Circle"), TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-		break;
-	case SHAPE_RECT:
-		/* For.Com_Model */
-		if (FAILED(__super::AddComponent(m_iCurrentLevel, TEXT("Prototype_Component_Model_Territory_Rect"), TEXT("Com_Model"), (CComponent**)&m_pModelCom)))
-			return E_FAIL;
-	default:
-		break;
-	}
+	/* For.Com_Model */
+	if (FAILED(__super::AddComponent(m_iCurrentLevel, TEXT("Prototype_Component_Model_Territory_Circle"), TEXT("Com_Model_Circle"), (CComponent**)&m_pModelCom_Circle)))
+		return E_FAIL;
 
+	/* For.Com_Model */
+	if (FAILED(__super::AddComponent(m_iCurrentLevel, TEXT("Prototype_Component_Model_Territory_Rect"), TEXT("Com_Model_Rect"), (CComponent**)&m_pModelCom_Rect)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -172,8 +204,10 @@ void CTerritory::Free()
 {
 	__super::Free();
 
+	SafeRelease(m_pModelCom_Rect);
+	SafeRelease(m_pModelCom_Circle);
+	m_pCurrentModel = nullptr;
 
-	SafeRelease(m_pModelCom);
 	SafeRelease(m_pShaderCom);
 	SafeRelease(m_pRendererCom);
 	SafeRelease(m_pTransformCom);

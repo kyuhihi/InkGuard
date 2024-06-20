@@ -53,6 +53,10 @@ void CMainApp::Tick(_float fTimeDelta)
 		g_bDebug = !g_bDebug;
 	}
 
+	if (m_pGameInstance->GetDIKDownState(DIK_F3)) {
+		m_bShowImGuiDemo = !m_bShowImGuiDemo;
+	}
+	
 	
 	m_pGameInstance->TickEngine(fTimeDelta);
 
@@ -60,10 +64,12 @@ void CMainApp::Tick(_float fTimeDelta)
 
 HRESULT CMainApp::RenderIMGUI()
 {
-	bool bTrue = true;
-	ImGui::ShowDemoWindow(&bTrue);
+	if(m_bShowImGuiDemo)
+		ImGui::ShowDemoWindow(&m_bShowImGuiDemo);
+
 	ImGui::Begin("MainApp");
-	ImGui::Text("[KeyInput]");
+	ImGui::Text("[KeyInput]"); 
+
 	ImGui::Text("Show Render Target"); ImGui::SameLine(); ImGui::Text("F1");
 	ImGui::Text("Change Camera Mode"); ImGui::SameLine(); ImGui::Text("F2");
 	ImGui::Text("Show ImGui Demo"); ImGui::SameLine(); ImGui::Text("F3");

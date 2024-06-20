@@ -296,7 +296,7 @@ HRESULT CLevelGamePlay::Ready_Lights()
 	ZeroMemory(&LightDesc, sizeof(LIGHTDESC));
 	LightDesc.bShadow = false;
 	LightDesc.eType = LIGHTDESC::TYPE_DIRECTIONAL;
-	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vDirection = _float4(0.f, -1.f, 0.f, 0.f);
 	LightDesc.vDiffuse = _float4(0.5, 0.5, 0.5, 1.f);
 	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
@@ -370,7 +370,7 @@ HRESULT CLevelGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 
 	
 	CTerritory::DebugTerritoryStruct tNewInfo;
-	tNewInfo.eNewShape = CTerritory::SHAPE_CIRCLE;
+	tNewInfo.eNewShape = CTerritory::SHAPE_RECT;
 	if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Territory"), LEVEL_GAMEPLAY, pLayerTag, &tNewInfo))
 		return E_FAIL;
 	

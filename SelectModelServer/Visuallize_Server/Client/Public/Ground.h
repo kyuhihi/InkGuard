@@ -27,7 +27,6 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render(_uint eRenderGroup) override;
 
-
 private:
 	CShader*		m_pShaderCom = nullptr;
 	CRenderer*		m_pRendererCom = nullptr;

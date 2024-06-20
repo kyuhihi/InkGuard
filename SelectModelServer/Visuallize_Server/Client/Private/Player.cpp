@@ -143,14 +143,18 @@ HRESULT CPlayer::RenderLightDepth(CLight* pLight) {
 
 void CPlayer::RenderIMGUI()
 {
-	ImGui::Begin("Player");
+	ImGui::Begin("Utils");
+	ImGui::Separator();
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Player");
+
 	_float3 vPositon;
 	XMStoreFloat3(&vPositon, m_pTransformCom->GetState(CTransform::STATE_POSITION));
 	ImGui::Text("[Position]");
 	ImGui::Text(to_string(vPositon.x).data()); ImGui::SameLine();
 	ImGui::Text(to_string(vPositon.y).data()); ImGui::SameLine();
 	ImGui::Text(to_string(vPositon.z).data());
-	
+	ImGui::Separator();
+
 
 	//const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon" };
 	//static int item_current = 1;
@@ -210,6 +214,12 @@ void CPlayer::KeyInput(CTransform* pCamTransform, const _float fTimeDelta)
 	if (pGameInstance->GetDIKState(DIK_E) & 0x80)
 	{
 		m_pTransformCom->GoDown(MoveValue * fTimeDelta);
+	}
+
+	if (pGameInstance->GetDIKState(DIK_R) & 0x80)
+	{
+		m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f),XMConvertToRadians(0.f));
 	}
 
 }

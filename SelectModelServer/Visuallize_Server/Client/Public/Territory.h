@@ -38,15 +38,25 @@ public:
 	virtual HRESULT Render(_uint eRenderGroup) override;
 	virtual HRESULT RenderLightDepth(CLight* pLight) override;
 
+	void RenderIMGUI();
+private:
+	void Modify_Transform();
 
 private:
 	CShader*				m_pShaderCom = nullptr;
 	CRenderer*				m_pRendererCom = nullptr;
 	CTransform*				m_pTransformCom = nullptr;
-	CModel*					m_pModelCom = nullptr;
+	CModel*					m_pCurrentModel = nullptr;
+	CModel*					m_pModelCom_Rect = nullptr;
+	CModel*					m_pModelCom_Circle = nullptr;
 
 	DebugTerritoryStruct m_tInfo;
 
+	const _float m_Territory_Radius_Circle = 11.52f;
+	const _float m_Territory_Radius_Rect = 7.68f;
+
+	int m_iCurrentSelected = 0;
+	
 private:
 	HRESULT Ready_Components();
 

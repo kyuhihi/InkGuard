@@ -70,12 +70,12 @@ void CCameraFree::Tick(_float fTimeDelta)
 
 		if (MouseMove = pGameInstance->GetDIMMoveState(DIMM_X))
 		{
-			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * fTimeDelta);
+			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * fTimeDelta*0.01f);
 		}
 
 		if (MouseMove = pGameInstance->GetDIMMoveState(DIMM_Y))
 		{
-			m_pTransformCom->Turn(m_pTransformCom->GetState(CTransform::STATE_RIGHT), MouseMove * fTimeDelta);
+			m_pTransformCom->Turn(m_pTransformCom->GetState(CTransform::STATE_RIGHT), MouseMove * fTimeDelta * 0.01f);
 		}
 	}
 	

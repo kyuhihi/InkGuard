@@ -29,6 +29,7 @@ HRESULT CGround::Initialize(void * pArg)
 	//m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSet(static_cast<_float>(rand() % 10), 0.f, static_cast<_float>(rand() % 10), 1.f));
 	m_pTransformCom->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f),XMConvertToRadians(90.f));
 	m_pTransformCom->SetScale(XMVectorSet(GROUND_SIZE, GROUND_SIZE, 1.f, 1.f));
+	//m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSet(-GROUND_SIZE * 0.5f, 0.f, -GROUND_SIZE * 0.5f, 1.f));
 
 	return S_OK;
 }
@@ -73,6 +74,7 @@ HRESULT CGround::Render(_uint eRenderGroup)
 
 	return S_OK;
 }
+
 
 
 HRESULT CGround::Ready_Components()
