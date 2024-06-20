@@ -177,6 +177,7 @@
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Common.h" />
     <ClInclude Include="..\Public\Daka.h" />
+    <ClInclude Include="..\Public\Deferred.h" />
     <ClInclude Include="..\Public\Effect.h" />
     <ClInclude Include="..\Public\ForkLift.h" />
     <ClInclude Include="..\Public\GameServer_Select.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="..\private\ChaseCamera.cpp" />
     <ClCompile Include="..\Private\Common.cpp" />
     <ClCompile Include="..\Private\Daka.cpp" />
+    <ClCompile Include="..\Private\Deferred.cpp" />
     <ClCompile Include="..\Private\Effect.cpp" />
     <ClCompile Include="..\Private\ForkLift.cpp" />
     <ClCompile Include="..\Private\GameServer_Select.cpp" />
@@ -266,6 +268,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cartoon.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_ClientDeferred.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_RimLighting.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCubeTex.hlsl" />

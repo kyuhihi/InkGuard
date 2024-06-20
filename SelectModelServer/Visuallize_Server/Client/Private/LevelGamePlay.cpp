@@ -14,6 +14,7 @@
 #include "SkyStar.h"
 #include "ModelSky.h"
 #include "Glass.h"
+#include "Deferred.h"
 
 #include "GameInstance.h"
 #include "CameraFree.h"
@@ -89,7 +90,11 @@ HRESULT CLevelGamePlay::Loading(_int eLevelID)
 	if (FAILED(pGameInstance->AddPrototype(TEXT("Prototype_GameObject_Glass"),
 		CGlass::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-	
+	/* For.Prototype_GameObject_Effect */
+	if (FAILED(pGameInstance->AddPrototype(TEXT("Prototype_GameObject_Deferred"),
+		CDeferred::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐를 로딩중입니다. "));
 	/* 텍스쳐를 로드한다. */
 	
@@ -324,8 +329,11 @@ HRESULT CLevelGamePlay::Ready_Layer_Camera(const _tchar * pLayerTag)
 	if (!pCamera)
 		return E_FAIL;
 	pCamera->SetPlayer(m_pPlayer);
-	SafeRelease(pGameInstance);
 
+	if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Deferred"), LEVEL_GAMEPLAY, TEXT("Layer_Deferred")))
+		return E_FAIL;
+
+	SafeRelease(pGameInstance);
 	return S_OK;
 }
 

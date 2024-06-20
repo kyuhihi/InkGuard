@@ -124,6 +124,9 @@
     <Filter Include="03. Network\GameObject\Daka">
       <UniqueIdentifier>{1fe940b1-35bc-4464-864e-9e89a7e7f443}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Defered">
+      <UniqueIdentifier>{23d902a5-1262-4dd6-8e42-de5ec4b7783e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -255,6 +258,9 @@
     <ClInclude Include="..\Public\SoldierMgr.h">
       <Filter>03. Network\GameObject\Soldier</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Deferred.h">
+      <Filter>02.GameObjects\Defered</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -368,6 +374,9 @@
     <ClCompile Include="..\Private\Common.cpp">
       <Filter>03. Network\Include\Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Deferred.cpp">
+      <Filter>02.GameObjects\Defered</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -411,6 +420,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMapModel.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_ClientDeferred.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

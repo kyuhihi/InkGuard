@@ -52,10 +52,24 @@ void CMainApp::Tick(_float fTimeDelta)
 	if (m_pGameInstance->GetDIKDownState(DIK_F1)) {
 		g_bDebug = !g_bDebug;
 	}
-	
+
 	
 	m_pGameInstance->TickEngine(fTimeDelta);
 
+}
+
+HRESULT CMainApp::RenderIMGUI()
+{
+	bool bTrue = true;
+	ImGui::ShowDemoWindow(&bTrue);
+	ImGui::Begin("MainApp");
+	ImGui::Text("[KeyInput]");
+	ImGui::Text("Show Render Target"); ImGui::SameLine(); ImGui::Text("F1");
+	ImGui::Text("Change Camera Mode"); ImGui::SameLine(); ImGui::Text("F2");
+	ImGui::Text("Show ImGui Demo"); ImGui::SameLine(); ImGui::Text("F3");
+
+	ImGui::End();
+	return S_OK;
 }
 
 HRESULT CMainApp::Render()
@@ -68,6 +82,8 @@ HRESULT CMainApp::Render()
 	
 	m_pRenderer->Draw();
 	m_pGameInstance->RenderLevel();
+
+	RenderIMGUI();
 
 #ifdef _DEBUG
 	++m_iNumDraw;
@@ -138,7 +154,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->AddPrototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxTex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxTex.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements))))
 		return E_FAIL;
-	
+
+	if (FAILED(m_pGameInstance->AddPrototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Deferred"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_ClientDeferred.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements))))
+		return E_FAIL;
+
 	SafeAddRef(m_pRenderer);
 
 	return S_OK;

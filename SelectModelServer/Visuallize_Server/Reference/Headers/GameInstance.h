@@ -89,7 +89,18 @@ public: /* For.Font_Manager */
 		_float fAngle = 0.f, _float2 vOrigin = _float2(0.f, 0.f), _float2 vScale = _float2(1.f, 1.f));
 
 public:  /* For.Target_Manager*/ 
+	HRESULT AddRenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, const _float4* pClearColor);
+	HRESULT AddMRT(const _tchar* pMRTTag, const _tchar* pTargetTag);
 	HRESULT BindRenderTargetSRV(const _tchar* pTargetTag, class CShader* pShader, const char* pConstantName);
+	HRESULT ClearRenderTargetSRV(ID3D11DeviceContext* pContext);
+	HRESULT BeginMRT(ID3D11DeviceContext* pContext, const _tchar* pMRTTag, ID3D11DepthStencilView* pDepthStencil = nullptr);
+	HRESULT BeginOverwriteMRT(ID3D11DeviceContext* pContext, const _tchar* pMRTTag, ID3D11DepthStencilView* pDepthStencil = nullptr);
+	HRESULT EndMRT(ID3D11DeviceContext* pContext);
+
+#ifdef _DEBUG
+	HRESULT AddDebugTarget(const _tchar* pTargetTag, _uint iCol, _uint iRow);
+	HRESULT AddDebugMRT(const _tchar* pMRTTag);
+#endif // _DEBUG
 
 public: /* For.Sound Manager */
 	HRESULT PlaySoundChannel(_tchar* pFileName, SOUND_CHANNEL eID, float volume);

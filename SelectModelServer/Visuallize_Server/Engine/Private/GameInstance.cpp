@@ -383,12 +383,78 @@ HRESULT CGameInstance::RenderFonts(const _tchar * pFontTag, const _tchar * pText
 	return m_pFontManager->RenderFonts(pFontTag, pTextm, vPosition, vColor, fAngle, vOrigin, vScale);	
 }
 
+HRESULT CGameInstance::AddRenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, const _float4* pClearColor)
+{
+	if (nullptr == m_pTargetManager)
+		return E_FAIL;
+
+	return m_pTargetManager->AddRenderTarget(pDevice, pContext, pTargetTag, iSizeX, iSizeY, eFormat, pClearColor);
+}
+
+HRESULT CGameInstance::AddMRT(const _tchar* pMRTTag, const _tchar* pTargetTag)
+{
+	if (nullptr == m_pTargetManager)
+		return E_FAIL;
+
+	return m_pTargetManager->AddMRT(pMRTTag, pTargetTag);
+}
+
 HRESULT CGameInstance::BindRenderTargetSRV(const _tchar * pTargetTag, CShader * pShader, const char * pConstantName)
 {
 	if (nullptr == m_pTargetManager)
 		return E_FAIL;
 
 	return m_pTargetManager->BindSRV(pTargetTag, pShader, pConstantName);	
+}
+
+HRESULT CGameInstance::ClearRenderTargetSRV(ID3D11DeviceContext* pContext)
+{
+	if (nullptr == m_pTargetManager)
+		return E_FAIL;
+
+	return m_pTargetManager->ClearSRV(pContext);
+}
+
+HRESULT CGameInstance::BeginMRT(ID3D11DeviceContext* pContext, const _tchar* pMRTTag, ID3D11DepthStencilView* pDepthStencil)
+{
+	if (nullptr == m_pTargetManager)
+		return E_FAIL;
+
+	return m_pTargetManager->BeginMRT(pContext, pMRTTag, pDepthStencil);
+}
+
+HRESULT CGameInstance::BeginOverwriteMRT(ID3D11DeviceContext* pContext, const _tchar* pMRTTag, ID3D11DepthStencilView* pDepthStencil)
+{
+	if (nullptr == m_pTargetManager)
+		return E_FAIL;
+
+	return m_pTargetManager->BeginOverwriteMRT(pContext, pMRTTag, pDepthStencil);
+
+}
+
+
+HRESULT CGameInstance::EndMRT(ID3D11DeviceContext* pContext)
+{
+	if (nullptr == m_pTargetManager)
+		return E_FAIL;
+
+	return m_pTargetManager->EndMRT(pContext);
+}
+
+HRESULT CGameInstance::AddDebugTarget(const _tchar* pTargetTag, _uint iCol, _uint iRow)
+{
+	if (nullptr == m_pTargetManager)
+		return E_FAIL;
+
+	return m_pTargetManager->AddDebugTarget(pTargetTag, iCol, iRow);
+}
+
+HRESULT CGameInstance::AddDebugMRT(const _tchar* pMRTTag)
+{
+	if (nullptr == m_pTargetManager)
+		return E_FAIL;
+
+	return m_pTargetManager->AddDebugMRT(pMRTTag);
 }
 
 HRESULT CGameInstance::PlaySoundChannel(_tchar* pFileName, SOUND_CHANNEL eID, float volume) 

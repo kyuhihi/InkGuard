@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 
+class CRenderTarget;
 class CTargetManager final : public CBase
 {
 	DECLARE_SINGLETON(CTargetManager)
@@ -28,16 +29,24 @@ public:
 #ifdef _DEBUG
 public:	
 	HRESULT InitializeDebug(const _tchar* pTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
-	HRESULT RenderDebug(const _tchar* pMRTTag, class CVIBuffer* pVIBuffer, class CShader* pShader);
+public:
+	HRESULT AddDebugTarget(const _tchar* pTargetTag, _uint iCol, _uint iRow);
+	HRESULT AddDebugMRT(const _tchar* pMRTTag);
+	HRESULT RenderDebug(class CVIBuffer* pVIBuffer, class CShader* pShader);
 #endif // _DEBUG
 
 private:
-	using RENDERTARGETS = map<const _tchar*, class CRenderTarget*>;
+	using RENDERTARGETS = map<const _tchar*, CRenderTarget*>;
 	RENDERTARGETS m_RenderTargets;
 
 private:
-	using MRTS = map<const _tchar*, list<class CRenderTarget*>>;
+	using MRTS = map<const _tchar*, list< CRenderTarget*>>;
 	MRTS m_MRTs;
+
+#ifdef _DEBUG
+private:
+	list<list<CRenderTarget*>*> m_DebugMRTs;
+#endif // _DEBUG
 
 private:
 	ID3D11RenderTargetView* m_pOldRenderTargets[8] = { nullptr };
@@ -45,7 +54,7 @@ private:
 
 private:
 	class CRenderTarget* Find_RenderTarget(const _tchar* pTargetTag);
-	list<class CRenderTarget*>* FindMRT(const _tchar* pMRTTag);
+	list<CRenderTarget*>* FindMRT(const _tchar* pMRTTag);
 
 public:
 	virtual void Free() override;

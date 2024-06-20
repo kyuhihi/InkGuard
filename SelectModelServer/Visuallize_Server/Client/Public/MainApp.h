@@ -20,6 +20,7 @@ private:
 public:
 	HRESULT Initialize();
 	void Tick(_float fTimeDelta);
+	HRESULT RenderIMGUI();
 	HRESULT Render();	
 
 private:

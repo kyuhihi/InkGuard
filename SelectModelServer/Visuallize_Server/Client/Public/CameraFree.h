@@ -27,11 +27,11 @@ public:
 
 public:
 	void SetPlayer(class CPlayer* pPlayer) { m_pPlayer = pPlayer; }
+	const bool& IsFreeCamMode() const { return m_bFreeCam; }
 
 private:
 	class CPlayer* m_pPlayer = nullptr;
 	bool m_bFreeCam = false;
-
 };
 
 END

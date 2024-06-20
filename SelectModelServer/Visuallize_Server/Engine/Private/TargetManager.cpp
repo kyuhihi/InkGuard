@@ -11,12 +11,12 @@ CTargetManager::CTargetManager()
 
 
 
-HRESULT CTargetManager::AddRenderTarget(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const _tchar * pTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, const _float4 * pClearColor)
+HRESULT CTargetManager::AddRenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pTargetTag, _uint iSizeX, _uint iSizeY, DXGI_FORMAT eFormat, const _float4* pClearColor)
 {
 	if (nullptr != Find_RenderTarget(pTargetTag))
 		return E_FAIL;
 
-	CRenderTarget*		pRenderTarget = CRenderTarget::Create(pDevice, pContext, iSizeX, iSizeY, eFormat, pClearColor);
+	CRenderTarget* pRenderTarget = CRenderTarget::Create(pDevice, pContext, iSizeX, iSizeY, eFormat, pClearColor);
 	if (nullptr == pRenderTarget)
 		return E_FAIL;
 
@@ -25,16 +25,16 @@ HRESULT CTargetManager::AddRenderTarget(ID3D11Device * pDevice, ID3D11DeviceCont
 	return S_OK;
 }
 
-HRESULT CTargetManager::AddMRT(const _tchar * pMRTTag, const _tchar * pTargetTag)
+HRESULT CTargetManager::AddMRT(const _tchar* pMRTTag, const _tchar* pTargetTag)
 {
-	CRenderTarget*		pRenderTarget = Find_RenderTarget(pTargetTag);
-	if(nullptr == pRenderTarget)
+	CRenderTarget* pRenderTarget = Find_RenderTarget(pTargetTag);
+	if (nullptr == pRenderTarget)
 		return E_FAIL;
 
-	list<CRenderTarget*>*		pMRTList = FindMRT(pMRTTag);
+	list<CRenderTarget*>* pMRTList = FindMRT(pMRTTag);
 	if (nullptr == pMRTList)
 	{
-		list<CRenderTarget*>		MRTList;
+		list<CRenderTarget*> MRTList;
 
 		MRTList.push_back(pRenderTarget);
 
@@ -48,13 +48,13 @@ HRESULT CTargetManager::AddMRT(const _tchar * pMRTTag, const _tchar * pTargetTag
 	return S_OK;
 }
 
-HRESULT CTargetManager::BindSRV(const _tchar * pTargetTag, CShader * pShader, const char * pConstantName)
+HRESULT CTargetManager::BindSRV(const _tchar* pTargetTag, CShader* pShader, const char* pConstantName)
 {
-	CRenderTarget*		pRenderTarget = Find_RenderTarget(pTargetTag);
+	CRenderTarget* pRenderTarget = Find_RenderTarget(pTargetTag);
 	if (nullptr == pRenderTarget)
 		return E_FAIL;
 
-	return pRenderTarget->BindSRV(pShader, pConstantName);	
+	return pRenderTarget->BindSRV(pShader, pConstantName);
 }
 
 HRESULT CTargetManager::BeginMRT(ID3D11DeviceContext* pContext, const _tchar* pMRTTag, ID3D11DepthStencilView* pDepthStencil)
@@ -66,13 +66,13 @@ HRESULT CTargetManager::BeginMRT(ID3D11DeviceContext* pContext, const _tchar* pM
 
 	_uint iNumViews = 8;
 	pContext->OMGetRenderTargets(iNumViews, m_pOldRenderTargets, &m_pOldDepthStencil);
-		
+
 	_uint iNumRTVs = 0;
 
 	ID3D11RenderTargetView* RTVs[8] = { nullptr };
 
 	for (auto& pRenderTarget : *pMRTList)
-	{		
+	{
 		pRenderTarget->Clear();
 		RTVs[iNumRTVs++] = pRenderTarget->GetRTV();
 
@@ -111,9 +111,9 @@ HRESULT CTargetManager::BeginOverwriteMRT(ID3D11DeviceContext* pContext, const _
 }
 
 
-HRESULT CTargetManager::EndMRT(ID3D11DeviceContext * pContext)
+HRESULT CTargetManager::EndMRT(ID3D11DeviceContext* pContext)
 {
-	_uint		iNumRTVs = 8;	
+	_uint		iNumRTVs = 8;
 
 	pContext->OMSetRenderTargets(iNumRTVs, m_pOldRenderTargets, m_pOldDepthStencil);
 
@@ -136,7 +136,7 @@ HRESULT CTargetManager::ClearSRV(ID3D11DeviceContext* pContext)
 	return S_OK;
 }
 
-ID3D11DepthStencilView* CTargetManager::CreateDepthStencil(ID3D11Device * pDevice, _uint iWinCX, _uint iWinCY)
+ID3D11DepthStencilView* CTargetManager::CreateDepthStencil(ID3D11Device* pDevice, _uint iWinCX, _uint iWinCY)
 {
 	if (nullptr == pDevice)
 		return nullptr;
@@ -189,26 +189,58 @@ D3D11_VIEWPORT CTargetManager::CreateViewPort(_uint iWinCX, _uint iWinCY)
 
 #ifdef _DEBUG
 
-HRESULT CTargetManager::InitializeDebug(const _tchar * pTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
+HRESULT CTargetManager::AddDebugTarget(const _tchar* pTargetTag, _uint iCol, _uint iRow)
 {
-	CRenderTarget*		pRenderTarget =  Find_RenderTarget(pTargetTag);
+	CRenderTarget* pRenderTarget = Find_RenderTarget(pTargetTag);
+
+	const _float fCellSizeX = 100.f;
+	const _float fCellSizeY = 100.f;
+	const _float startX = fCellSizeX * 0.5f;
+	const _float startY = fCellSizeY * 0.5f;
 
 	if (nullptr == pRenderTarget)
 		return E_FAIL;
 
-	return pRenderTarget->InitializeDebug(fX, fY, fSizeX, fSizeY);	
+	return pRenderTarget->InitializeDebug(startX + (iRow * fCellSizeX), startY + (iCol * fCellSizeY), fCellSizeX, fCellSizeY);
 }
 
-HRESULT CTargetManager::RenderDebug(const _tchar * pMRTTag, class CVIBuffer* pVIBuffer, class CShader* pShader)
+HRESULT CTargetManager::InitializeDebug(const _tchar* pTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
 {
-	list<CRenderTarget*>*		pMRTList = FindMRT(pMRTTag);
+	CRenderTarget* pRenderTarget = Find_RenderTarget(pTargetTag);
+
+	if (nullptr == pRenderTarget)
+		return E_FAIL;
+
+	return pRenderTarget->InitializeDebug(fX, fY, fSizeX, fSizeY);
+}
+
+HRESULT CTargetManager::AddDebugMRT(const _tchar* pMRTTag)
+{
+	list<CRenderTarget*>* pMRTList = FindMRT(pMRTTag);
+
 	if (nullptr == pMRTList)
 		return E_FAIL;
 
+	m_DebugMRTs.push_back(pMRTList);
 
-	for (auto& pRenderTarget : *pMRTList)
-	{
-		pRenderTarget->RenderDebug(pShader, pVIBuffer);
+	return S_OK;
+}
+
+HRESULT CTargetManager::RenderDebug(class CVIBuffer* pVIBuffer, class CShader* pShader)
+{
+	//list<CRenderTarget*>* pMRTList = FindMRT(pMRTTag);
+	//if (nullptr == pMRTList)
+	//	return E_FAIL;
+
+	//for (auto& pRenderTarget : *pMRTList)
+	//{
+	//	pRenderTarget->RenderDebug(pShader, pVIBuffer);
+	//}
+
+	for (auto& MRT : m_DebugMRTs) {
+		for (auto& pRenderTarget : *MRT) {
+			pRenderTarget->RenderDebug(pShader, pVIBuffer);
+		}
 	}
 
 	return S_OK;
@@ -216,20 +248,20 @@ HRESULT CTargetManager::RenderDebug(const _tchar * pMRTTag, class CVIBuffer* pVI
 
 #endif // _DEBUG
 
-CRenderTarget * CTargetManager::Find_RenderTarget(const _tchar * pTargetTag)
+CRenderTarget* CTargetManager::Find_RenderTarget(const _tchar* pTargetTag)
 {
 	auto	iter = find_if(m_RenderTargets.begin(), m_RenderTargets.end(), CTagFinder(pTargetTag));
 
 	if (iter == m_RenderTargets.end())
 		return nullptr;
 
-	return iter->second;	
+	return iter->second;
 }
 
-list<class CRenderTarget*>* CTargetManager::FindMRT(const _tchar * pMRTTag)
+list<class CRenderTarget*>* CTargetManager::FindMRT(const _tchar* pMRTTag)
 {
 	auto	iter = find_if(m_MRTs.begin(), m_MRTs.end(), CTagFinder(pMRTTag));
-	if(iter == m_MRTs.end())
+	if (iter == m_MRTs.end())
 		return nullptr;
 
 	return &iter->second;
