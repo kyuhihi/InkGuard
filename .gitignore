@@ -529,11 +529,47 @@ Content/InfinityBladeGrassLands/
 Content/CT_Components/
 Content/Realistic_Starter_VFX_Pack_Vol2/
 Content/Modular_MedievalTown_WI/
+
 !SelectModelServer/
 !SelectModelServer/GameServer_Select/
 !SelectModelServer/GameServer_Select/GameServer_Select/
 !SelectModelServer/GameServer_Select/GameServer_Select.sln
 
+# DX------------------------------
+SelectModelServer/Visuallize_Server/Client/Bin/*.exe
+SelectModelServer/Visuallize_Server/Client/Bin/*.exp
+SelectModelServer/Visuallize_Server/Client/Bin/*.ilk
+SelectModelServer/Visuallize_Server/Client/Bin/*.pdb
+SelectModelServer/Visuallize_Server/Client/Bin/*.dll
+SelectModelServer/Visuallize_Server/Client/**/imgui.ini
+
+SelectModelServer/Visuallize_Server/Client/Bin/Resources/*.*
+SelectModelServer/Visuallize_Server/Client/Bin/Resources/Meshes
+SelectModelServer/Visuallize_Server/Client/Bin/Resources/Models
+SelectModelServer/Visuallize_Server/Client/Bin/Resources/Sound
+SelectModelServer/Visuallize_Server/Client/Bin/Resources/Textures
+!SelectModelServer/Visuallize_Server/Client/Bin/Resources/Data
+!SelectModelServer/Visuallize_Server/Client/Bin/ShaderFiles/
+
+SelectModelServer/Visuallize_Server/Engine/Bin/*.exp
+SelectModelServer/Visuallize_Server/Engine/Bin/*.exe
+SelectModelServer/Visuallize_Server/Engine/Bin/*.ilk
+SelectModelServer/Visuallize_Server/Engine/Bin/*.pdb
+SelectModelServer/Visuallize_Server/Engine/Bin/Engine.dll
+SelectModelServer/Visuallize_Server/Engine/Bin/Engine.lib
+
+SelectModelServer/Visuallize_Server/Tool/Bin/Resources/*.*
+SelectModelServer/Visuallize_Server/Tool/Bin/Resources/Meshes
+SelectModelServer/Visuallize_Server/Tool/Bin/Resources/Models
+SelectModelServer/Visuallize_Server/Tool/Bin/Resources/Sound
+SelectModelServer/Visuallize_Server/Tool/Bin/Resources/Textures
+SelectModelServer/Visuallize_Server/Tool/Bin/*.exe
+SelectModelServer/Visuallize_Server/Tool/Bin/*.ilk
+SelectModelServer/Visuallize_Server/Tool/Bin/*.pdb
+SelectModelServer/Visuallize_Server/Tool/Bin/*.dll
+!SelectModelServer/Visuallize_Server/Tool/Bin/Resources/Data
+!SelectModelServer/Visuallize_Server/Tool/Bin/ShaderFiles/
+SelectModelServer/Visuallize_Server/Tool/**/imgui.ini
 
 InkGuard.VC.db
 #     ? ------------------------------

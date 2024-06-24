@@ -27,15 +27,12 @@ void ExitMain()
 
 	CMemoryPooler::GetInstance()->DestroyInstance();
 
-	_CrtDumpMemoryLeaks();
 }
 
 
 int main(int argc, char* argv[])
 {
-#ifdef _DEBUG
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif // _DEBUG
+
 	atexit(ExitMain);
 
 
@@ -85,7 +82,7 @@ int main(int argc, char* argv[])
 		// 소켓 셋 초기화
 		FD_ZERO(&ReadSet);
 		FD_ZERO(&WriteSet);
-
+		cout << "1" << endl;
 		FD_SET(listen_sock, &ReadSet);	// ReadSet에 관찰 대상인 ListenSocket을 등록한다.
 		
 		for (int i = 0; i < nTotalSockets; i++) {

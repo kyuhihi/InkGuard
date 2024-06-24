@@ -1,0 +1,429 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="98.Default">
+      <UniqueIdentifier>{505dbb78-4965-42ce-a1a1-9532b52bcf92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.MainApp">
+      <UniqueIdentifier>{d9fd2301-2adc-4297-8e67-639f847fb590}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Defines">
+      <UniqueIdentifier>{ac9086de-94de-4822-ae8c-26dec28c70c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels">
+      <UniqueIdentifier>{789d874f-ce49-4332-82c7-3805cb5b9080}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects">
+      <UniqueIdentifier>{3531814c-4b42-451a-9044-33e6ba5a8eab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\00.Loading">
+      <UniqueIdentifier>{703e1f72-f965-4a5f-bc75-02795441baec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\01.Logo">
+      <UniqueIdentifier>{d01c3f2b-2df6-4ab5-a228-50b69330939c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GamePlay">
+      <UniqueIdentifier>{0d2a1e61-f8a8-4688-bc84-0b1f67902fc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\00.Loading\Loader">
+      <UniqueIdentifier>{db88da8f-913a-4f03-b3b7-a148128660ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97.ShaderFiles">
+      <UniqueIdentifier>{84640545-3351-4721-a11c-de1b2a88ed44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\BackGround">
+      <UniqueIdentifier>{3cb37fbb-5a48-442b-857d-c8d7bd9d9f34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera">
+      <UniqueIdentifier>{753f5023-0e15-42c5-950a-9aefad3b0ead}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Player">
+      <UniqueIdentifier>{abc6b74f-e41e-4559-9c08-356e0bb3ccf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\ForkLift">
+      <UniqueIdentifier>{abb92046-4f30-44f4-85d8-25e7996f1904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Sky">
+      <UniqueIdentifier>{d0e2c2a0-3213-4864-a75f-fd3e72b5cb6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI">
+      <UniqueIdentifier>{65a178dd-22af-43d4-903f-4d75c019e3f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\ProjParent">
+      <UniqueIdentifier>{c43500a2-0f42-4cc1-9567-6443b06d98c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\99.ObjForShaderTool">
+      <UniqueIdentifier>{b19ffb4d-4465-4349-9ba7-0e5d5088fff2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\99.CamForShaderTool">
+      <UniqueIdentifier>{1f5ad644-fc80-408f-ac2f-0233fa02ac08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect">
+      <UniqueIdentifier>{038892c1-1383-445d-8f63-a0075520ab6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\Effect">
+      <UniqueIdentifier>{6506574e-2f9d-4a08-9b36-4d54ea1cda10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\ParticleRect">
+      <UniqueIdentifier>{8ea4a20e-0354-4691-afe5-6747c1e23ad3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\ParticlePoint">
+      <UniqueIdentifier>{3ec22bfe-86a9-4e7d-95ae-ebd49e49f8b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Effect\TestEffect">
+      <UniqueIdentifier>{1bdbf6fc-c282-4a7c-94d4-b84366b95756}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Ground">
+      <UniqueIdentifier>{eeae4222-15c6-456d-b0c8-42966fe6748e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Territory">
+      <UniqueIdentifier>{ffb86be3-3f55-4534-89f0-3bcc4134fe48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Sky\ModelSky">
+      <UniqueIdentifier>{f61d19b1-279d-47ca-b513-892b78945afb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Player\Glass">
+      <UniqueIdentifier>{0e7d486f-8943-430b-a966-17e907b7b1a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network">
+      <UniqueIdentifier>{56fefe7d-8401-435d-aa53-ad5bd6ab9320}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\Include">
+      <UniqueIdentifier>{1a6cb616-7cbc-4edc-8cbc-6606e9ec9d95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\Include\Common">
+      <UniqueIdentifier>{79dbe0b0-2ecb-4748-a03f-04f7ae246893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\GameObject">
+      <UniqueIdentifier>{28b70f33-51a2-49e9-ae11-65dfdf743132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\GameObject\Network_Player">
+      <UniqueIdentifier>{3c33f30c-3fd0-44ea-b248-d7641cd3b9f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\Network Client">
+      <UniqueIdentifier>{8d9a0667-232d-4175-8402-030265a3dfca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\MatchMakingMgr">
+      <UniqueIdentifier>{23fac3b8-12cb-4a61-82d3-46675fb3ec5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\Utils">
+      <UniqueIdentifier>{cae763a9-6348-4c8e-94b0-c0d489d7a51b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\Utils\MemoryPooler">
+      <UniqueIdentifier>{c28b9aba-e09c-4713-842a-36c2e337ded7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\Utils\Packet">
+      <UniqueIdentifier>{c94da28c-70c2-4383-a2d7-ae38531b5564}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\GameObject\Soldier">
+      <UniqueIdentifier>{613bdc4a-ea00-4eea-adfd-6ea54c4c5428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\GameObject\SpearMan">
+      <UniqueIdentifier>{69a0fa73-83b0-4da0-b1c0-71445a64c59b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Network\GameObject\Daka">
+      <UniqueIdentifier>{1fe940b1-35bc-4464-864e-9e89a7e7f443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Defered">
+      <UniqueIdentifier>{23d902a5-1262-4dd6-8e42-de5ec4b7783e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Client.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>98.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MainApp.h">
+      <Filter>00.MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Defines.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loader.h">
+      <Filter>01.Levels\00.Loading\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BackGround.h">
+      <Filter>02.GameObjects\BackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ForkLift.h">
+      <Filter>02.GameObjects\ForkLift</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sky.h">
+      <Filter>02.GameObjects\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bin\ShaderFiles\Client_Shader_Defines.hpp">
+      <Filter>97.ShaderFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect.h">
+      <Filter>02.GameObjects\Effect\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI.h">
+      <Filter>02.GameObjects\UI\ProjParent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ParticlePoint.h">
+      <Filter>02.GameObjects\Effect\ParticlePoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CameraFree.h">
+      <Filter>02.GameObjects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ParticleRect.h">
+      <Filter>02.GameObjects\Effect\ParticleRect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LevelLoading.h">
+      <Filter>01.Levels\00.Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LevelLogo.h">
+      <Filter>01.Levels\01.Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LevelGamePlay.h">
+      <Filter>01.Levels\02.GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ShaderAnim.h">
+      <Filter>02.GameObjects\99.ObjForShaderTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ShaderCam.h">
+      <Filter>02.GameObjects\Camera\99.CamForShaderTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TestEffect.h">
+      <Filter>02.GameObjects\Effect\TestEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ChaseCamera.h">
+      <Filter>02.GameObjects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ground.h">
+      <Filter>02.GameObjects\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Territory.h">
+      <Filter>02.GameObjects\Territory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkyStar.h">
+      <Filter>02.GameObjects\Sky\ModelSky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ModelSky.h">
+      <Filter>02.GameObjects\Sky\ModelSky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Glass.h">
+      <Filter>02.GameObjects\Player\Glass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Common.h">
+      <Filter>03. Network\Include\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Daka.h">
+      <Filter>03. Network\GameObject\Daka</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameServer_Select.h">
+      <Filter>03. Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MatchMakingMgr.h">
+      <Filter>03. Network\MatchMakingMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MemoryPooler.h">
+      <Filter>03. Network\Utils\MemoryPooler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Network_Include.h">
+      <Filter>03. Network\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Network_Struct.h">
+      <Filter>03. Network\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Network_Client.h">
+      <Filter>03. Network\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Network_Define.h">
+      <Filter>03. Network\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Network_Enum.h">
+      <Filter>03. Network\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Packet.h">
+      <Filter>03. Network\Utils\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Soldier.h">
+      <Filter>03. Network\GameObject\Soldier</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SoldierMgr.h">
+      <Filter>03. Network\GameObject\Soldier</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Deferred.h">
+      <Filter>02.GameObjects\Defered</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Client.cpp">
+      <Filter>98.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>98.Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MainApp.cpp">
+      <Filter>00.MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loader.cpp">
+      <Filter>01.Levels\00.Loading\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02.GameObjects\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ForkLift.cpp">
+      <Filter>02.GameObjects\ForkLift</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sky.cpp">
+      <Filter>02.GameObjects\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect.cpp">
+      <Filter>02.GameObjects\Effect\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BackGround.cpp">
+      <Filter>02.GameObjects\BackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI.cpp">
+      <Filter>02.GameObjects\UI\ProjParent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ParticlePoint.cpp">
+      <Filter>02.GameObjects\Effect\ParticlePoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CameraFree.cpp">
+      <Filter>02.GameObjects\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ParticleRect.cpp">
+      <Filter>02.GameObjects\Effect\ParticleRect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LevelLoading.cpp">
+      <Filter>01.Levels\00.Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LevelLogo.cpp">
+      <Filter>01.Levels\01.Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LevelGamePlay.cpp">
+      <Filter>01.Levels\02.GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ShaderAnim.cpp">
+      <Filter>02.GameObjects\99.ObjForShaderTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ShaderCam.cpp">
+      <Filter>02.GameObjects\Camera\99.CamForShaderTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestEffect.cpp">
+      <Filter>02.GameObjects\Effect\TestEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ChaseCamera.cpp">
+      <Filter>02.GameObjects\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ground.cpp">
+      <Filter>02.GameObjects\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Territory.cpp">
+      <Filter>02.GameObjects\Territory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkyStar.cpp">
+      <Filter>02.GameObjects\Sky\ModelSky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ModelSky.cpp">
+      <Filter>02.GameObjects\Sky\ModelSky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Glass.cpp">
+      <Filter>02.GameObjects\Player\Glass</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameServer_Select.cpp">
+      <Filter>03. Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MatchMakingMgr.cpp">
+      <Filter>03. Network\MatchMakingMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MemoryPooler.cpp">
+      <Filter>03. Network\Utils\MemoryPooler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Network_Client.cpp">
+      <Filter>03. Network\Network Client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Network_GameObject.cpp">
+      <Filter>03. Network\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Network_Player.cpp">
+      <Filter>03. Network\GameObject\Network_Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Packet.cpp">
+      <Filter>03. Network\Utils\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Soldier.cpp">
+      <Filter>03. Network\GameObject\Soldier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SoldierMgr.cpp">
+      <Filter>03. Network\GameObject\Soldier</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpearMan.cpp">
+      <Filter>03. Network\GameObject\SpearMan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Daka.cpp">
+      <Filter>03. Network\GameObject\Daka</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Common.cpp">
+      <Filter>03. Network\Include\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Deferred.cpp">
+      <Filter>02.GameObjects\Defered</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Client.ico">
+      <Filter>98.Default</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>98.Default</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Client.rc">
+      <Filter>98.Default</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCubeTex.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxRectInstance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPointInstance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_RimLighting.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Cartoon.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMapModel.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_ClientDeferred.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
