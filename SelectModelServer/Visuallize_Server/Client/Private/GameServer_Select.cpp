@@ -99,6 +99,9 @@ void CGameServer_Select::ServerLoop()
             }
         }
     }
+
+    Tidy();
+
 }
 
 void CGameServer_Select::SetbDone()

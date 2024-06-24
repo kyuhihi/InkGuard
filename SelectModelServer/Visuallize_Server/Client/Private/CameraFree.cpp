@@ -34,6 +34,14 @@ void CCameraFree::Tick(_float fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	SafeAddRef(pGameInstance);
 
+	if (!g_bKeyInput)
+		return;
+
+	if (pGameInstance->GetDIKState(DIK_R) & 0x80)
+	{
+		m_pPlayer->PlacePlayerZeroBase();
+	}
+
 	if (pGameInstance->GetDIKDownState(DIK_F2))
 	{
 		m_bFreeCam = !m_bFreeCam;

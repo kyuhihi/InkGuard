@@ -56,7 +56,10 @@ void CMainApp::Tick(_float fTimeDelta)
 	if (m_pGameInstance->GetDIKDownState(DIK_F3)) {
 		m_bShowImGuiDemo = !m_bShowImGuiDemo;
 	}
-	
+
+	if (m_pGameInstance->GetDIKDownState(DIK_F4) && m_pGameInstance->GetDIKState(DIK_LSHIFT)) {
+		g_bKeyInput = !g_bKeyInput;
+	}
 	
 	m_pGameInstance->TickEngine(fTimeDelta);
 
@@ -73,6 +76,8 @@ HRESULT CMainApp::RenderIMGUI()
 	ImGui::Text("Show Render Target"); ImGui::SameLine(); ImGui::Text("F1");
 	ImGui::Text("Change Camera Mode"); ImGui::SameLine(); ImGui::Text("F2");
 	ImGui::Text("Show ImGui Demo"); ImGui::SameLine(); ImGui::Text("F3");
+	ImGui::Text("Change Input Mode"); ImGui::SameLine(); ImGui::Text("L Shift F4");
+	ImGui::Text("Place Player Zero"); ImGui::SameLine(); ImGui::Text("R");
 
 	ImGui::End();
 	return S_OK;

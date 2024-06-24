@@ -114,6 +114,9 @@ HRESULT CPlayer::RenderLightDepth(CLight* pLight) {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	for (_uint i = 0; i < iNumMeshes; ++i) {
+		if (ModelIndex::MODEL_KIND_EYE == i || ModelIndex::MODEL_KIND_EYE_AROUND == i || ModelIndex::MODEL_CLOSE_EYE == i)
+			continue;
+
 		if (FAILED(m_pShaderCom->SetRawValue("g_WorldMatrix",
 			&m_pTransformCom->GetWorldFloat4x4TP(), sizeof(_float4x4))))
 			return E_FAIL;
@@ -216,12 +219,12 @@ void CPlayer::KeyInput(CTransform* pCamTransform, const _float fTimeDelta)
 		m_pTransformCom->GoDown(MoveValue * fTimeDelta);
 	}
 
-	if (pGameInstance->GetDIKState(DIK_R) & 0x80)
-	{
-		m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
-		m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f),XMConvertToRadians(0.f));
-	}
+}
 
+void CPlayer::PlacePlayerZeroBase()
+{
+	m_pTransformCom->SetState(CTransform::STATE_POSITION, XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(0.f));
 }
 
 HRESULT CPlayer::Ready_Components()

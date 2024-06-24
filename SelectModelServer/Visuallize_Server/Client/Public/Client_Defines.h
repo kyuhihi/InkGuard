@@ -12,6 +12,7 @@ extern HINSTANCE g_hInst;
 extern HWND g_hWnd;
 
 extern bool g_bDebug;
-extern int g_iFPS;
+extern bool g_bKeyInput;
+extern int	g_iFPS;
 
 using namespace Client;

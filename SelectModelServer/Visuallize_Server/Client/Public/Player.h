@@ -39,6 +39,7 @@ public:
 
 	void RenderIMGUI();
 	void KeyInput(CTransform* pCamTransform,const _float fTimeDelta);
+	void PlacePlayerZeroBase();
 
 private:
 	const _float WALK_SPEED;
