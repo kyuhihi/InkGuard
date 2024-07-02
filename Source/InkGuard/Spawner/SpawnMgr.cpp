@@ -55,6 +55,8 @@ bool ASpawnMgr::GetSoldierData(C2S_PACKET_SOLDIER_TRANSFORM* pSendPacket)
 
 		for (auto& Soldier : SpawnerInfoArray)
 		{
+			if (!IsValid(Soldier.pTargetActor))
+				continue;
 			//ACharacter* pCharacter = Soldier.pTargetActor.Get();
 			//USkeletalMeshComponent* pMesh = pCharacter->GetMesh();
 			USkeletalMeshComponent* pMesh = Soldier.pTargetActor->GetMesh();
