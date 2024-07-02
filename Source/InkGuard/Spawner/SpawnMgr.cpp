@@ -55,8 +55,9 @@ bool ASpawnMgr::GetSoldierData(C2S_PACKET_SOLDIER_TRANSFORM* pSendPacket)
 
 		for (auto& Soldier : SpawnerInfoArray)
 		{
-			ACharacter* pCharacter = Soldier.pTargetActor.Get();
-			USkeletalMeshComponent* pMesh = pCharacter->GetMesh();
+			//ACharacter* pCharacter = Soldier.pTargetActor.Get();
+			//USkeletalMeshComponent* pMesh = pCharacter->GetMesh();
+			USkeletalMeshComponent* pMesh = Soldier.pTargetActor->GetMesh();
 			UAnimInstance* pAnimInstance = pMesh->GetAnimInstance();
 
 			UAnimMontage* pAnimMontage = pAnimInstance->GetCurrentActiveMontage();
@@ -154,9 +155,9 @@ void ASpawnMgr::RegisterSpawner(ASoldierSpawner* pCallSoldierSpawner, const int 
 	}
 	else
 	{
+		m_pOtherSpawners.Add(pCallSoldierSpawner);
 		for (int i = 0; i < SOLDIER_MAX_CNT; i++)
 		{
-			m_pOtherSpawners.Add(pCallSoldierSpawner);
 			if (iTargetTerritory == MyNetworkMgr::m_tOtherSoldierInfo[i].eTargetTerritory)
 			{
 				pCallSoldierSpawner->AppendNewDuty((int)MyNetworkMgr::m_tOtherSoldierInfo[i].eSoldierType,i);
