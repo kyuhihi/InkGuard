@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "HierarchyNode.h"
 #include "Light.h"
+#include "../Public/Territory.h"
 
 CPlayer::CPlayer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -152,16 +153,12 @@ void CPlayer::RenderIMGUI()
 
 	_float3 vPositon;
 	XMStoreFloat3(&vPositon, m_pTransformCom->GetState(CTransform::STATE_POSITION));
-	ImGui::Text("[Position]");
+	ImGui::Text("[ DX Position ]");
 	ImGui::Text(to_string(vPositon.x).data()); ImGui::SameLine();
 	ImGui::Text(to_string(vPositon.y).data()); ImGui::SameLine();
 	ImGui::Text(to_string(vPositon.z).data());
 	ImGui::Separator();
 
-
-	//const char* items[] = { "Apple", "Banana", "Cherry", "Kiwi", "Mango", "Orange", "Pineapple", "Strawberry", "Watermelon" };
-	//static int item_current = 1;
-	//ImGui::ListBox("listbox", &item_current, items, IM_ARRAYSIZE(items), 5);
 
 	ImGui::End();
 }
@@ -309,4 +306,6 @@ void CPlayer::Free()
 	SafeRelease(m_pRendererCom);
 	SafeRelease(m_pTransformCom);
 	SafeRelease(m_pIntervalComponent);
+	m_pTargetTerritory = nullptr;
+	m_pLight = nullptr;
 }

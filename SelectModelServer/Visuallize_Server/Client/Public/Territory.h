@@ -34,6 +34,10 @@ public:
 	virtual HRESULT RenderLightDepth(CLight* pLight) override;
 
 	void RenderIMGUI();
+
+public:
+	const int& GetCurTerritory() const { return m_iCurrentSelected; } 
+
 private:
 	void Modify_Transform();
 

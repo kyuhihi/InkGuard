@@ -368,10 +368,13 @@ HRESULT CLevelGamePlay::Ready_Layer_BackGround(const _tchar * pLayerTag)
 	if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Ground"), LEVEL_GAMEPLAY, pLayerTag))
 		return E_FAIL;
 
-	
-	if (!pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Territory"), LEVEL_GAMEPLAY, pLayerTag))
+	CTerritory* pTerritory = nullptr;
+
+	pTerritory = (CTerritory*)pGameInstance->AddGameObjectToLayer(TEXT("Prototype_GameObject_Territory"), LEVEL_GAMEPLAY, pLayerTag);
+	if (!pTerritory)
 		return E_FAIL;
-	
+
+	m_pPlayer->SetTargetTerritory(pTerritory);
 
 	SafeRelease(pGameInstance);
 

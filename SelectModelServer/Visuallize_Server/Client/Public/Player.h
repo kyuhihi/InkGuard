@@ -40,6 +40,7 @@ public:
 	void RenderIMGUI();
 	void KeyInput(CTransform* pCamTransform,const _float fTimeDelta);
 	void PlacePlayerZeroBase();
+	void SetTargetTerritory(class CTerritory* pTargetTerritory) { m_pTargetTerritory = pTargetTerritory; }
 
 private:
 	const _float WALK_SPEED;
@@ -70,6 +71,8 @@ private:
 
 	CGameInstance* m_pGameInstance = nullptr;
 	CLight* m_pLight = nullptr;
+
+	class CTerritory* m_pTargetTerritory = nullptr;
 
 
 private:
