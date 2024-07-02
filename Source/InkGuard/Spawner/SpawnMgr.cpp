@@ -55,7 +55,10 @@ bool ASpawnMgr::GetSoldierData(C2S_PACKET_SOLDIER_TRANSFORM* pSendPacket)
 
 		for (auto& Soldier : SpawnerInfoArray)
 		{
-			UAnimInstance* pAnimInstance = Soldier.pTargetActor.Get()->GetMesh()->GetAnimInstance();
+			ACharacter* pCharacter = Soldier.pTargetActor.Get();
+			USkeletalMeshComponent* pMesh = pCharacter->GetMesh();
+			UAnimInstance* pAnimInstance = pMesh->GetAnimInstance();
+
 			UAnimMontage* pAnimMontage = pAnimInstance->GetCurrentActiveMontage();
 			float fPlayTime(0.f);
 			if (IsValid(pAnimMontage) != false)

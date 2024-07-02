@@ -43,7 +43,7 @@ HRESULT CMainApp::Initialize()
 void CMainApp::Tick(_float fTimeDelta)
 {
 	if (nullptr == m_pGameInstance)
-		return ;
+		return;
 
 #ifdef _DEBUG
 	m_fTimeAcc += fTimeDelta;
@@ -71,14 +71,19 @@ HRESULT CMainApp::RenderIMGUI()
 		ImGui::ShowDemoWindow(&m_bShowImGuiDemo);
 
 	ImGui::Begin("MainApp");
+	
 	ImGui::Text("[KeyInput]"); 
-
 	ImGui::Text("Show Render Target"); ImGui::SameLine(); ImGui::Text("F1");
 	ImGui::Text("Change Camera Mode"); ImGui::SameLine(); ImGui::Text("F2");
 	ImGui::Text("Show ImGui Demo"); ImGui::SameLine(); ImGui::Text("F3");
 	ImGui::Text("Change Input Mode"); ImGui::SameLine(); ImGui::Text("L Shift F4");
 	ImGui::Text("Place Player Zero"); ImGui::SameLine(); ImGui::Text("R");
 
+	ImGui::Separator();
+
+	ImGui::Text("Utils");
+	ImGui::DragInt("Target FPS", &g_iFPS);
+	
 	ImGui::End();
 	return S_OK;
 }

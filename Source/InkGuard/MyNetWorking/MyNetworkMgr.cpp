@@ -9,7 +9,7 @@ MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 
 SOLDIERINFO MyNetworkMgr::m_tSoldierInfo[SOLDIER_MAX_CNT];
 SOLDIERINFO MyNetworkMgr::m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
-string MyNetworkMgr::SERVERIP = "192.168.0.104";
+string MyNetworkMgr::SERVERIP = "192.168.45.106";
 
 #define MAX_ADDITIONAL_SIZE 128
 
