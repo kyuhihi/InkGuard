@@ -50,19 +50,21 @@ bool ASpawnMgr::GetSoldierData(C2S_PACKET_SOLDIER_TRANSFORM* pSendPacket)
 	for (auto& OurTeamSpawner : m_pSpawners)
 	{
 		const TArray<FSpawnDutyStruct>& SpawnerInfoArray = OurTeamSpawner->GetSpawnerInfo();
-		if (SpawnerInfoArray.Num() == 0)
+		const TArray<ACharacter*>& SpawnedCharacters = OurTeamSpawner->GetSpawnedCharacters();
+
+		if (SpawnerInfoArray.Num() == 0|| SpawnedCharacters.Num() == 0)
 			continue;
 
-		for (auto& Soldier : SpawnerInfoArray)
+		for (int32 i = 0; i < SpawnedCharacters.Num(); i++)
 		{
-			if (!IsValid(Soldier.pTargetActor))
+			if (IsValid(SpawnedCharacters[i]) == false)
 				continue;
-			//ACharacter* pCharacter = Soldier.pTargetActor.Get();
-			//USkeletalMeshComponent* pMesh = pCharacter->GetMesh();
-			USkeletalMeshComponent* pMesh = Soldier.pTargetActor->GetMesh();
-			UAnimInstance* pAnimInstance = pMesh->GetAnimInstance();
+			ACharacter* pLoopCharacter = SpawnedCharacters[i];
 
+			USkeletalMeshComponent* pMesh = pLoopCharacter->GetMesh();
+			UAnimInstance* pAnimInstance = pMesh->GetAnimInstance();
 			UAnimMontage* pAnimMontage = pAnimInstance->GetCurrentActiveMontage();
+
 			float fPlayTime(0.f);
 			if (IsValid(pAnimMontage) != false)
 			{
@@ -70,24 +72,57 @@ bool ASpawnMgr::GetSoldierData(C2S_PACKET_SOLDIER_TRANSFORM* pSendPacket)
 				fPlayTime = pAnimInstance->Montage_GetPosition(pAnimMontage);
 			}
 
-			FVector Velocity = Soldier.pTargetActor.Get()->GetVelocity();
-			FVector Position = Soldier.pTargetActor.Get()->GetActorLocation();
-			FRotator tPlayerRotation{ Soldier.pTargetActor->GetActorRotation() };
+			FVector Velocity = pLoopCharacter->GetVelocity();
+			FVector Position = pLoopCharacter->GetActorLocation();
+			FRotator tPlayerRotation{ pLoopCharacter->GetActorRotation() };
 
-			for (int i = 0; i < SOLDIER_MAX_CNT; i++) {
+			for (int j = 0; j < SOLDIER_MAX_CNT; j++) {
 
-				if (Soldier.iSpawnMgrIndex == i)
+				if (SpawnerInfoArray[i].iSpawnMgrIndex == j)
 				{
 					pSendPacket[i].fSoldier_MontagePlayTime = fPlayTime;
 					pSendPacket[i].fSoldier_Speed = (float)Velocity.Length();
 					pSendPacket[i].fSoldier_Yaw = tPlayerRotation.Yaw;
-					pSendPacket[i].fHP = Soldier.fSoldierHP;
+					pSendPacket[i].fHP = SpawnerInfoArray[i].fSoldierHP;
 					pSendPacket[i].vSoldier_Position = UCustomFunctional::FVector_To_float3(Position);
 					break;
 				}
 			}
-
 		}
+		//for (auto& Soldier : SpawnerInfoArray)
+		//{
+
+		//	//ACharacter* pCharacter = Soldier.pTargetActor.Get();
+		//	//USkeletalMeshComponent* pMesh = pCharacter->GetMesh();
+		//	USkeletalMeshComponent* pMesh = Soldier.pTargetActor->GetMesh();
+		//	UAnimInstance* pAnimInstance = pMesh->GetAnimInstance();
+
+		//	UAnimMontage* pAnimMontage = pAnimInstance->GetCurrentActiveMontage();
+		//	float fPlayTime(0.f);
+		//	if (IsValid(pAnimMontage) != false)
+		//	{
+		//		//UE_LOG(InkGuardNetErr, Log, TEXT("[X]: %f [Y]: %f [Z]: %f"), tRecvPacket.vPosition.x, tRecvPacket.vPosition.y, tRecvPacket.vPosition.z);
+		//		fPlayTime = pAnimInstance->Montage_GetPosition(pAnimMontage);
+		//	}
+
+		//	FVector Velocity = Soldier.pTargetActor->GetVelocity();
+		//	FVector Position = Soldier.pTargetActor->GetActorLocation();
+		//	FRotator tPlayerRotation{ Soldier.pTargetActor->GetActorRotation() };
+
+		//	for (int i = 0; i < SOLDIER_MAX_CNT; i++) {
+
+		//		if (Soldier.iSpawnMgrIndex == i)
+		//		{
+		//			pSendPacket[i].fSoldier_MontagePlayTime = fPlayTime;
+		//			pSendPacket[i].fSoldier_Speed = (float)Velocity.Length();
+		//			pSendPacket[i].fSoldier_Yaw = tPlayerRotation.Yaw;
+		//			pSendPacket[i].fHP = Soldier.fSoldierHP;
+		//			pSendPacket[i].vSoldier_Position = UCustomFunctional::FVector_To_float3(Position);
+		//			break;
+		//		}
+		//	}
+
+		//}
 	}
 
 	return true;

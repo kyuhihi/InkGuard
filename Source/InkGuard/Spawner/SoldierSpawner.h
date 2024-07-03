@@ -38,6 +38,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setting to Object")
 	const TArray<FSpawnDutyStruct>& GetSpawnerInfo();
 
+	UFUNCTION(BlueprintCallable, Category = "Setting to Object")
+	const TArray<ACharacter*>& GetSpawnedCharacters();
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int iTargetTerritoryType = TERRITORY_END;
@@ -47,4 +50,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FSpawnDutyStruct> m_tSpawnInfos;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<ACharacter*> m_pCharaters;
 };

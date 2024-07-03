@@ -53,3 +53,9 @@ const TArray<FSpawnDutyStruct>& ASoldierSpawner::GetSpawnerInfo()
 	// TODO: 여기에 return 문을 삽입합니다.
 }
 
+const TArray<ACharacter*>& ASoldierSpawner::GetSpawnedCharacters()
+{
+	return m_pCharaters;
+	// TODO: 여기에 return 문을 삽입합니다.
+}
+
