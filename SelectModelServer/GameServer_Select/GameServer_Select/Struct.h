@@ -80,6 +80,7 @@ struct S2C_PACKET_PLAYER_TRANSFORM {
 	float fSpeed = 0.f;
 	float fVelocityZ = 0.f;
 	float fYaw = 0.f;
+	float fHP = 100.f;
 };
 
 #pragma pack(1)
