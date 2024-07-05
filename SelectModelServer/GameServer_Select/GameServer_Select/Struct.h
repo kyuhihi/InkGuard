@@ -25,6 +25,7 @@ typedef struct C2S_PACKET_SOLDIER_TRANSFORM
 	float		fSoldier_Speed = 0.f;
 	float		fSoldier_MontagePlayTime = 0.f;
 	float		fSoldier_Yaw = 0.f;
+	float		fHP = 1.f;
 }S2C_PACKET_SOLDIER_TRANSFORM;
 
 #pragma pack(1)
@@ -37,6 +38,7 @@ struct C2S_PACKET_PLAYER_TRANSFORM
 	float fSpeed = 0.f;
 	float fVelocityZ = 0.f;
 	float fYaw = 0.f;
+	float fHP = 100.f;
 };
 
 #pragma pack(1)
@@ -83,7 +85,7 @@ struct S2C_PACKET_PLAYER_TRANSFORM {
 #pragma pack(1)
 struct S2C_PACKET_PLAYER_INPUT
 {
-	bool bInputs[PLAYER_INPUT::INPUT_END] = { false,false,false,false,false,false,false,false};
+	bool bInputs[PLAYER_INPUT::INPUT_END] = { false,false,false,false,false,false,false,false };
 	float fMontagePlayTime = 0.f;
 	short sAdditionalPacketSize = 0;
 };

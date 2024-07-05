@@ -9,7 +9,7 @@ MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 
 SOLDIERINFO MyNetworkMgr::m_tSoldierInfo[SOLDIER_MAX_CNT];
 SOLDIERINFO MyNetworkMgr::m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
-string MyNetworkMgr::SERVERIP = "192.168.45.5";
+string MyNetworkMgr::SERVERIP = "172.30.1.35";
 
 #define MAX_ADDITIONAL_SIZE 128
 
@@ -273,10 +273,10 @@ void MyNetworkMgr::SendPlayerTransform(const FVector& vPlayerPosition, const FRo
 	char* SendBuffer = new char[size_Total];
 	memcpy(SendBuffer, &tTransformPacket, size_TransformPacket);//플레이어거 먼저담아갈거임.
 
-	int iSendIndex = 0;
+	int iSendStartIndex = 0;
 	if (m_iSendSoldierCnt == 5)
-		iSendIndex = 4;//근데 4개 일때는 앞에, 5개일땐 뒤... 정말싫다.
-	memcpy(SendBuffer + size_TransformPacket, &(SoldierTransforms[iSendIndex]), size_SoldiersPacket);//병사거 담을거임.
+		iSendStartIndex = 4;//근데 4개 일때는 앞에, 5개일땐 뒤... 정말싫다.
+	memcpy(SendBuffer + size_TransformPacket, &(SoldierTransforms[iSendStartIndex]), size_SoldiersPacket);//병사거 담을거임.
 
 	int retval{ 0 };
 	retval = send(m_tClientSock.sock, SendBuffer, size_Total, 0);
@@ -288,6 +288,7 @@ void MyNetworkMgr::SendPlayerTransform(const FVector& vPlayerPosition, const FRo
 
 		return;
 	}
+	MakeDebugStringTable(to_string(retval).c_str());
 
 	delete[] SendBuffer;
 	ChangeSendSoldierTransformCnt(m_iSendSoldierCnt);

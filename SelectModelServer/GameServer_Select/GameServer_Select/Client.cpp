@@ -249,9 +249,11 @@ bool CClient::RecvPacket()
 		else if (retval == 0) { 
 			return false;
 		}
-		if (retval != tNewPacket.m_iBufferSize)
-			cout << "받아야할 사이즈: " << tNewPacket.m_iBufferSize<<"  받은 패킷양: " << retval << endl;
-
+		if (retval != tNewPacket.m_iBufferSize) {
+			cout << "받아야할 사이즈: " << tNewPacket.m_iBufferSize << "  받은 패킷양: " << retval << endl;
+		}
+		string strDebug = "RecvPacket" + to_string(retval);
+		MakeDebugStringtable(strDebug.c_str());
 		ConductPacket(tNewPacket);
 	}
 	else if (m_eState == STATE_ADDITIONAL)
@@ -281,7 +283,7 @@ bool CClient::RecvPacket()
 
 bool CClient::SendPacket()
 {// 데이터 보내기
-	MakeDebugStringtable("SendPacket");
+	//MakeDebugStringtable("SendPacket");
 	if (m_tSockInfo.totalSendLen == m_tSockInfo.sendbytes) {// 이건 
 		err_display("total != sendbytes");//이건 나중에 조금 손봐.
 		return false;
@@ -361,7 +363,7 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 			const unsigned long long& size_SoldiersPacket = sizeof(C2S_PACKET_SOLDIER_TRANSFORM) * m_iSendSoldiersCnt;
 			S2C_PACKET_PLAYER_TRANSFORM tSendPacket = m_pOtherClient->GetOtherPlayerTransform();
 
-			m_tSockInfo.totalSendLen = size_TransformPacket + size_SoldiersPacket;
+			m_tSockInfo.totalSendLen = (int)(size_TransformPacket + size_SoldiersPacket);
 			m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];
 
 			memcpy(m_tSockInfo.cBuf, &tSendPacket, size_TransformPacket);
