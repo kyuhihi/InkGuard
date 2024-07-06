@@ -27,6 +27,7 @@ USTRUCT(Atomic, BlueprintType)
 struct FSpawnDutyStruct
 {
 	GENERATED_USTRUCT_BODY()
+
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -38,7 +39,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float fSoldierHP = 100.f;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int iPlayingAnimationIndex = -1;
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -60,6 +62,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float		fHP = 100.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int			iPlayingMontageIndex = -1;
 
 };
 
