@@ -16,6 +16,9 @@
 #define _fmatrix FXMMATRIX
 
 #define _float4x4 XMFLOAT4X4
+using _tchar = wchar_t;
+using _float = float;
+
 
 #ifdef _DEBUG
 

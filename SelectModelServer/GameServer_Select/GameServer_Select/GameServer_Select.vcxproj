@@ -141,12 +141,15 @@
     <ClCompile Include="Soldier.cpp" />
     <ClCompile Include="SoldierMgr.cpp" />
     <ClCompile Include="SpearMan.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TimerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Daka.h" />
     <ClInclude Include="Define.h" />
+    <ClInclude Include="Engine_Functor.h" />
     <ClInclude Include="Enum.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Include.h" />
@@ -158,6 +161,8 @@
     <ClInclude Include="SoldierMgr.h" />
     <ClInclude Include="SpearMan.h" />
     <ClInclude Include="Struct.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="TimerManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

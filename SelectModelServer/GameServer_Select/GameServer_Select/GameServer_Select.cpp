@@ -41,6 +41,8 @@ int main(int argc, char* argv[])
 	for (int i = 0; i < FD_SETSIZE; ++i)
 		ClientArray[i] = nullptr;
 
+
+
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 		return 1;

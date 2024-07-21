@@ -48,6 +48,12 @@
     <Filter Include="소스 파일\01. Client\Packet\MemoryMgr">
       <UniqueIdentifier>{f674ae0a-b782-424b-9cf0-c4ccfa1a4ffc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\02. Timer">
+      <UniqueIdentifier>{a181df22-851b-46aa-8ead-822973fd74c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\02. Timer\00. Manager">
+      <UniqueIdentifier>{d60b2ac3-b4db-4706-a104-c1fa58568431}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common.cpp">
@@ -85,6 +91,12 @@
     </ClCompile>
     <ClCompile Include="MemoryPooler.cpp">
       <Filter>소스 파일\01. Client\Packet\MemoryMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>소스 파일\02. Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerManager.cpp">
+      <Filter>소스 파일\02. Timer\00. Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +144,15 @@
     </ClInclude>
     <ClInclude Include="MemoryPooler.h">
       <Filter>소스 파일\01. Client\Packet\MemoryMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>소스 파일\02. Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine_Functor.h">
+      <Filter>소스 파일\99. Include</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerManager.h">
+      <Filter>소스 파일\02. Timer\00. Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
