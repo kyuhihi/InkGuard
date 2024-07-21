@@ -224,7 +224,10 @@ void CClient::ConductTransformPacket(bool& bSendTransformDuty, const CPacket& Pa
 	m_pPlayer->SetTransform(tPlayerTransform);
 	m_pSoldierMgr->SetSoldiersPacket(SoldierTransforms, iRecvIndex);
 
-
+	if (m_tSockInfo.eGamePlayTeam == GAME_BLUE_TEAM)
+	{//디버그용.
+		m_pSoldierMgr->DebugPrintSoldiersPos();
+	}
 	ChangeRecvSoldierTransformCnt(m_iRecvSoldiersCnt);
 }
 

@@ -52,7 +52,7 @@ bool ASpawnMgr::GetSoldierData(C2S_PACKET_SOLDIER_TRANSFORM* pSendPacket)
 		const TArray<FSpawnDutyStruct>& SpawnerInfoArray = OurTeamSpawner->GetSpawnerInfo();
 		const TArray<ACharacter*>& SpawnedCharacters = OurTeamSpawner->GetSpawnedCharacters();
 
-		if (SpawnerInfoArray.Num() == 0|| SpawnedCharacters.Num() == 0)
+		if (SpawnerInfoArray.Num() == 0 || SpawnedCharacters.Num() == 0)
 			continue;
 
 		for (int32 i = 0; i < SpawnedCharacters.Num(); i++)
@@ -70,28 +70,29 @@ bool ASpawnMgr::GetSoldierData(C2S_PACKET_SOLDIER_TRANSFORM* pSendPacket)
 			{
 				//UE_LOG(InkGuardNetErr, Log, TEXT("[X]: %f [Y]: %f [Z]: %f"), tRecvPacket.vPosition.x, tRecvPacket.vPosition.y, tRecvPacket.vPosition.z);
 				fPlayTime = pAnimInstance->Montage_GetPosition(pAnimMontage);
-				
+
 			}
 
 			FVector Velocity = pLoopCharacter->GetVelocity();
 			FVector Position = pLoopCharacter->GetActorLocation();
 			FRotator tPlayerRotation{ pLoopCharacter->GetActorRotation() };
 
-			for (int j = 0; j < SOLDIER_MAX_CNT; j++) {
+			//for (int j = 0; j < SOLDIER_MAX_CNT; j++) {
 
-				if (SpawnerInfoArray[i].iSpawnMgrIndex == j)
-				{
-					pSendPacket[i].vSoldier_Position = UCustomFunctional::FVector_To_float3(Position);
-					pSendPacket[i].fSoldier_Speed = (float)Velocity.Length();
-					pSendPacket[i].fSoldier_MontagePlayTime = fPlayTime;
-					pSendPacket[i].fSoldier_Yaw = tPlayerRotation.Yaw;
-					pSendPacket[i].cHP = (char)SpawnerInfoArray[i].fSoldierHP;
-					pSendPacket[i].cPlayingMontageIndex = (char)SpawnerInfoArray[i].iPlayingAnimationIndex;
-					break;
-				}
-			}
+			//	if (SpawnerInfoArray[i].iSpawnMgrIndex == j)
+			//	{
+			int iSpawnMgrIndex = SpawnerInfoArray[i].iSpawnMgrIndex;
+			pSendPacket[iSpawnMgrIndex].vSoldier_Position = UCustomFunctional::FVector_To_float3(Position);
+			pSendPacket[iSpawnMgrIndex].fSoldier_Speed = (float)Velocity.Length();
+			pSendPacket[iSpawnMgrIndex].fSoldier_MontagePlayTime = fPlayTime;
+			pSendPacket[iSpawnMgrIndex].fSoldier_Yaw = tPlayerRotation.Yaw;
+			pSendPacket[iSpawnMgrIndex].cHP = (char)SpawnerInfoArray[i].fSoldierHP;
+			pSendPacket[iSpawnMgrIndex].cPlayingMontageIndex = (char)SpawnerInfoArray[i].iPlayingAnimationIndex;
+			//break;
+			//	}
+			//}
 		}
-		
+
 	}
 
 	return true;

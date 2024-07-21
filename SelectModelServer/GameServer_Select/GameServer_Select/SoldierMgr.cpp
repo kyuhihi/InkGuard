@@ -97,3 +97,30 @@ void CSoldierMgr::GetSoldiersPacket(S2C_PACKET_SOLDIER_TRANSFORM* pSendPacket)
 		pSendPacket[i] = m_pSoldiers[i]->GetSoldierTransform();
 	}
 }
+
+void CSoldierMgr::DebugPrintSoldiersPos()
+{
+	if (m_pSoldiers.empty())
+		return;
+	string strPos;
+	for (int i = 0; i < SOLDIER_MAX_CNT; i++)
+	{
+		strPos.clear();
+		strPos = to_string(i);
+		strPos += "  Pos:  ";
+		
+		_float3 vPos = m_pSoldiers[i]->GetSoldierTransform().vSoldier_Position;
+
+		strPos += " X: ";
+		
+		strPos += to_string(vPos.x);
+
+		strPos += " Y: ";
+		strPos += to_string(vPos.y);
+
+		strPos += " Z: ";
+		strPos += to_string(vPos.z);
+		cout << strPos << endl;
+	}
+
+}

@@ -21,6 +21,8 @@ public:
 	void SetSoldiersPacket(const S2C_PACKET_SOLDIER_TRANSFORM* pRecvPacket,const int iStartIndex);
 	void GetSoldiersPacket(S2C_PACKET_SOLDIER_TRANSFORM* pSendPacket);
 
+	void DebugPrintSoldiersPos();
+
 private:
 	vector<class CSoldier*>m_pSoldiers; // 9
 };
