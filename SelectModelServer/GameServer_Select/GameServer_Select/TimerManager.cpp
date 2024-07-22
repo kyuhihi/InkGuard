@@ -18,18 +18,15 @@ CTimerManager::~CTimerManager()
 	m_Timers.clear();
 }
 
-_float CTimerManager::GetTimeDelta(const _tchar * pTimerTag)
-{
-	CTimer*		pTimer = FindTimer(pTimerTag);
-	if (nullptr == pTimer)
-		return 0.0f;
-
-	return pTimer->GetTimeDelta();	
-}
-
 _float CTimerManager::GetGameTime(const _tchar* pTimerTag)
 {
-	return _float();
+	CTimer* pTimer = FindTimer(pTimerTag);
+	if (nullptr == pTimer) {
+		err_display("Timer못찾겠는데?\n");
+		return -1.f;
+	}
+
+	return pTimer->GetGameTime();
 }
 
 HRESULT CTimerManager::AddTimer(const _tchar * pTimerTag)
@@ -53,6 +50,18 @@ HRESULT CTimerManager::UpdateTimer(const _tchar * pTimerTag)
 		return E_FAIL;
 
 	pTimer->Update();	
+
+	return S_OK;
+}
+
+HRESULT CTimerManager::ReserveGameStart(const _tchar* pTimerTag)
+{
+	CTimer* pTimer = FindTimer(pTimerTag);
+	if (nullptr == pTimer)
+		return E_FAIL;
+
+	pTimer->SetGameTime(TOTAL_GAME_TIME);
+	pTimer->Update();
 
 	return S_OK;
 }

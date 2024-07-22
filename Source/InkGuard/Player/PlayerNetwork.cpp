@@ -153,7 +153,6 @@ void UPlayerNetwork::RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tO
 		tOutInputs.Climbing = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_CLIMBING];
 		tOutInputs.QSkill = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_QSKILL];
 		tOutInputs.MontagePlayTime = tRecvPacket.fMontagePlayTime;
-
 	}
 	//UE_LOG(InkGuardNetErr, Warning, TEXT("RecvPlayerInputData"));
 	

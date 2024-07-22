@@ -9,11 +9,13 @@ public:
 	~CTimer();
 
 public:
-	const float GetTimeDelta(void) const { return m_fTimeDelta; }
+	float GetGameTime(void);
+	void SetGameTime(const float fNewTime) { m_bGameStart = false; m_fGameTime = fNewTime; };
 
 public:
 	HRESULT Initialize();
 	void Update(void);
+
 
 private:
 	LARGE_INTEGER		m_CurrentTime;
@@ -22,4 +24,6 @@ private:
 	LARGE_INTEGER		m_CpuTick;
 	float				m_fTimeDelta;
 
+	float				m_fGameTime = TOTAL_GAME_TIME;
+	bool				m_bGameStart = false;
 };

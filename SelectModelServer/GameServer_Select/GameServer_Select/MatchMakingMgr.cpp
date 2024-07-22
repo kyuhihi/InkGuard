@@ -1,4 +1,5 @@
 #include "MatchMakingMgr.h"
+#include "TimerManager.h"
 
 CMatchMakingMgr::CMatchMakingMgr()
 {
@@ -64,27 +65,24 @@ bool CMatchMakingMgr::CheckMatchMakingPossible()
 			if (i == j)
 				continue;
 
-			++m_iCurrentGameCnt;
+			CTimerManager* pTimerManager = CTimerManager::GetInstance();
+			wstring strMatchTimer = pTimerManager->GetDefaultTimerName();
+			strMatchTimer += to_wstring(m_iCurrentGameCnt);
+			
+			if (E_FAIL == pTimerManager->ReserveGameStart(strMatchTimer.c_str()))
+				err_display("이거 타이머 못찾겠는데");
 
 			pSourClient->SetTeam(GAME_RED_TEAM);
 			pSourClient->SetOtherClient(pDestClient);
+			pSourClient->SetTimerTag(strMatchTimer.c_str());
 			
 			pDestClient->SetTeam(GAME_BLUE_TEAM);
 			pDestClient->SetOtherClient(pSourClient);
+			pDestClient->SetTimerTag(strMatchTimer.c_str());
 
-			//pGameInstance->UpdateTimer(TEXT("Timer_Default"));
 
-			//fTimeAcc += pGameInstance->GetTimeDelta(TEXT("Timer_Default"));
-
-			//if (fTimeAcc >= 1.0f / g_iFPS/*0.0f*/)
-			//{
-			//	pGameInstance->UpdateTimer(TEXT("Timer_60"));
-			//	pMainApp->Tick(pGameInstance->GetTimeDelta(TEXT("Timer_60")));
-			//	pMainApp->Render();
-
-			//	fTimeAcc = 0.f;
-			//}
 			bMatchSuccess = true;
+			++m_iCurrentGameCnt;
 			break;
 		}
 		if (bMatchSuccess) {

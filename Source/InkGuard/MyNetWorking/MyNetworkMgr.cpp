@@ -15,13 +15,13 @@ string MyNetworkMgr::SERVERIP = "192.168.25.55";
 
 MyNetworkMgr::MyNetworkMgr()
 {
-	//Initialize(); //네트워킹 커넥트 작업.
-	//ASpawnMgr::Initialize();
+	Initialize(); //네트워킹 커넥트 작업.
+	ASpawnMgr::Initialize();
 }
 
 MyNetworkMgr::~MyNetworkMgr()
 {
-	//Tidy();
+	Tidy();
 }
 
 void MyNetworkMgr::Initialize()
@@ -371,6 +371,8 @@ bool MyNetworkMgr::RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket)
 
 	m_sRecvAdditionalPacketSize = tOutPacket.sAdditionalPacketSize;
 
+	
+	tOutPacket.fGameTime;
 	//if (m_sRecvAdditionalPacketSize != 0) // 추가로 받아야하는 패킷이있다면 recv한번ㄴ더 해야함.
 	//{
 	//	RecvAdditionalData();
