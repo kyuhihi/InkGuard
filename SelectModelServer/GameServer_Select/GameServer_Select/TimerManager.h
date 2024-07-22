@@ -32,14 +32,18 @@ private:
 
 public:
 	_float GetTimeDelta(const _tchar* pTimerTag);
+	_float GetGameTime(const _tchar* pTimerTag);
 
 public:
 	HRESULT AddTimer(const _tchar* pTimerTag);
 	HRESULT UpdateTimer(const _tchar* pTimerTag);
 
+	const wstring GetDefaultTimerName() { return m_strDefaultTimerName; }
+
 private:
 	using TIMERS = map<const _tchar*, class CTimer*>;
 	TIMERS m_Timers;
+	wstring m_strDefaultTimerName = L"Match_";
 
 private:
 	class CTimer* FindTimer(const _tchar* pTimerTag);

@@ -64,17 +64,32 @@ bool CMatchMakingMgr::CheckMatchMakingPossible()
 			if (i == j)
 				continue;
 
+			++m_iCurrentGameCnt;
+
 			pSourClient->SetTeam(GAME_RED_TEAM);
 			pSourClient->SetOtherClient(pDestClient);
 			
 			pDestClient->SetTeam(GAME_BLUE_TEAM);
 			pDestClient->SetOtherClient(pSourClient);
 
+			//pGameInstance->UpdateTimer(TEXT("Timer_Default"));
+
+			//fTimeAcc += pGameInstance->GetTimeDelta(TEXT("Timer_Default"));
+
+			//if (fTimeAcc >= 1.0f / g_iFPS/*0.0f*/)
+			//{
+			//	pGameInstance->UpdateTimer(TEXT("Timer_60"));
+			//	pMainApp->Tick(pGameInstance->GetTimeDelta(TEXT("Timer_60")));
+			//	pMainApp->Render();
+
+			//	fTimeAcc = 0.f;
+			//}
 			bMatchSuccess = true;
 			break;
 		}
-		if (bMatchSuccess)
+		if (bMatchSuccess) {
 			break;
+		}
 	}
 
 	m_WaitingClientVec.erase(m_WaitingClientVec.begin() + i);

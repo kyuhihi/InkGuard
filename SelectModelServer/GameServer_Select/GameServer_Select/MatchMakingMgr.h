@@ -17,5 +17,6 @@ private:
 
 private:
 	vector<CClient*> m_WaitingClientVec;
+	int m_iCurrentGameCnt = 0;
 };
 

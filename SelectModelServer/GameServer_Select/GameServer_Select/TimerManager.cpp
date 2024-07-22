@@ -4,6 +4,7 @@
 CTimerManager* CTimerManager::m_pInstance = nullptr;
 
 CTimerManager::CTimerManager()
+	
 {
 }
 
@@ -24,6 +25,11 @@ _float CTimerManager::GetTimeDelta(const _tchar * pTimerTag)
 		return 0.0f;
 
 	return pTimer->GetTimeDelta();	
+}
+
+_float CTimerManager::GetGameTime(const _tchar* pTimerTag)
+{
+	return _float();
 }
 
 HRESULT CTimerManager::AddTimer(const _tchar * pTimerTag)
