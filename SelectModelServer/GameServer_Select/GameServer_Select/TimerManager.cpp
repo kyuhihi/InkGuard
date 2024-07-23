@@ -38,7 +38,15 @@ HRESULT CTimerManager::AddTimer(const _tchar * pTimerTag)
 	if (nullptr == pTimer)
 		return E_FAIL;
 
-	m_Timers.emplace(pTimerTag, pTimer);
+	size_t length = wcslen(pTimerTag) + 1;
+
+	// Allocate new memory for the string copy.
+	_tchar* pNewTimerTag = new _tchar[length];
+
+	// Copy the string to the newly allocated memory.
+	wcscpy(pNewTimerTag, pTimerTag);
+
+	m_Timers.emplace(pNewTimerTag, pTimer);
 
 	return S_OK;
 }

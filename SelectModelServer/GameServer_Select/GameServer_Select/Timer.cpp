@@ -15,9 +15,10 @@ CTimer::~CTimer()
 
 float CTimer::GetGameTime(void)
 {
+	Update();
+
 	if (!m_bGameStart) {
 		m_bGameStart = true;
-		Update();
 		return TOTAL_GAME_TIME;
 	}
 

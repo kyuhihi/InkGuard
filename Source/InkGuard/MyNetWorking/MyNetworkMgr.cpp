@@ -9,7 +9,7 @@ MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 
 SOLDIERINFO MyNetworkMgr::m_tSoldierInfo[SOLDIER_MAX_CNT];
 SOLDIERINFO MyNetworkMgr::m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
-string MyNetworkMgr::SERVERIP = "192.168.25.55";
+string MyNetworkMgr::SERVERIP = "172.30.1.35";
 
 #define MAX_ADDITIONAL_SIZE 128
 
@@ -371,8 +371,9 @@ bool MyNetworkMgr::RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket)
 
 	m_sRecvAdditionalPacketSize = tOutPacket.sAdditionalPacketSize;
 
-	
-	tOutPacket.fGameTime;
+	m_fServerTime = tOutPacket.fGameTime;
+
+	m_fServerTime = std::clamp(m_fServerTime, 0.f, TOTAL_GAME_TIME);
 	//if (m_sRecvAdditionalPacketSize != 0) // 추가로 받아야하는 패킷이있다면 recv한번ㄴ더 해야함.
 	//{
 	//	RecvAdditionalData();
