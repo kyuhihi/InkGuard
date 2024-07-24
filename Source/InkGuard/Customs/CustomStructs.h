@@ -10,7 +10,14 @@
 UENUM(BlueprintType)
 enum class EAdditionalPacketType : uint8
 {
-	ADD_VAULT UMETA(DisplayName = "Vaulting Data"),
+	INTERACTION_DORERAE_A UMETA(DisplayName = "INTERACTION_DORERAE_A"),
+	INTERACTION_DORERAE_B UMETA(DisplayName = "INTERACTION_DORERAE_B"),
+	INTERACTION_DORERAE_C UMETA(DisplayName = "INTERACTION_DORERAE_C"),
+	INTERACTION_VAULT UMETA(DisplayName = "INTERACTION_VAULT"),
+	INTERACTION_CLIMB UMETA(DisplayName = "INTERACTION_CLIMB"),
+	INTERACTION_DAEPO UMETA(DisplayName = "INTERACTION_DAEPO"),
+	INTERACTION_BALISTA UMETA(DisplayName = "INTERACTION_BALISTA"),
+	INTERACTION_END UMETA(DisplayName = "INTERACTION_END"),
 };
 
 /**
@@ -93,13 +100,13 @@ struct FPlayerInputStruct
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EAdditionalPacketType InteractionType = EAdditionalPacketType::INTERACTION_END;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool PressingF = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Attack = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool Vault = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool Dodge = false;
@@ -111,13 +118,22 @@ public:
 	bool Crouch = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool Climbing = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool QSkill = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool ESkill = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MontagePlayTime = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector Value1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector Value2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector Value3;
 };
 
 USTRUCT(Atomic, BlueprintType)

@@ -338,7 +338,7 @@ void MyNetworkMgr::SendPlayerInputData(C2S_PACKET_PLAYER_INPUT& tBakuInputData)
 	if (!m_tClientSock.bConnectSuccess)
 		return;
 
-	tBakuInputData.sAdditionalPacketSize = m_sSendAdditionalPacketSize; // 다음에 추가로 보낼 패킷 사이즈를 넣어준다.
+	//tBakuInputData.sAdditionalPacketSize = m_sSendAdditionalPacketSize; // 다음에 추가로 보낼 패킷 사이즈를 넣어준다.
 
 	int retval{ 0 };
 	unsigned long long llPacketSize(sizeof(tBakuInputData));
@@ -369,7 +369,7 @@ bool MyNetworkMgr::RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket)
 		return false;
 	}
 
-	m_sRecvAdditionalPacketSize = tOutPacket.sAdditionalPacketSize;
+	//m_sRecvAdditionalPacketSize = tOutPacket.sAdditionalPacketSize;
 
 	m_fServerTime = tOutPacket.fGameTime;
 
@@ -506,21 +506,21 @@ void MyNetworkMgr::ConductAdditionalData(const char* pNewPacket)
 
 		C2S_PACKET_ADDITIONAL_FLOAT3x3 tFloat3x3;
 
-		switch (eNewPacketType)
-		{
-			case EAdditionalPacketType::ADD_VAULT: 
-			{
-				memcpy(&tFloat3x3, pNewPacket + iOffset, sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3));
-				iOffset += sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3);
-				AppendDataToAdditionalList(false, eNewPacketType, tFloat3x3);
+		//switch (eNewPacketType)
+		//{
+		//	/*case EAdditionalPacketType::ADD_VAULT: 
+		//	{
+		//		memcpy(&tFloat3x3, pNewPacket + iOffset, sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3));
+		//		iOffset += sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3);
+		//		AppendDataToAdditionalList(false, eNewPacketType, tFloat3x3);
 
-				break; 
-			}
-			default: 
-			{
-				break;
-			}
-		}
+		//		break; 
+		//	}*/
+		//	default: 
+		//	{
+		//		break;
+		//	}
+		//}
 
 	}
 	m_sRecvAdditionalPacketSize = 0;
