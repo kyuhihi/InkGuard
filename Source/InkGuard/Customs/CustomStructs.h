@@ -40,7 +40,7 @@ public:
 	float fSoldierHP = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int iPlayingAnimationIndex = -1;
+	int iLastDamageCauser = -1;
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -64,7 +64,7 @@ public:
 	float		fHP = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int			iPlayingMontageIndex = -1;
+	int			iLastDamageCauser = -1;
 
 };
 

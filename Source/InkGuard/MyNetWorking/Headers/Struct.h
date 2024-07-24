@@ -31,7 +31,7 @@ typedef struct C2S_PACKET_SOLDIER_TRANSFORM
 	float		fSoldier_MontagePlayTime = 0.f;
 	float		fSoldier_Yaw = 0.f;
 	char		cHP = 100;
-	char		cPlayingMontageIndex = -1;
+	char		cLastDamageCauser = -1;
 } S2C_PACKET_SOLDIER_TRANSFORM;
 
 #pragma pack(1)

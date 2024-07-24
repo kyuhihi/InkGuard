@@ -45,6 +45,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
 	float GetHP();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
+	int GetLastDamageCauser();
+
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Spawner")
 	const bool GetEffectPoint(FVector MyLocation, FTransform& vEffectPoint);

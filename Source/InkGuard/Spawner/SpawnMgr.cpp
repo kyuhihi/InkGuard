@@ -87,10 +87,12 @@ bool ASpawnMgr::GetSoldierData(C2S_PACKET_SOLDIER_TRANSFORM* pSendPacket)
 			pSendPacket[iSpawnMgrIndex].fSoldier_MontagePlayTime = fPlayTime;
 			pSendPacket[iSpawnMgrIndex].fSoldier_Yaw = tPlayerRotation.Yaw;
 			pSendPacket[iSpawnMgrIndex].cHP = (char)SpawnerInfoArray[i].fSoldierHP;
-			pSendPacket[iSpawnMgrIndex].cPlayingMontageIndex = (char)SpawnerInfoArray[i].iPlayingAnimationIndex;
+			pSendPacket[iSpawnMgrIndex].cLastDamageCauser = (char)SpawnerInfoArray[i].iLastDamageCauser;
 			//break;
 			//	}
 			//}
+			//UE_LOG(InkGuardNetErr, Log, TEXT("index: %d [HP]: %d"), iSpawnMgrIndex, (int)pSendPacket[iSpawnMgrIndex].cHP);
+
 		}
 
 	}
@@ -121,7 +123,7 @@ bool ASpawnMgr::SetSoldierData(const C2S_PACKET_SOLDIER_TRANSFORM* pRecvPacket, 
 			tCastedPacket.fSoldier_Yaw = pRecvPacket[i].fSoldier_Yaw;
 			tCastedPacket.vSoldier_Position = UCustomFunctional::float3_To_FVector(pRecvPacket[i].vSoldier_Position);
 			tCastedPacket.fHP = pRecvPacket[i].cHP;
-			tCastedPacket.iPlayingMontageIndex = pRecvPacket[i].cPlayingMontageIndex;
+			tCastedPacket.iLastDamageCauser = (int)pRecvPacket[i].cLastDamageCauser;
 
 			m_OtherSoldiersTransform[i] = tCastedPacket;
 			m_OtherSoldiersUpdate[i] = true;
