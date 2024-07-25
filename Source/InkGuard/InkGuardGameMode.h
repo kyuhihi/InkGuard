@@ -61,6 +61,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
 	void GetTeamColor(bool& bRedColor);
 
+	UFUNCTION(BlueprintCallable, Category = "MyNetworking")
+	float GetServerTime();
+
 private:
 	MyNetworkMgr* m_pNetWorkMgr = nullptr;
 

@@ -9,19 +9,19 @@ MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 
 SOLDIERINFO MyNetworkMgr::m_tSoldierInfo[SOLDIER_MAX_CNT];
 SOLDIERINFO MyNetworkMgr::m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
-string MyNetworkMgr::SERVERIP = "192.168.25.55";
+string MyNetworkMgr::SERVERIP = "127.0.0.1";
 
 #define MAX_ADDITIONAL_SIZE 128
 
 MyNetworkMgr::MyNetworkMgr()
 {
-	//Initialize(); //네트워킹 커넥트 작업.
-	//ASpawnMgr::Initialize();
+	Initialize(); //네트워킹 커넥트 작업.
+	ASpawnMgr::Initialize();
 }
 
 MyNetworkMgr::~MyNetworkMgr()
 {
-	//Tidy();
+	Tidy();
 }
 
 void MyNetworkMgr::Initialize()
@@ -338,7 +338,7 @@ void MyNetworkMgr::SendPlayerInputData(C2S_PACKET_PLAYER_INPUT& tBakuInputData)
 	if (!m_tClientSock.bConnectSuccess)
 		return;
 
-	tBakuInputData.sAdditionalPacketSize = m_sSendAdditionalPacketSize; // 다음에 추가로 보낼 패킷 사이즈를 넣어준다.
+	//tBakuInputData.sAdditionalPacketSize = m_sSendAdditionalPacketSize; // 다음에 추가로 보낼 패킷 사이즈를 넣어준다.
 
 	int retval{ 0 };
 	unsigned long long llPacketSize(sizeof(tBakuInputData));
@@ -369,8 +369,11 @@ bool MyNetworkMgr::RecvPlayerInputData(S2C_PACKET_PLAYER_INPUT& tOutPacket)
 		return false;
 	}
 
-	m_sRecvAdditionalPacketSize = tOutPacket.sAdditionalPacketSize;
+	//m_sRecvAdditionalPacketSize = tOutPacket.sAdditionalPacketSize;
 
+	m_fServerTime = tOutPacket.fGameTime;
+
+	m_fServerTime = std::clamp(m_fServerTime, 0.f, TOTAL_GAME_TIME);
 	//if (m_sRecvAdditionalPacketSize != 0) // 추가로 받아야하는 패킷이있다면 recv한번ㄴ더 해야함.
 	//{
 	//	RecvAdditionalData();
@@ -503,21 +506,21 @@ void MyNetworkMgr::ConductAdditionalData(const char* pNewPacket)
 
 		C2S_PACKET_ADDITIONAL_FLOAT3x3 tFloat3x3;
 
-		switch (eNewPacketType)
-		{
-			case EAdditionalPacketType::ADD_VAULT: 
-			{
-				memcpy(&tFloat3x3, pNewPacket + iOffset, sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3));
-				iOffset += sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3);
-				AppendDataToAdditionalList(false, eNewPacketType, tFloat3x3);
+		//switch (eNewPacketType)
+		//{
+		//	/*case EAdditionalPacketType::ADD_VAULT: 
+		//	{
+		//		memcpy(&tFloat3x3, pNewPacket + iOffset, sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3));
+		//		iOffset += sizeof(C2S_PACKET_ADDITIONAL_FLOAT3x3);
+		//		AppendDataToAdditionalList(false, eNewPacketType, tFloat3x3);
 
-				break; 
-			}
-			default: 
-			{
-				break;
-			}
-		}
+		//		break; 
+		//	}*/
+		//	default: 
+		//	{
+		//		break;
+		//	}
+		//}
 
 	}
 	m_sRecvAdditionalPacketSize = 0;

@@ -122,14 +122,20 @@ void UPlayerNetwork::SendPlayerInputData(float DeltaTime, const FPlayerInputStru
 
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_F] = tBakuInputData.PressingF;
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_ATTACK] = tBakuInputData.Attack;
-	tSendPacket.bInputs[PLAYER_INPUT::INPUT_VAULT] = tBakuInputData.Vault;
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_DODGE] = tBakuInputData.Dodge;
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_SPRINT] = tBakuInputData.Sprint;
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_CROUCH] = tBakuInputData.Crouch;
-	tSendPacket.bInputs[PLAYER_INPUT::INPUT_CLIMBING] = tBakuInputData.Climbing;
 	tSendPacket.bInputs[PLAYER_INPUT::INPUT_QSKILL] = tBakuInputData.QSkill;
-
+	tSendPacket.bInputs[PLAYER_INPUT::INPUT_ESKILL] = tBakuInputData.ESkill;
+	
 	tSendPacket.fMontagePlayTime = tBakuInputData.MontagePlayTime;
+	tSendPacket.cInteractionType = (uint8)tBakuInputData.InteractionType;
+
+	tSendPacket.tAddPacket.vValue1 = UCustomFunctional::FVector_To_float3(tBakuInputData.Value1);
+	tSendPacket.tAddPacket.vValue2 = UCustomFunctional::FVector_To_float3(tBakuInputData.Value2);
+	tSendPacket.tAddPacket.vValue3 = UCustomFunctional::FVector_To_float3(tBakuInputData.Value3);
+
+
 
 	//SendPlayerInputData
 	m_pNetworkMgr->SendPlayerInputData(tSendPacket);
@@ -146,14 +152,18 @@ void UPlayerNetwork::RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tO
 	{
 		tOutInputs.PressingF = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_F];
 		tOutInputs.Attack = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_ATTACK];
-		tOutInputs.Vault = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_VAULT];
 		tOutInputs.Dodge = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_DODGE];
 		tOutInputs.Sprint = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_SPRINT];
 		tOutInputs.Crouch = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_CROUCH];
-		tOutInputs.Climbing = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_CLIMBING];
 		tOutInputs.QSkill = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_QSKILL];
-		tOutInputs.MontagePlayTime = tRecvPacket.fMontagePlayTime;
+		tOutInputs.ESkill = tRecvPacket.bInputs[PLAYER_INPUT::INPUT_ESKILL];
 
+		tOutInputs.MontagePlayTime = tRecvPacket.fMontagePlayTime;
+		tOutInputs.InteractionType = (EAdditionalPacketType)tRecvPacket.cInteractionType;
+
+		tOutInputs.Value1 = UCustomFunctional::float3_To_FVector(tRecvPacket.tAddPacket.vValue1);
+		tOutInputs.Value2 = UCustomFunctional::float3_To_FVector(tRecvPacket.tAddPacket.vValue2);
+		tOutInputs.Value3 = UCustomFunctional::float3_To_FVector(tRecvPacket.tAddPacket.vValue3);
 	}
 	//UE_LOG(InkGuardNetErr, Warning, TEXT("RecvPlayerInputData"));
 	
@@ -162,24 +172,24 @@ void UPlayerNetwork::RecvPlayerInputData(float DeltaTime, FPlayerInputStruct& tO
 
 void UPlayerNetwork::SendAdditionalData(float DeltaTime)
 {
-	if (m_pNetworkMgr->GetAdditionalSendPacketSize() > 0) {
-		int iSendByte = m_pNetworkMgr->SendAdditionalData();
-		if (iSendByte > 0)
-		{
-			UE_LOG(InkGuardNetErr, Warning, TEXT("Additional SendByte %d"), iSendByte);
-		}
-	}
+	//if (m_pNetworkMgr->GetAdditionalSendPacketSize() > 0) {
+	//	int iSendByte = m_pNetworkMgr->SendAdditionalData();
+	//	if (iSendByte > 0)
+	//	{
+	//		UE_LOG(InkGuardNetErr, Warning, TEXT("Additional SendByte %d"), iSendByte);
+	//	}
+	//}
 }
 
 void UPlayerNetwork::RecvAdditionalData(float DeltaTime)
 {
-	m_pNetworkMgr->RecvAdditionalData();
+	//m_pNetworkMgr->RecvAdditionalData();
 }
 
 const FVaultingPacket UPlayerNetwork::GetVaultingData()
 {
 	C2S_PACKET_ADDITIONAL_FLOAT3x3 tFindData;
-	m_pNetworkMgr->FindAdditionalData(EAdditionalPacketType::ADD_VAULT, tFindData);
+	//m_pNetworkMgr->FindAdditionalData(EAdditionalPacketType::ADD_VAULT, tFindData);
 	FVaultingPacket RetData;
 	RetData.VaultingStart = UCustomFunctional::float3_To_FVector(tFindData.vValue1);
 	RetData.VaultingMiddle = UCustomFunctional::float3_To_FVector(tFindData.vValue2);

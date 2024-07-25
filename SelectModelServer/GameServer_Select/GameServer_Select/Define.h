@@ -4,6 +4,8 @@
 
 #define SOLDIER_MAX_CNT 9
 #define MAX_ADDITIONAL_SIZE 100 //추가로 오는 패킷은 최대 백개ㄲㅏ지받을수있다.
+#define INIT_TIMER_CNT 5	//5개의 팀을 받을수있음..
+#define TOTAL_GAME_TIME 300.f	//5개의 팀을 받을수있음..
 
 
 #define _float3	XMFLOAT3
@@ -16,6 +18,7 @@
 #define _fmatrix FXMMATRIX
 
 #define _float4x4 XMFLOAT4X4
+
 using _tchar = wchar_t;
 using _float = float;
 

@@ -76,6 +76,8 @@ public:
 	void SetSyncTime(bool bSyncTime) { m_bSyncTime = bSyncTime; }
 	const bool& GetSyncTime() { return m_bSyncTime; }
 
+	const float GetServerGameTime() const { return m_fServerTime; }
+
 	void SetSoldierInfo(int iIndex, int iSoldierType, int iTargetTerritory);
 
 	void SetReservedOpenLevel(bool bNewValue);
@@ -110,6 +112,8 @@ private:
 
 	int m_iSendSoldierCnt = 4;
 	int m_iRecvSoldierCnt = 4;
+
+	float m_fServerTime = TOTAL_GAME_TIME;
 
 	list<string> m_DebugStringTable;
 	void MakeDebugStringTable(const char* pString);

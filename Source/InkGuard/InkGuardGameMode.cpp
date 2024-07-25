@@ -79,3 +79,11 @@ void AInkGuardGameMode::GetTeamColor(bool& bRedColor)
 	else
 		bRedColor = false;
 }
+
+float AInkGuardGameMode::GetServerTime()
+{
+	if (m_pNetWorkMgr == nullptr)
+		m_pNetWorkMgr = MyNetworkMgr::GetInstance();
+
+	return m_pNetWorkMgr->GetServerGameTime();
+}

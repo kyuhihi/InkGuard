@@ -1,4 +1,5 @@
 #include "Client.h"
+#include "TimerManager.h"
 
 #define MAX_DEBUG_STRING_WRITE 20
 
@@ -398,6 +399,7 @@ void CClient::ConductPacket(const CPacket& Packet) //받은 패킷을 set하고, 보낼 �
 		if ((m_tSockInfo.sendbytes == 0))// 인풋 패킷은 매 프레임 마다 보내도록한다.
 		{
 			S2C_PACKET_PLAYER_INPUT tSendPacket = m_pOtherClient->GetOtherPlayerInputs();
+			tSendPacket.fGameTime = CTimerManager::GetInstance()->GetGameTime(m_strTimerTag.c_str());
 
 			m_tSockInfo.totalSendLen = sizeof(tSendPacket);
 			m_tSockInfo.cBuf = new char[m_tSockInfo.totalSendLen];

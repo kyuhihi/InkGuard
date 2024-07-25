@@ -27,28 +27,18 @@ void CPlayer::SetTransform(const C2S_PACKET_PLAYER_TRANSFORM& tPacket)
 
 void CPlayer::SetInputs(const C2S_PACKET_PLAYER_INPUT& tPacket)
 {
+	m_tInputs.cInteractionType = tPacket.cInteractionType;
+
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_F] = tPacket.bInputs[PLAYER_INPUT::INPUT_F];
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_ATTACK] = tPacket.bInputs[PLAYER_INPUT::INPUT_ATTACK];
-	m_tInputs.bInputs[PLAYER_INPUT::INPUT_VAULT] = tPacket.bInputs[PLAYER_INPUT::INPUT_VAULT];
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_DODGE] = tPacket.bInputs[PLAYER_INPUT::INPUT_DODGE];
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_SPRINT] = tPacket.bInputs[PLAYER_INPUT::INPUT_SPRINT];
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_CROUCH] = tPacket.bInputs[PLAYER_INPUT::INPUT_CROUCH];
-	m_tInputs.bInputs[PLAYER_INPUT::INPUT_CLIMBING] = tPacket.bInputs[PLAYER_INPUT::INPUT_CLIMBING];
 	m_tInputs.bInputs[PLAYER_INPUT::INPUT_QSKILL] = tPacket.bInputs[PLAYER_INPUT::INPUT_QSKILL];
-
+	m_tInputs.bInputs[PLAYER_INPUT::INPUT_ESKILL] = tPacket.bInputs[PLAYER_INPUT::INPUT_ESKILL];
 
 	m_tInputs.fMontagePlayTime = tPacket.fMontagePlayTime;
-
-	if (tPacket.sAdditionalPacketSize == 0)
-		return;
-
-	m_AdditionalDataList.push_back(make_pair(tPacket.sAdditionalPacketSize, m_pMemoryPooler->Allocate(tPacket.sAdditionalPacketSize))); 
-
-	m_tInputs.sAdditionalPacketSize = 0;
-	for (auto& iter : m_AdditionalDataList)
-	{
-		m_tInputs.sAdditionalPacketSize +=	iter.first; // ∆–≈∂ √— ªÁ¿Ã¡Ó ∞ËªÍ«ÿµ÷!
-	}
+	m_tInputs.tAddPacket = tPacket.tAddPacket;
 //	m_StringTable.push_back(to_string(m_tInputs.sAdditionalPacketSize));
 
 }
@@ -56,7 +46,6 @@ void CPlayer::SetInputs(const C2S_PACKET_PLAYER_INPUT& tPacket)
 const S2C_PACKET_PLAYER_INPUT CPlayer::GetInputs()
 {
 	S2C_PACKET_PLAYER_INPUT newInput = m_tInputs;
-	newInput.sAdditionalPacketSize = m_iRemAdditionalSize;
 
 	return newInput;
 }

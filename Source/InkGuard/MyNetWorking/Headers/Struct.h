@@ -1,5 +1,4 @@
 #pragma once
-
 // 여기서 선언하면 언리얼에선 안보임.
 
 struct SOLDIERINFO
@@ -31,7 +30,7 @@ typedef struct C2S_PACKET_SOLDIER_TRANSFORM
 	float		fSoldier_MontagePlayTime = 0.f;
 	float		fSoldier_Yaw = 0.f;
 	char		cHP = 100;
-	char		cPlayingMontageIndex = -1;
+	char		cLastDamageCauser = -1;
 } S2C_PACKET_SOLDIER_TRANSFORM;
 
 #pragma pack(1)
@@ -48,15 +47,6 @@ struct C2S_PACKET_PLAYER_TRANSFORM
 };
 
 #pragma pack(1)
-struct C2S_PACKET_PLAYER_INPUT
-{
-	short sPacketType = PACKET_INPUT;
-	bool bInputs[PLAYER_INPUT::INPUT_END];
-	float fMontagePlayTime = 0.f;
-	short sAdditionalPacketSize = 0;
-};
-
-#pragma pack(1)
 struct C2S_PACKET_ADDITIONAL_FLOAT3
 {
 	XMFLOAT3 vValue = XMFLOAT3();
@@ -68,6 +58,15 @@ struct C2S_PACKET_ADDITIONAL_FLOAT3x3
 	XMFLOAT3 vValue1 = XMFLOAT3();
 	XMFLOAT3 vValue2 = XMFLOAT3();
 	XMFLOAT3 vValue3 = XMFLOAT3();
+};
+
+#pragma pack(1)
+struct C2S_PACKET_PLAYER_INPUT
+{
+	char cInteractionType = INTERACTION_TYPE::INTERACTION_END;
+	bool bInputs[PLAYER_INPUT::INPUT_END];
+	float fMontagePlayTime = 0.f;
+	C2S_PACKET_ADDITIONAL_FLOAT3x3 tAddPacket;
 };
 
 //------------------------------------------------
@@ -91,9 +90,11 @@ struct S2C_PACKET_PLAYER_TRANSFORM
 #pragma pack(1)
 struct S2C_PACKET_PLAYER_INPUT
 {
-	bool bInputs[PLAYER_INPUT::INPUT_END] = { false,false,false,false,false,false,false,false };
+	char cInteractionType = INTERACTION_END;
+	bool bInputs[PLAYER_INPUT::INPUT_END] = { false,false,false,false,false,false,false };
 	float fMontagePlayTime = 0.f;
-	short sAdditionalPacketSize = 0;
+	C2S_PACKET_ADDITIONAL_FLOAT3x3 tAddPacket;
+	float fGameTime = -1.f;
 };
 
 //------------------------------------------------ 

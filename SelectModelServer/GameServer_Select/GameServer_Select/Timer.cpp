@@ -13,6 +13,20 @@ CTimer::~CTimer()
 {
 }
 
+float CTimer::GetGameTime(void)
+{
+	Update();
+
+	if (!m_bGameStart) {
+		m_bGameStart = true;
+		return TOTAL_GAME_TIME;
+	}
+
+	m_fGameTime -= m_fTimeDelta;
+	
+	return m_fGameTime;
+}
+
 HRESULT CTimer::Initialize()
 {
 	// 메인보드가 갖고 있는 고해상도 타이머의 누적값을 얻어오는 함수

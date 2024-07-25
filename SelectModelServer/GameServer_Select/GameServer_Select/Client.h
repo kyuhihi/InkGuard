@@ -31,6 +31,8 @@ public://일반함수
 
 	bool PutInReadOrWriteSet(const fd_set& ReadSet, const fd_set& WriteSet); // return 값이 false라면 다시 호출할것.
 
+	void SetTimerTag(const _tchar* pTag) { m_strTimerTag = pTag; }
+
 public:	//Getter Setter
 	bool IsInitializedSoldierMgr();
 	const SOCKETINFO* GetSocketInfo() { return &m_tSockInfo; }
@@ -83,6 +85,7 @@ private:
 
 	FRAME_SET m_eCurSet = FRAME_SET::FRAME_END;
 
+	wstring m_strTimerTag;
 
 	int m_iSendSoldiersCnt = 4;
 	int m_iRecvSoldiersCnt = 4;

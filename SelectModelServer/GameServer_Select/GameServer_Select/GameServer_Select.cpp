@@ -1,6 +1,8 @@
 ﻿#include "Include.h"
 #include "Client.h"
 #include "MatchMakingMgr.h"
+#include "TimerManager.h"
+
 
 int nTotalSockets = 0;
 CClient* ClientArray[FD_SETSIZE];// 총 64개의 소켓을 받을수있다.
@@ -11,6 +13,8 @@ SOCKET listen_sock;
 bool AddSocketInfo(SOCKET sock);
 void RemoveSocketInfo(int nIndex);
 void ExitMain();
+
+int main(int argc, char* argv[]);
 
 void ExitMain() 
 {
@@ -26,7 +30,7 @@ void ExitMain()
 
 
 	CMemoryPooler::GetInstance()->DestroyInstance();
-
+	CTimerManager::GetInstance()->DestroyInstance();
 }
 
 
@@ -41,7 +45,13 @@ int main(int argc, char* argv[])
 	for (int i = 0; i < FD_SETSIZE; ++i)
 		ClientArray[i] = nullptr;
 
-
+	CTimerManager* pTimerMgr = CTimerManager::GetInstance();
+	for (int i = 0; i < INIT_TIMER_CNT; ++i) {
+		wstring strNewTimer = pTimerMgr->GetDefaultTimerName();
+		strNewTimer += to_wstring(i);
+		pTimerMgr->AddTimer(strNewTimer.c_str());
+	}
+	
 
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
