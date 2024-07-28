@@ -9,19 +9,19 @@ MyNetworkMgr* MyNetworkMgr::m_pInstance = nullptr;
 
 SOLDIERINFO MyNetworkMgr::m_tSoldierInfo[SOLDIER_MAX_CNT];
 SOLDIERINFO MyNetworkMgr::m_tOtherSoldierInfo[SOLDIER_MAX_CNT];
-string MyNetworkMgr::SERVERIP = "127.0.0.1";
+string MyNetworkMgr::SERVERIP = "192.168.25.56";
 
 #define MAX_ADDITIONAL_SIZE 128
 
 MyNetworkMgr::MyNetworkMgr()
 {
-	//Initialize(); //네트워킹 커넥트 작업.
-	//ASpawnMgr::Initialize();
+	Initialize(); //네트워킹 커넥트 작업.
+	ASpawnMgr::Initialize();
 }
 
 MyNetworkMgr::~MyNetworkMgr()
 {
-	//Tidy();
+	Tidy();
 }
 
 void MyNetworkMgr::Initialize()
