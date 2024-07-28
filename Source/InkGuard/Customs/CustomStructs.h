@@ -57,7 +57,7 @@ struct FPACKET_SOLDIER_TRANSFORM_BLUEPRINT
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector	vSoldier_Position;
+	FVector	vSoldier_Position = FVector(0.f, 0.f, 0.f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float		fSoldier_Speed = 0.f;
@@ -128,13 +128,13 @@ public:
 	float MontagePlayTime = 0.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector Value1;
+	FVector Value1 = FVector(0.f, 0.f, 0.f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector Value2;
+	FVector Value2 = FVector(0.f, 0.f, 0.f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector Value3;
+	FVector Value3 = FVector(0.f, 0.f, 0.f);
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -153,12 +153,12 @@ struct FVaultingPacket : public FAdditionalBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector VaultingStart;
+	FVector VaultingStart = FVector(0.f, 0.f, 0.f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector VaultingMiddle;
+	FVector VaultingMiddle = FVector(0.f, 0.f, 0.f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector VaultingEnd;
+	FVector VaultingEnd = FVector(0.f, 0.f, 0.f);
 	
 };
